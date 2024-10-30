@@ -2,5 +2,5 @@
 ```
 cmake -S. -Bbuild
 cmake --build build
-build/bin/MyGame
+build/bin/game
 ```
