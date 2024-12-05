@@ -16,13 +16,33 @@ int main() {
     if (!tileset.loadFromFile("../resources/blocks.png") || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")) {
         return -1;
     }
-
+    std::vector<sf::Texture> runTextures(4);
+    if (!runTextures[0].loadFromFile("../resources/run wk_sprite_1.png") ||
+        !runTextures[1].loadFromFile("../resources/run wk_sprite_2.png") ||
+        !runTextures[2].loadFromFile("../resources/run wk_sprite_3.png") ||
+        !runTextures[3].loadFromFile("../resources/run wk_sprite_4.png")) {
+        return -1;  // Error loading run textures
+    }
     // Create map and character
     Map gameMap("../resources/level.txt", TILE_SIZE, tileset);
-    Character player(playerTexture, 100, 100);
+    Character player(playerTexture,runTextures, 100, 100);
 
     sf::View camera(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
     camera.setCenter(player.getBounds().left + player.getBounds().width / 2, player.getBounds().top + player.getBounds().height / 2);
+
+    sf::Texture backgroundTexture;
+    if (!backgroundTexture.loadFromFile("../resources/bg.jpg")) {
+        return -1; // Error loading the texture
+    }
+    sf::Sprite backgroundSprite(backgroundTexture);
+
+    // Get the size of the screen
+    int screenWidth = window.getSize().x;
+    int screenHeight = window.getSize().y;
+
+    // Calculate the number of repetitions
+    int xRepeatCount = gameMap.getMapData()[0].size()*32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+    int yRepeatCount = gameMap.getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
     sf::Clock clock;
 
@@ -39,10 +59,10 @@ int main() {
 
         // Handle movement
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            player.move(-200.f * deltaTime, 0, gameMap); // Move left
+            player.setVelocityX(-200.f);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            player.move(200.f * deltaTime, 0, gameMap); // Move right
+            player.setVelocityX(200.f);
         }
 
         // Handle jump
@@ -53,18 +73,33 @@ int main() {
         // Update player
         player.update(deltaTime, gameMap);
 
-        // Move the camera with the player (center the camera on the player)
-        camera.setCenter(player.getBounds().left + player.getBounds().width / 2, player.getBounds().top + player.getBounds().height / 2);
+        gameMap.updateCoins(player.getBounds());
+
+        int mapWidth = gameMap.getMapData()[0].size() * gameMap.getTileSize();
+        int mapHeight = gameMap.getMapData().size() * gameMap.getTileSize();
+
+        // Make sure the camera stays within the bounds of the map
+        float cameraX = std::max(constants::scene_width / 2.f, std::min(player.getBounds().left + player.getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
+        float cameraY = std::max(constants::scene_height / 2.f, std::min(player.getBounds().top + player.getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
+
+        camera.setCenter(cameraX, cameraY);
 
         // Set the view of the window to the camera
         window.setView(camera);
 
         // Clear the window
         window.clear();
+        for (int i = 0; i < xRepeatCount; ++i) {
+            for (int j = 0; j < yRepeatCount; ++j) {
+                backgroundSprite.setPosition(i * backgroundTexture.getSize().x, j * backgroundTexture.getSize().y);
+                window.draw(backgroundSprite);  // Draw each tile of the background
+            }
+        }
 
         // Draw the map and player
         gameMap.draw(window);
         player.draw(window);
+        player.drawBounds(window);
 
         // Display everything on the window
         window.display();
