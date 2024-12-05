@@ -145,7 +145,7 @@ void Character::handleCollisions(const Map& map) {
     // Check for collision with ground (the tile at the bottom of the character)
     if (tileY < map.getMapData().size() && tileX < map.getMapData()[tileY].size()) {
         char tile = map.getMapData()[tileY][tileX];
-        if (tile == '1') { // Colliding with the ground
+        if (tile != '0') { // Colliding with the ground
             onGround = true;
             velocityY = 0;
             sprite.setPosition(bounds.left, tileY * map.getTileSize() - bounds.height); // Adjust position to be on top of the tile
@@ -202,53 +202,55 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
         return -1;
     }
 
+    std::vector<int> check(2);
+    
 
 
     // Check if the new position collides with the wall (tile == '1')
     if (tileX >= 0 && tileX < map.getMapData()[0].size() && tileY >= 0 && tileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][tileX] == '1') {
+        if (map.getMapData()[tileY][tileX] != '0') {
             return 1; // Collision detected
         }
     }
 
     if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size() && tileY >= 0 && tileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][rightTileX] == '1') {
+        if (map.getMapData()[tileY][rightTileX] != '0') {
             return 2; // Collision detected
         }
     }
 
     if (tileX >= 0 && tileX < map.getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][tileX] == '1') {
+        if (map.getMapData()[bottomTileY][tileX] != '0') {
             return 3; // Collision detected
         }
     }
 
     if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][rightTileX] == '1') {
+        if (map.getMapData()[bottomTileY][rightTileX] != '0') {
             return 4; // Collision detected
         }
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][middleTileX] == '1') {
+        if (map.getMapData()[tileY][middleTileX] != '0') {
             return 5; // Collision detected
         }
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[middleTileY][rightTileX] == '1') {
+        if (map.getMapData()[middleTileY][rightTileX] != '0') {
             return 6; // Collision detected
         }
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][middleTileX] == '1') {
+        if (map.getMapData()[bottomTileY][middleTileX] != '0') {
             return 7; // Collision detected
         }
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[middleTileY][tileX] == '1') {
+        if (map.getMapData()[middleTileY][tileX] != '0') {
             return 8; // Collision detected
         }
     }

@@ -32,7 +32,33 @@ void Map::draw(sf::RenderWindow& window) {
 
             // Define tile texture regions based on tile type
             if (tileType == '1') { // Solid block
-                tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
+                tile.setTextureRect(sf::IntRect(32*3, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
+            }
+            else if (tileType == '2') {
+                // Solid block
+				tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
+            }
+            else if (tileType == '5')
+            {
+                tile.setTextureRect(sf::IntRect(32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+            }
+            else if (tileType == '7' || tileType == '8') {
+                tile.setTextureRect(sf::IntRect(32*6, 32, tileSize, tileSize));  // Assuming the first tile is a solid block
+            }
+            else if (tileType == 'P')
+            {
+                tile.setTextureRect(sf::IntRect(16*32, 7*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+            }
+            else if (tileType == 'p') {
+                tile.setTextureRect(sf::IntRect(17*32, 7*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+            }
+            else if (tileType == 'H') {
+                tile.setTextureRect(sf::IntRect(16*32, 6*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+            }
+            else if (tileType == 'h')
+            {
+                tile.setTextureRect(sf::IntRect(17*32, 6*32, tileSize, tileSize));  // Assuming the first tile is a solid block
+
             }
             else /*if (tileType == '0' || tileType == 'C')*/ { // Empty space (no drawing needed)
                 continue;
