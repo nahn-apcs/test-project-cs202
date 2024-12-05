@@ -57,18 +57,7 @@ int main() {
         // Get elapsed time
         float deltaTime = clock.restart().asSeconds();
 
-        // Handle movement
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            player.setVelocityX(-200.f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            player.setVelocityX(200.f);
-        }
-
-        // Handle jump
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            player.jump();
-        }
+        player.interact();
 
         // Update player
         player.update(deltaTime, gameMap);

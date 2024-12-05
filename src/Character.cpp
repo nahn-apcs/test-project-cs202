@@ -3,13 +3,43 @@
 #include "render.h"
 
 Character::Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, int x, int y)
-    : velocityX(0), velocityY(0), onGround(false), isJumping(false) {
+    : velocityX(0), velocityY(0), onGround(false), isJumping(false), faceRight(true) {
 
     // Set up idle animation (if needed, for example, when the character is not moving)
+
     sprite.setTexture(idleTexture);
     sprite.setPosition(x, y);
     idle = idleTexture; // Save the idle sprite for later use
     runAnimation = new Animation(runTextures, 0.1f);  // Assuming 0.1s per frame for the run animation
+}
+
+void Character::interact() {
+    // Handle movement
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+        increaseSpeed();
+    }
+    else
+    {
+        moveSpeed = 200.0f;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        setVelocityX(-moveSpeed);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        setVelocityX(moveSpeed);
+    }
+    
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+        jump();
+    }
+
+    
+}
+
+void Character::increaseSpeed() {
+	moveSpeed = 400.0f;
 }
 
 void Character::drawBounds(sf::RenderWindow& window) {
@@ -31,6 +61,14 @@ void Character::update(float deltaTime, const Map& map) {
     applyGravity(deltaTime);
     applyFriction(deltaTime);
     onGround = false; // Assume the character is not on the ground
+
+    if (velocityX > 0) {
+		faceRight = true;
+	}
+	else if (velocityX < 0) {
+		faceRight = false;
+	}
+
     // Check if we are about to hit a wall before moving
     if (velocityX == 0) {
         sprite.setTexture(idle);
@@ -40,7 +78,7 @@ void Character::update(float deltaTime, const Map& map) {
         sprite.move(velocityX*deltaTime, 0); 
         if (velocityX != 0) {
             runAnimation->update(deltaTime); 
-            runAnimation->applyToSprite(sprite);  
+            runAnimation->applyToSprite(sprite, faceRight);  
         }
     }
 

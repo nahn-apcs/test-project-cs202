@@ -34,7 +34,7 @@ void Map::draw(sf::RenderWindow& window) {
             if (tileType == '1') { // Solid block
                 tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
             }
-            else if (tileType == '0' || tileType == 'C') { // Empty space (no drawing needed)
+            else /*if (tileType == '0' || tileType == 'C')*/ { // Empty space (no drawing needed)
                 continue;
             }
 

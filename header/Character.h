@@ -16,7 +16,8 @@ public:
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }
     void drawBounds(sf::RenderWindow& window);
-
+    void interact();
+    void increaseSpeed();
     sf::FloatRect getBounds() const;
 
 private:
@@ -28,7 +29,8 @@ private:
     sf::Texture idle;
     const float gravity = 600.f;
     const float jumpStrength = -600.f;
-    const float moveSpeed = 200.f;
+    float moveSpeed = 200.f;
+    bool faceRight;
 
     void handleCollisions(const Map& map);
     void applyGravity(float deltaTime);

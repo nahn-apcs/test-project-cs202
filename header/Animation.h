@@ -9,7 +9,7 @@ public:
     Animation(const std::vector<sf::Texture>& frames, float switchTime);
 
     void update(float deltaTime);
-    void applyToSprite(sf::Sprite& sprite);
+    void applyToSprite(sf::Sprite& sprite, bool faceRight);
 
 private:
     std::vector<sf::Texture> frames;  // A list of textures (the frames of the animation)
