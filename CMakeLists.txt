@@ -49,7 +49,7 @@
 # install(TARGETS game RUNTIME DESTINATION bin)
 
 cmake_minimum_required(VERSION 3.11)
-project(CS202Project LANGUAGES CXX)
+project(GroupProject7 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -94,7 +94,7 @@ file(GLOB SRCS CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
-add_executable(game ${SRCS})
+add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp")
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)
@@ -108,6 +108,8 @@ target_compile_features(game PRIVATE cxx_std_17)
 #thêm các folder vào đây
 target_include_directories(game PRIVATE
     #${CMAKE_SOURCE_DIR}/include
+    header
+    resources
 )
 
 if(WIN32)
@@ -117,6 +119,12 @@ if(WIN32)
         PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:game>
         VERBATIM)
 endif()
-
+# Copy images directory
+add_custom_target(copy_resources_images ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/resources
+    ${CMAKE_BINARY_DIR}/resources
+)
+add_dependencies(game copy_resources_images)
 
 install(TARGETS game)
