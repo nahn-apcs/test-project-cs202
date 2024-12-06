@@ -57,7 +57,7 @@ int main() {
         // Get elapsed time
         float deltaTime = clock.restart().asSeconds();
 
-        player.interact();
+        player.interact(deltaTime, gameMap);
 
         // Update player
         player.update(deltaTime, gameMap);
