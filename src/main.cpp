@@ -12,8 +12,10 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(constants::scene_width,constants::scene_height), "Mario Game");
 
     // Load textures
-    sf::Texture tileset, playerTexture;
-    if (!tileset.loadFromFile("../resources/blocks.png") || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")) {
+    sf::Texture tileset, playerTexture, monsterset;
+    if (!tileset.loadFromFile("../resources/blocks.png") 
+        || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png") 
+        || !monsterset.loadFromFile("../resources/enemies.png")) { 
         return -1;
     }
     std::vector<sf::Texture> runTextures(4);
@@ -24,7 +26,7 @@ int main() {
         return -1;  // Error loading run textures
     }
     // Create map and character
-    Map gameMap("../resources/level.txt", TILE_SIZE, tileset);
+    Map gameMap("../resources/level.txt", TILE_SIZE, tileset, monsterset);
     Character player(playerTexture,runTextures, 100, 100);
 
     sf::View camera(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
@@ -89,6 +91,7 @@ int main() {
         gameMap.draw(window);
         player.draw(window);
         player.drawBounds(window);
+        gameMap.updateMonsters(deltaTime, player.getBounds());
 
         // Display everything on the window
         window.display();

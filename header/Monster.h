@@ -5,19 +5,28 @@
 #include<iostream>
 #include<memory>
 #include "MovementStrategy.h"
+#include "MonsterAnimation.h"
 
 class Monster {
 protected:
   sf::Sprite sprite;
   MovementStrategy* movementStrategy;
+  MonsterAnimation* animation;
+  bool isKilled;
+
 
 public:
   Monster(sf::Texture& texture);
   virtual ~Monster();
   virtual void setMovementStrategy(MovementStrategy* movementStrategy);
-  virtual void move(float deltatime);
+  virtual void update(float deltatime,
+                      std::vector<std::string>& mapData,
+                      int tileSize);
   virtual void draw(sf::RenderWindow& window);
   void setPosition(float x, float y);
+  void setAnimation(MonsterAnimation* ani);
+
+  sf::Sprite& getSprite() { return sprite; }
 
 };
 
