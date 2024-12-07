@@ -21,10 +21,12 @@ void Monster::setMovementStrategy(MovementStrategy* movementStrategy)
   this->movementStrategy = movementStrategy;
 }
 
-void Monster::update(float deltatime)
+void Monster::update(float deltatime,
+                     std::vector<std::string>& mapData,
+                     int tileSize)
 {
   if (movementStrategy)
-    movementStrategy->move(sprite, deltatime);
+    movementStrategy->move(sprite, deltatime,mapData,tileSize);
 
   if (animation)
     animation->update(deltatime);

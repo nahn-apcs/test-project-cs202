@@ -107,6 +107,11 @@ std::vector<std::string> Map::getMapData() const {
 void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
 {
   for (auto& monster : monsters) {
-    monster->update(deltatime);
+    monster->update(deltatime,mapData,tileSize);
+    if (monster->getSprite().getGlobalBounds().intersects(playerBounds)) {
+      // Player is killed
+      // Implement player death logic here
+    }
   }
+  
 }

@@ -19,7 +19,9 @@ public:
   Monster(sf::Texture& texture);
   virtual ~Monster();
   virtual void setMovementStrategy(MovementStrategy* movementStrategy);
-  virtual void update(float deltatime);
+  virtual void update(float deltatime,
+                      std::vector<std::string>& mapData,
+                      int tileSize);
   virtual void draw(sf::RenderWindow& window);
   void setPosition(float x, float y);
   void setAnimation(MonsterAnimation* ani);
