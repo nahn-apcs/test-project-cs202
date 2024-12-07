@@ -46,6 +46,17 @@ int main() {
     int xRepeatCount = gameMap.getMapData()[0].size()*32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
     int yRepeatCount = gameMap.getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
+    sf::Font font;
+    if (!font.loadFromFile("../resources/font/Arial.ttf")) { // Replace with the correct font path
+        return -1; // Error loading font
+    }
+
+    sf::Text messageText;
+    messageText.setFont(font);
+    messageText.setCharacterSize(24); // Set the font size
+    messageText.setFillColor(sf::Color::Blue); // Set text color
+    messageText.setPosition(10.f, 10.f); // Set position on screen
+    messageText.setString("Coins: "); // The text to display
     sf::Clock clock;
 
     // Game loop
@@ -93,6 +104,8 @@ int main() {
         player.drawBounds(window);
         gameMap.updateMonsters(deltaTime, player.getBounds());
 
+        window.setView(window.getDefaultView());
+        window.draw(messageText);
         // Display everything on the window
         window.display();
     }
