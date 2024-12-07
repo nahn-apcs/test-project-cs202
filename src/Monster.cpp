@@ -4,8 +4,7 @@
 Monster::Monster(sf::Texture& texture) : movementStrategy(nullptr), animation(nullptr), isKilled(false) { 
   sprite.setTexture(texture);
   sprite.setTextureRect(sf::IntRect(0, 0, 32, 32)); 
-  moveRight = true;
-  moveOffset = 100.f;
+
 }
 
 Monster::~Monster()
