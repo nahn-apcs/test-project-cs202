@@ -31,4 +31,4 @@ public:
 };
 
 
-#endif  // !ENTITY_H
+#endif  

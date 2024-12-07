@@ -2,7 +2,7 @@
 #include "render.h"
 #include <fstream>
 
-Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture)
+Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Texture& Monstertexture)
     : tileSize(tileSize)
 {
     std::ifstream file(filePath);
@@ -10,7 +10,6 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture)
     while (std::getline(file, line)) {
         mapData.push_back(line);
     }
-
     tile.setTexture(texture);
     tile.setTextureRect(sf::IntRect(0, 0, constants::scene_width, constants::scene_height)); // Select first tile
     sf::Sprite coinTexture = tile;
@@ -21,8 +20,21 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture)
                 // Create a coin at the corresponding position
                 coins.push_back(Coin(coinTexture, j * tileSize, i * tileSize));
             }
+            if (mapData[i][j] == 'M') {
+              Monster* monster =
+                MonsterFactory::createMonster("Goomba", Monstertexture);
+              monster->setPosition(j * tileSize, i * tileSize);
+              monsters.push_back(monster);
+            }
+            if (mapData[i][j] == 'T') {
+              Monster* monster =
+                MonsterFactory::createMonster("Turtle", Monstertexture);
+              monster->setPosition(j * tileSize, i * tileSize);
+              monsters.push_back(monster);
+            }
         }
     }
+   
 }
 
 void Map::draw(sf::RenderWindow& window) {
@@ -64,6 +76,7 @@ void Map::draw(sf::RenderWindow& window) {
                 continue;
             }
 
+
             tile.setPosition(j * tileSize, i * tileSize);
             window.draw(tile);
         }
@@ -71,6 +84,9 @@ void Map::draw(sf::RenderWindow& window) {
 
     for (auto& coin : coins) {
         coin.draw(window);
+    }
+    for (auto& monster : monsters) {
+      monster->draw(window);
     }
 }
 
@@ -86,4 +102,11 @@ void Map::updateCoins(const sf::FloatRect& playerBounds) {
 
 std::vector<std::string> Map::getMapData() const {
 	return mapData;
+}
+
+void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
+{
+  for (auto& monster : monsters) {
+    monster->update(deltatime);
+  }
 }
