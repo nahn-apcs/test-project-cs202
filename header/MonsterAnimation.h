@@ -11,6 +11,7 @@ private:
   float elapsedTime;                // Time tracker for switching frames
   unsigned int currentFrame;        // Index of the current frame
 
+
 public:
   MonsterAnimation(sf::Sprite& sprite, float frameTime);
   void addFrame(const sf::IntRect& frame);

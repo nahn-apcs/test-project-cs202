@@ -14,6 +14,7 @@ protected:
   MonsterAnimation* animation;
   bool isKilled;
 
+
 public:
   Monster(sf::Texture& texture);
   virtual ~Monster();
