@@ -21,16 +21,18 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
                 coins.push_back(Coin(coinTexture, j * tileSize, i * tileSize));
             }
             if (mapData[i][j] == 'M') {
-              Monster* monster =
-                MonsterFactory::createMonster("Goomba", Monstertexture);
-              monster->setPosition(j * tileSize, i * tileSize);
+              Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
+              monsters.push_back(monster);
+            }
+            if (mapData[i][j] == 'B') {
+              Monster* monster = MonsterFactory::createMonster("Bat", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
             }
             if (mapData[i][j] == 'T') {
-              Monster* monster =
-                MonsterFactory::createMonster("Turtle", Monstertexture);
-              monster->setPosition(j * tileSize, i * tileSize);
-              monsters.push_back(monster);
+              Monster* monster = MonsterFactory::createMonster(
+                "Plant", Monstertexture, { j * tileSize, i * tileSize });
+             
+                monsters.push_back(monster);
             }
         }
     }
@@ -38,6 +40,9 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
 }
 
 void Map::draw(sf::RenderWindow& window) {
+  for (auto& monster : monsters) {
+    monster->draw(window);
+  }
     for (int i = 0; i < mapData.size(); ++i) {
         for (int j = 0; j < mapData[i].size(); ++j) {
             char tileType = mapData[i][j];
@@ -85,9 +90,7 @@ void Map::draw(sf::RenderWindow& window) {
     for (auto& coin : coins) {
         coin.draw(window);
     }
-    for (auto& monster : monsters) {
-      monster->draw(window);
-    }
+    
 }
 
 void Map::updateCoins(const sf::FloatRect& playerBounds) {

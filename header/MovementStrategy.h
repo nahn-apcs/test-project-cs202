@@ -43,4 +43,34 @@ public:
 };
 
 
+class XYmovement : public MovementStrategy {
+private:
+  sf::Vector2f velocity;
+  float direction = -1.0f;
+
+public:
+  XYmovement(sf::Vector2f velocity);
+  void move(sf::Sprite& sprite,
+            float deltatime,
+            std::vector<std::string>& mapData,
+            int tileSize) override;
+};
+
+class UpDownmovement : public MovementStrategy {
+private:
+  float initialY;
+  float movementrange;
+  float direction = -1.0f;
+  float speed;
+
+public:
+  UpDownmovement(float initailY,float movementrange, float speed);
+  void move(sf::Sprite& sprite,
+            float deltatime,
+            std::vector<std::string>& mapData,
+            int tileSize) override;
+};
+
+
+
 #endif  

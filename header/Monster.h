@@ -38,10 +38,10 @@ public:
   ~Goomba();
 };
 
-class Turtle : public Monster {
+class Bat : public Monster {
 public:
-  Turtle(sf::Texture& texture);
-  ~Turtle();
+  Bat(sf::Texture& texture);
+  ~Bat();
 };
 
 class Plant : public Monster {
@@ -52,7 +52,7 @@ public:
 
 class MonsterFactory {
 public:
-	static Monster* createMonster(const std::string& type, sf::Texture& texture);
+	static Monster* createMonster(const std::string& type, sf::Texture& texture, sf::Vector2i position);
 };
 
 
