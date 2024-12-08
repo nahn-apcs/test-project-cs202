@@ -8,7 +8,7 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
   sf::Vector2f prevPosition = sprite.getPosition();
   sf::Vector2f nextPosition = prevPosition;
   nextPosition.x += speed * direction * deltatime;
-  std::cout << nextPosition.y << std::endl;
+ // std::cout << nextPosition.x << std::endl;
   // Calculate grid positions
   int prevGridX = static_cast<int>(prevPosition.x / tileSize);
   int prevGridY = static_cast<int>(prevPosition.y / tileSize);
@@ -17,15 +17,19 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
   //std::cout << nextGridY << std::endl;
   // Check for collision
   if (nextGridX < 0 || nextGridX >= mapData[0].size() || nextGridY < 0 ||
-      nextGridY >= mapData.size() || mapData[nextGridY][nextGridX] == 'P' || mapData[nextGridY][nextGridX] == 'p') {
+      nextGridY >= mapData.size() || (mapData[nextGridY][nextGridX] != '0' && mapData[nextGridY][nextGridX]!='M')) {
       direction = -direction;  // Reverse direction on collision
+  }
+  else if (direction > 0 && (mapData[nextGridY][nextGridX+1] != '0' &&
+                             mapData[nextGridY][nextGridX + 1] != 'M')) {
+    direction = -direction;
   }
   else {
     if (mapData[nextGridY + 1][prevGridX] != '0') {
       if (mapData[nextGridY + 1][nextGridX] == '0') {
         if (nextPosition.y != 384) {
           nextPosition.y = prevPosition.y + 256;
-          nextPosition.x = nextPosition.x - 1.0f;
+          nextPosition.x = nextPosition.x - 0.5f;
           nextGridX = static_cast<int>(nextPosition.x / tileSize);
           nextGridY = static_cast<int>(nextPosition.y / tileSize);
         }

@@ -25,11 +25,21 @@ void Monster::update(float deltatime,
                      std::vector<std::string>& mapData,
                      int tileSize)
 {
-  if (movementStrategy)
-    movementStrategy->move(sprite, deltatime,mapData,tileSize);
+  if (isKilled && animation) {
+    animation->update(deltatime, false);  // Play death animation once
+    if (animation->isFinished()) {
+      sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));// Hide sprite after animation
+      sprite.setPosition(-1000, -1000);  // Move sprite off screen
+       
+    }
+  }
+  else if (movementStrategy) {
+    movementStrategy->move(sprite, deltatime, mapData, tileSize);
+  }
 
-  if (animation)
+  if (!isKilled && animation) {
     animation->update(deltatime);
+  }
 }
 
 void Monster::draw(sf::RenderWindow& window)
@@ -83,6 +93,8 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     auto animation = new MonsterAnimation(goomba->getSprite(), 0.5f);
     animation->addFrame(sf::IntRect(0, 0, 32, 32));
     animation->addFrame(sf::IntRect(32, 0, 32, 32));
+    animation->addFrame(sf::IntRect(64, 0, 32, 32));
+    animation->addFrame(sf::IntRect(96, 0, 32, 32));
     goomba->setAnimation(animation);
   }
   else if (type == "Turtle")
@@ -90,8 +102,10 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     Monster *turtle = new Turtle(texture);
     turtle->setMovementStrategy(new PatrolMovement());
     auto animation = new MonsterAnimation(turtle->getSprite(), 0.5f);
-    animation->addFrame(sf::IntRect(0, 16, 16, 16));
-    animation->addFrame(sf::IntRect(16, 16, 16, 16));
+    animation->addFrame(sf::IntRect(0, 32, 32, 32));
+    animation->addFrame(sf::IntRect(32, 32, 32, 32));
+    animation->addFrame(sf::IntRect(64, 32, 32, 32));
+    animation->addFrame(sf::IntRect(96, 32, 32, 32));
     turtle->setAnimation(animation);
 
   }
@@ -107,4 +121,32 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     return nullptr;
 }
 
+void Monster::kill(bool isKilled, const std::string& type)
+{
+  if (isKilled) {
+    if (animation) {
+      delete animation;
+    }
+    animation = new MonsterAnimation(sprite, 0.1f);
 
+    if (type == "M") {
+      animation->addFrame(sf::IntRect(0, 32, 32, 32));  // Example death frames
+      animation->addFrame(sf::IntRect(32, 32, 32, 32));
+    }
+    else if (type == "T") {
+      animation->addFrame(sf::IntRect(0, 32, 32, 32));
+      animation->addFrame(sf::IntRect(32, 32, 32, 32));
+    }
+    else if (type == "Plant") {
+      animation->addFrame(sf::IntRect(0, 160, 32, 32));
+      animation->addFrame(sf::IntRect(32, 160, 32, 32));
+    }
+
+    this->isKilled = true;
+  }
+}
+
+bool Monster::isAnimationFinished()
+{
+  return animation->isFinished();
+}

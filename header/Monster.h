@@ -25,9 +25,11 @@ public:
   virtual void draw(sf::RenderWindow& window);
   void setPosition(float x, float y);
   void setAnimation(MonsterAnimation* ani);
+  virtual void kill(bool isKilled,const std::string& type);
 
   sf::Sprite& getSprite() { return sprite; }
-
+  bool getIsKilled() { return isKilled; }
+  bool isAnimationFinished();
 };
 
 class Goomba : public Monster {

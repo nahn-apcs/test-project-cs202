@@ -106,12 +106,44 @@ std::vector<std::string> Map::getMapData() const {
 
 void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
 {
-  for (auto& monster : monsters) {
-    monster->update(deltatime,mapData,tileSize);
-    if (monster->getSprite().getGlobalBounds().intersects(playerBounds)) {
-      // Player is killed
-      // Implement player death logic here
+  for (auto it = monsters.begin(); it != monsters.end();) {
+    auto& monster = *it;  // Use reference for clarity and efficiency
+    monster->update(deltatime, mapData, tileSize);
+
+    // Get player and monster positions
+    sf::FloatRect monsterBounds = monster->getSprite().getGlobalBounds();
+
+    // Check intersection
+    if (monsterBounds.intersects(playerBounds)) {
+      // Check if the player is above the monster
+      float playerBottom =
+        playerBounds.top + playerBounds.height;  // Bottom of the player
+      float monsterTop = monsterBounds.top;      // Top of the monster
+
+      if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
+        // Monster is killed
+        auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+        auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+       
+        mapData[tileY][tileX] = '0';
+        monster->kill(true, "M");  // Kill the monster
+        if (monster->getIsKilled() && monster->isAnimationFinished()) {
+          std::cout << "Monster is killed" << std::endl;
+          
+          it = monsters.erase(it);  // Remove the monster
+          continue;  // Skip incrementing the iterator since we erased
+        }
+      }
+      else {
+        if (!monster->getIsKilled()) {
+          // Player is killed
+          std::cout << "Player is killed" << std::endl;
+          // Implement player death here
+        }
+      
+      }
     }
+
+    ++it;  // Increment the iterator if no monster was removed
   }
-  
 }

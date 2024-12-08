@@ -16,7 +16,7 @@ int main() {
     sf::Texture tileset, playerTexture, monsterset;
     if (!tileset.loadFromFile("../resources/blocks.png")
         || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
-        || !monsterset.loadFromFile("../resources/enemies.png")) {
+        || !monsterset.loadFromFile("../resources/monster.png")) {
         return -1;
     }
     std::vector<sf::Texture> runTextures(4);
