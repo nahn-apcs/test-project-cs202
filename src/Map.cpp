@@ -104,10 +104,14 @@ std::vector<std::string> Map::getMapData() const {
 	return mapData;
 }
 
-void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
+void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera)
 {
   for (auto it = monsters.begin(); it != monsters.end();) {
     auto& monster = *it;  // Use reference for clarity and efficiency
+    if (!isVissible(monster->getSprite(), camera)) {
+      ++it;
+      continue;
+    }
     monster->update(deltatime, mapData, tileSize);
 
     // Get player and monster positions
@@ -146,4 +150,12 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
 
     ++it;  // Increment the iterator if no monster was removed
   }
+}
+
+bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)
+{
+  sf::FloatRect monsterBounds = sprite.getGlobalBounds();
+  sf::FloatRect viewBounds(camera.getCenter() - camera.getSize() / 2.f,
+                           camera.getSize());
+  return monsterBounds.intersects(viewBounds);
 }

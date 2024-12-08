@@ -27,16 +27,7 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
   else {
     if (mapData[nextGridY + 1][prevGridX] != '0') {
       if (mapData[nextGridY + 1][nextGridX] == '0') {
-        if (nextPosition.y != 384) {
-          nextPosition.y = prevPosition.y + 256;
-          nextPosition.x = nextPosition.x - 0.5f;
-          nextGridX = static_cast<int>(nextPosition.x / tileSize);
-          nextGridY = static_cast<int>(nextPosition.y / tileSize);
-        }
-        //remove the goomba when it falls off the platform
-        else {
           direction = -direction;
-        }
         
       }
     }

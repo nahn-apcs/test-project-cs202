@@ -15,8 +15,8 @@ public:
     std::vector<std::string> getMapData() const;
     int getTileSize() const { return tileSize; }
     void updateCoins(const sf::FloatRect& playerBounds);
-    void updateMonsters(float deltatime, const sf::FloatRect& playerBounds);
-
+    void updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera);
+    bool isVissible(const sf::Sprite& sprite, const sf::View &camera);
   private:
     std::vector<std::string> mapData;
     sf::Sprite tile;

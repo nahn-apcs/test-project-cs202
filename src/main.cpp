@@ -98,6 +98,9 @@ int main() {
 
         camera.setCenter(cameraX, cameraY);
         window.setView(camera);
+      
+        gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
+
 
         // Update the time display
         sf::Time elapsedTime = timeClock.getElapsedTime();
@@ -117,7 +120,7 @@ int main() {
         gameMap.draw(window);
         player.draw(window);
         player.drawBounds(window);
-        gameMap.updateMonsters(deltaTime, player.getBounds());
+        //gameMap.updateMonsters(deltaTime, player.getBounds());
 
         window.setView(window.getDefaultView());
 
