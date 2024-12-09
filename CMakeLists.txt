@@ -91,7 +91,7 @@ FetchContent_MakeAvailable(json)
 # Liệt kê hết những folder mà mình có file cpp
 # để khi chạy có thể tìm thấy hết file
 file(GLOB SRCS CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/Source/*.cpp
 )
 
 add_executable(game ${SRCS})
@@ -107,7 +107,10 @@ target_compile_features(game PRIVATE cxx_std_17)
 
 #thêm các folder vào đây
 target_include_directories(game PRIVATE
-    #${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/Include
+    ${CMAKE_SOURCE_DIR}/Asset/Fonts
+    ${CMAKE_SOURCE_DIR}/Asset/Textures
+
 )
 
 if(WIN32)
