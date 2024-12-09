@@ -12,6 +12,7 @@ public:
     bool isCollected() const;
     void collect(); // Mark coin as collected
 
+
 private:
     sf::Sprite sprite;
     bool collected;

@@ -17,7 +17,11 @@ public:
     void updateCoins(const sf::FloatRect& playerBounds);
     void updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera);
     bool isVissible(const sf::Sprite& sprite, const sf::View &camera);
+
+    bool colliable(int x, int y) const;
+    bool colliableChar(const char& c) const;
   private:
+    const std::string notCollidable = "0C";
     std::vector<std::string> mapData;
     sf::Sprite tile;
     int tileSize;
