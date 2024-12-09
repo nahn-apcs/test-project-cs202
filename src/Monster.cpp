@@ -26,7 +26,7 @@ void Monster::update(float deltatime,
                      int tileSize)
 {
   if (isKilled && animation) {
-    animation->update(deltatime, false);  // Play death animation once
+    animation->update(deltatime, false, movementStrategy->moveRight());  // Play death animation once
     if (animation->isFinished()) {
       sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));// Hide sprite after animation
       sprite.setPosition(-1000, -1000);  // Move sprite off screen
@@ -38,15 +38,16 @@ void Monster::update(float deltatime,
   }
 
   if (!isKilled && animation) {
-    animation->update(deltatime);
+    animation->update(deltatime, true, movementStrategy->moveRight());
   }
 }
 
 void Monster::draw(sf::RenderWindow& window)
 {
-  if (animation)
-    animation->applyToSprite(sprite);
-  window.draw(sprite);
+    if (animation) {
+        animation->applyToSprite(sprite, movementStrategy->moveRight());
+        window.draw(sprite);
+    }
 }
 
 void Monster::setPosition(float x, float y)

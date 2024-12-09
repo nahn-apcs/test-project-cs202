@@ -10,7 +10,9 @@ class MovementStrategy {
 public:
   virtual void move(sf::Sprite& sprite,float deltatime,std::vector<std::string>& mapData,
                     int tileSize) = 0;
- 
+  bool moveRight(){return (direction >0) ;}
+protected:
+    float direction = -1.0f;
 };
 
 class PatrolMovement : public MovementStrategy {
@@ -20,8 +22,6 @@ class PatrolMovement : public MovementStrategy {
             std::vector<std::string>& mapData,
             int tileSize) override;
 
-        private:
-  float direction=-1.0f;
 
 };
 
@@ -46,7 +46,6 @@ public:
 class XYmovement : public MovementStrategy {
 private:
   sf::Vector2f velocity;
-  float direction = -1.0f;
 
 public:
   XYmovement(sf::Vector2f velocity);
@@ -60,7 +59,6 @@ class UpDownmovement : public MovementStrategy {
 private:
   float initialY;
   float movementrange;
-  float direction = -1.0f;
   float speed;
 
 public:

@@ -10,7 +10,7 @@ void CoinAnimation::addFrame(const sf::IntRect& frame)
   frames.push_back(frame);
 }
 
-void CoinAnimation::update(float deltatime,bool loop)
+void CoinAnimation::update(float deltatime,bool loop, bool b)
 {
   if (finished)
 	return;
@@ -36,7 +36,7 @@ void CoinAnimation::update(float deltatime,bool loop)
 }
 
 
-void CoinAnimation::applyToSprite(sf::Sprite& sprite)
+void CoinAnimation::applyToSprite(sf::Sprite& sprite, bool b)
 {
   sprite.setTextureRect(frames[currentFrame]);
 }

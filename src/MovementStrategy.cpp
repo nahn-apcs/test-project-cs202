@@ -35,15 +35,15 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
       sprite.setPosition(nextPosition);
 
       // Update mapData if the monster "occupies" a new tile
-      if (nextGridX != prevGridX || nextGridY != prevGridY) {
-        // Clear previous tile
-        if (mapData[prevGridY][prevGridX] == 'M') {
-          mapData[prevGridY][prevGridX] = '0';
-        }
+      //if (nextGridX != prevGridX || nextGridY != prevGridY) {
+      //  // Clear previous tile
+      //  if (mapData[prevGridY][prevGridX] == 'M') {
+      //    mapData[prevGridY][prevGridX] = '0';
+      //  }
 
-        if (mapData[nextGridY][nextGridX] == '0')
-          mapData[nextGridY][nextGridX] = 'M';
-      }
+      //  if (mapData[nextGridY][nextGridX] == '0')
+      //    mapData[nextGridY][nextGridX] = 'M';
+      //}
   }
     //check for throw
   }
@@ -99,13 +99,18 @@ void XYmovement::move(sf::Sprite& sprite,float deltatime,std::vector<std::string
   int prevGridY = static_cast<int>(prevPosition.y / tileSize);
   int nextGridX = static_cast<int>(nextPosition.x / tileSize);
   int nextGridY = static_cast<int>(nextPosition.y / tileSize);
+  int rightX = static_cast<int>((nextPosition.x + tileSize) / tileSize);
+  int bottomY = static_cast<int>((nextPosition.y + tileSize) / tileSize);
+  int middleX = static_cast<int>((nextPosition.x + tileSize / 2) / tileSize);
+  int middleY = static_cast<int>((nextPosition.y + tileSize / 2) / tileSize);
 
   // Check X-axis collision
   if (nextGridX <= 0 || nextGridX >= mapData[0].size()-1 ||
       (mapData[prevGridY][nextGridX] != '0' &&
        mapData[prevGridY][nextGridX] != 'B')) {
     velocity.x = -velocity.x;         
-    nextPosition.x = prevPosition.x;  
+    nextPosition.x = prevPosition.x; 
+    direction = -direction;
   }
 
   // Check Y-axis collision
@@ -113,24 +118,38 @@ void XYmovement::move(sf::Sprite& sprite,float deltatime,std::vector<std::string
       (mapData[nextGridY][prevGridX] != '0' &&
        mapData[nextGridY][prevGridX] != 'B')) {
     velocity.y = -velocity.y;       
-    nextPosition.y = prevPosition.y;  
+    nextPosition.y = prevPosition.y; 
+    direction = -direction;
   }
+
+  if (bottomY <= 0 || bottomY >= mapData.size() -1 || (mapData[bottomY][rightX] != '0' && mapData[bottomY][rightX] != 'B') || (mapData[bottomY][nextGridX] != '0' && mapData[bottomY][nextGridX] != 'B') ) {
+	velocity.y = -velocity.y;       
+	nextPosition.y = prevPosition.y; 
+	direction = -direction;
+  }
+
+  if (rightX <= 0 || rightX >= mapData[0].size() -1 || (mapData[middleY][rightX] != '0' && mapData[middleY][rightX] != 'B')) {
+      velocity.x = -velocity.x;
+      nextPosition.x = prevPosition.x;
+      direction = -direction;
+  }
+
 
   // Update sprite position
   sprite.setPosition(nextPosition);
 
   // Update map data if the sprite moves to a new grid
-  if (nextGridX != prevGridX || nextGridY != prevGridY) {
-    // Clear previous tile
-    if (mapData[prevGridY][prevGridX] == 'B') {
-      mapData[prevGridY][prevGridX] = '0';
-    }
+  //if (nextGridX != prevGridX || nextGridY != prevGridY) {
+  //  // Clear previous tile
+  //  if (mapData[prevGridY][prevGridX] == 'B') {
+  //    mapData[prevGridY][prevGridX] = '0';
+  //  }
 
-    // Mark current tile
-    if (mapData[nextGridY][nextGridX] == '0') {
-      mapData[nextGridY][nextGridX] = 'B';
-    }
-  }
+  //  // Mark current tile
+  //  if (mapData[nextGridY][nextGridX] == '0') {
+  //    mapData[nextGridY][nextGridX] = 'B';
+  //  }
+  //}
 }
 
 UpDownmovement::UpDownmovement(float initialY,float speed, float movementRange)

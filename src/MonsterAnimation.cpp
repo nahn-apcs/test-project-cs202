@@ -9,7 +9,7 @@ void MonsterAnimation::addFrame(const sf::IntRect& frame)
   frames.push_back(frame);
 }
 
-void MonsterAnimation::update(float deltatime,bool loop)
+void MonsterAnimation::update(float deltatime,bool loop, bool faceRight)
 {
   if (finished)
     return;
@@ -30,13 +30,20 @@ void MonsterAnimation::update(float deltatime,bool loop)
       }
     }
   }
-
   sprite.setTextureRect(frames[currentFrame]);
 }
 
-void MonsterAnimation::applyToSprite(sf::Sprite& sprite)
+void MonsterAnimation::applyToSprite(sf::Sprite& sprite, bool faceRight)
 {
-  sprite.setTextureRect(frames[currentFrame]);
+  //sprite.setTextureRect(frames[currentFrame]);
+  // Flip sprite horizontally if not facing right
+    if (faceRight) {
+      sprite.setTextureRect(flipFrame(frames[currentFrame]));
+  }
+  else {
+      sprite.setTextureRect(frames[currentFrame]);
+  }
+
 }
 
 bool MonsterAnimation::isFinished() const

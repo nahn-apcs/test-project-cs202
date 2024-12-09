@@ -43,7 +43,7 @@ void Coin::collect() {
 void Coin::update(float deltatime) {
 	if (animation) {
 		animation->update(deltatime);
-		animation->applyToSprite(sprite);
+		animation->applyToSprite(sprite, true);
 	}
 }
 

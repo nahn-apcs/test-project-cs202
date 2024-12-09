@@ -24,16 +24,21 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
+              mapData[i][j] = '0';
+
             }
             if (mapData[i][j] == 'B') {
               Monster* monster = MonsterFactory::createMonster("Bat", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
+              mapData[i][j] = '0';
             }
             if (mapData[i][j] == 'T') {
               Monster* monster = MonsterFactory::createMonster(
                 "Plant", Monstertexture, { j * tileSize, i * tileSize });
              
                 monsters.push_back(monster);
+                mapData[i][j] = '0';
+
             }
         }
     }
