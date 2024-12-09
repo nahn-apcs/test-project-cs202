@@ -2,15 +2,16 @@
 #include <iostream>
 
 #include <Application.hpp>
+#include <ResourceID.hpp>
+#include <SFML/Graphics.hpp>
 
 int main () {
     try {
         Application app;
         app.run();
     } 
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
+    catch (std::exception& e) {
+        std::cout << "\nEXCEPTION: " << e.what() << std::endl;
     }
 
     return 0;
