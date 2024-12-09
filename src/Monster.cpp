@@ -92,10 +92,12 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     goomba->setPosition(position.x, position.y);
     goomba->setMovementStrategy(new PatrolMovement());
     auto animation = new MonsterAnimation(goomba->getSprite(), 0.5f);
-    animation->addFrame(sf::IntRect(0, 0, 32, 32));
-    animation->addFrame(sf::IntRect(32, 0, 32, 32));
-    animation->addFrame(sf::IntRect(64, 0, 32, 32));
-    animation->addFrame(sf::IntRect(96, 0, 32, 32));
+    animation->addFrame(sf::IntRect(0, 0, 48, 32));
+    animation->addFrame(sf::IntRect(48, 0, 48, 32));
+    animation->addFrame(sf::IntRect(96, 0, 48, 32));
+    animation->addFrame(sf::IntRect(144, 0, 48, 32));
+    animation->addFrame(sf::IntRect(192, 0, 48, 32));
+    animation->addFrame(sf::IntRect(240, 0, 48, 32));
     goomba->setAnimation(animation);
     
   }
@@ -105,10 +107,10 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     bat->setPosition(position.x, position.y);
     bat->setMovementStrategy(new XYmovement({50.0f,50.0f}));
     auto animation = new MonsterAnimation(bat->getSprite(), 0.5f);
-    animation->addFrame(sf::IntRect(0, 32, 32, 32));
-    animation->addFrame(sf::IntRect(32, 32, 32, 32));
-    animation->addFrame(sf::IntRect(64, 32, 32, 32));
-    animation->addFrame(sf::IntRect(96, 32, 32, 32));
+    animation->addFrame(sf::IntRect(0, 96, 64, 64));
+    animation->addFrame(sf::IntRect(64, 96, 64, 64));
+    animation->addFrame(sf::IntRect(128, 96, 64, 64));
+    animation->addFrame(sf::IntRect(192, 96, 64, 64));
     bat->setAnimation(animation);
     
 
