@@ -35,7 +35,7 @@ int main() {
     camera.setCenter(player.getBounds().left + player.getBounds().width / 2, player.getBounds().top + player.getBounds().height / 2);
 
     sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("../resources/bg.jpg")) {
+    if (!backgroundTexture.loadFromFile("../resources/bg.png")) {
         return -1; // Error loading the texture
     }
     sf::Sprite backgroundSprite(backgroundTexture);
