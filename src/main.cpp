@@ -6,6 +6,7 @@
 #include <SFML/System/Clock.hpp>
 #include "render.h"
 #include "GameInfo.h"
+#include "DrawEngine.h"
 
 const int TILE_SIZE = 32;
 
@@ -53,25 +54,25 @@ int main() {
         return -1; // Error loading font
     }
 
-    sf::Text messageText;
-    messageText.setFont(font);
-    messageText.setCharacterSize(24);
-    messageText.setFillColor(sf::Color::Blue);
-    messageText.setPosition(10.f, 10.f);
-    messageText.setString("Coins: ");
+    //sf::Text messageText;
+    //messageText.setFont(font);
+    //messageText.setCharacterSize(24);
+    //messageText.setFillColor(sf::Color::Blue);
+    //messageText.setPosition(10.f, 10.f);
+    //messageText.setString("Coins: ");
 
-    // Game clock for updating player and other mechanics (deltaTime)
+    //// Game clock for updating player and other mechanics (deltaTime)
     sf::Clock gameClock;
 
-    // Clock for tracking total time passed
+    //// Clock for tracking total time passed
     sf::Clock timeClock;
 
-    sf::Text timeText;
-    timeText.setFont(font);
-    timeText.setCharacterSize(24);
-    timeText.setFillColor(sf::Color::Blue);
-    timeText.setPosition(10, 40);
-
+    //sf::Text timeText;
+    //timeText.setFont(font);
+    //timeText.setCharacterSize(24);
+    //timeText.setFillColor(sf::Color::Blue);
+    //timeText.setPosition(10, 40);
+	DrawEngine drawEngine;
     // Game loop
     while (window.isOpen()) {
         sf::Event event;
@@ -103,10 +104,12 @@ int main() {
 
 
         // Update the time display
-        sf::Time elapsedTime = timeClock.getElapsedTime();
-        int seconds = static_cast<int>(elapsedTime.asSeconds()); // Convert time to seconds
-        timeText.setString("Time: " + std::to_string(seconds) + "s"); // Update the text with elapsed time
+        //sf::Time elapsedTime = timeClock.getElapsedTime();
+        //int seconds = static_cast<int>(elapsedTime.asSeconds()); // Convert time to seconds
+        //timeText.setString("Time: " + std::to_string(seconds) + "s"); // Update the text with elapsed time
 
+		// Display the game info
+		//drawEngine.displayGameInfo(window, timeClock);
         // Clear the window
         window.clear();
         for (int i = 0; i < xRepeatCount; ++i) {
@@ -122,11 +125,12 @@ int main() {
         player.drawBounds(window);
         //gameMap.updateMonsters(deltaTime, player.getBounds());
 
-        window.setView(window.getDefaultView());
+        //window.setView(window.getDefaultView());
 
         // Draw the message and time
-        window.draw(messageText);
-        window.draw(timeText);
+        /*window.draw(messageText);
+        window.draw(timeText);*/
+		drawEngine.displayGameInfo(window, timeClock);
 
         // Display everything on the window
         window.display();
