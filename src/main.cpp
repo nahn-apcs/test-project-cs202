@@ -87,6 +87,7 @@ int main() {
         player.interact(deltaTime, gameMap);
         player.update(deltaTime, gameMap);
         gameMap.updateCoins(player.getBounds(), deltaTime);
+        gameMap.updateScore();
 
         // Update camera position based on player position
         int mapWidth = gameMap.getMapData()[0].size() * gameMap.getTileSize();

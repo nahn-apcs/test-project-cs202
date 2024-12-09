@@ -30,7 +30,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock,
 
 	sf::Text scoreText;
 	scoreText.setFont(font);
-	scoreText.setString("Score: 0");
+	scoreText.setString("Score: " + std::to_string(map.score));
 	scoreText.setCharacterSize(24);
 	scoreText.setFillColor(sf::Color::Black);
 	scoreText.setPosition(610, 10);

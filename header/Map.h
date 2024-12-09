@@ -21,6 +21,8 @@ public:
     bool colliable(int x, int y) const;
     bool colliableChar(const char& c) const;
     int coinCount;
+    int score;
+	void updateScore();
 
   private:
     const std::string notCollidable = "0C";
@@ -29,6 +31,8 @@ public:
     int tileSize;
     std::vector<Coin*> coins;
     std::vector<Monster*> monsters;
+	int coinsNumber;
+	int monsterNumber;
 };
 
 #endif // MAP_H

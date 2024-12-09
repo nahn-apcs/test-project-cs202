@@ -6,6 +6,7 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
     : tileSize(tileSize)
 {
     coinCount = 0;
+    score = 0;
     std::ifstream file(filePath);
     std::string line;
     while (std::getline(file, line)) {
@@ -21,17 +22,21 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
                 // Create a coin at the corresponding position
                 Coin* temp = new Coin(texture, j * tileSize, i * tileSize);
                 coins.push_back(temp);
+				coinsNumber++;
             }
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
               mapData[i][j] = '0';
+			  monsterNumber++;
 
             }
             if (mapData[i][j] == 'B') {
               Monster* monster = MonsterFactory::createMonster("Bat", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
               mapData[i][j] = '0';
+              monsterNumber++;
+
             }
             if (mapData[i][j] == 'T') {
               Monster* monster = MonsterFactory::createMonster(
@@ -39,6 +44,7 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
              
                 monsters.push_back(monster);
                 mapData[i][j] = '0';
+                monsterNumber++;
 
             }
         }
@@ -115,8 +121,6 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
         coin->update(deltatime);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
             coin->collect(); // Collect the coin
-            //Display coins
-			coinCount++;
         }
     }
 }
@@ -152,19 +156,14 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
        
         mapData[tileY][tileX] = '0';
         monster->kill(true, "M");  // Kill the monster
-        if (monster->getIsKilled() && monster->isAnimationFinished()) {
-          std::cout << "Monster is killed" << std::endl;
-          
-          it = monsters.erase(it);  // Remove the monster
-          continue;  // Skip incrementing the iterator since we erased
-        }
+
       }
       else {
-        if (!monster->getIsKilled()) {
-          // Player is killed
-          std::cout << "Player is killed" << std::endl;
-          // Implement player death here
-        }
+          if (!monster->getIsKilled()) {
+              // Player is killed
+              std::cout << "Player is killed" << std::endl;
+              // Implement player death here
+          }
       
       }
     }
@@ -202,4 +201,21 @@ bool Map::colliableChar(const char& c) const
         return false;
     }
     return true;
+}
+
+void Map::updateScore()
+{   
+	int coi = 0;
+	for (auto& coin : coins) {
+		if (coin->isCollected()) {
+			coi++;
+		}
+	}
+	int mons = 0;
+	for (auto& monster : monsters) {
+		if (monster->getIsKilled()) {
+			mons++;
+		}
+	}
+	score = coi * 100 + mons * 200;
 }
