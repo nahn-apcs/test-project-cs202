@@ -133,28 +133,30 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     return nullptr;
 }
 
-void Monster::kill(bool isKilled, const std::string& type)
+void Monster::kill(bool isKilled, const Monster* monster)
 {
   if (isKilled) {
     if (animation) {
       delete animation;
     }
+    animation = new MonsterAnimation(sprite, 0.15f);
 
-    animation = new MonsterAnimation(sprite, 0.1f);
+    if (dynamic_cast<const Goomba*>(monster)) {
+      animation->addFrame(sf::IntRect(384, 0, 48, 32));
+      animation->addFrame(sf::IntRect(432, 0, 48, 32));
+      animation->addFrame(sf::IntRect(480, 0, 48, 32));
+      animation->addFrame(sf::IntRect(528, 0, 48, 32));
+     
 
-    if (type == "M") {
-      animation->addFrame(sf::IntRect(0, 32, 48, 32));  // Example death frames
-      animation->addFrame(sf::IntRect(48, 32, 32, 32));
     }
-    else if (type == "B") {
-      animation->addFrame(sf::IntRect(0, 32, 32, 32));
-      animation->addFrame(sf::IntRect(32, 32, 32, 32));
+    else if (dynamic_cast<const Bee*>(monster)) {
+      animation->addFrame(sf::IntRect(384, 96, 64, 64));
+      animation->addFrame(sf::IntRect(448, 96, 64, 64));
+      animation->addFrame(sf::IntRect(512, 96, 64, 64));
+      animation->addFrame(sf::IntRect(576, 96, 64, 64));
+     
     }
-    else if (type == "T") {
-      animation->addFrame(sf::IntRect(0, 64, 32, 32));
-      animation->addFrame(sf::IntRect(32, 64, 32, 32));
-    }
-
+   
     this->isKilled = true;
   }
 }

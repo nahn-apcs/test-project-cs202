@@ -151,7 +151,7 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
         auto tileY = static_cast<int>(monsterBounds.top / tileSize);
        
         mapData[tileY][tileX] = '0';
-        monster->kill(true, "M");  // Kill the monster
+        monster->kill(true, monster);  // Kill the monster
         if (monster->getIsKilled() && monster->isAnimationFinished()) {
           std::cout << "Monster is killed" << std::endl;
           
