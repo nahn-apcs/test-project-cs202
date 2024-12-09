@@ -1,13 +1,15 @@
 #include "DrawEngine.h"
 
-void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock) {
+void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map& map) {
 	// Display the game info
-	sf::Text text;
-	text.setFont(font);
-	text.setString("Coins: 0");
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::Black);
-	text.setPosition(10, 10);
+	sf::Text coinText;
+	coinText.setFont(font);
+	coinText.setString("Coins: " + std::to_string(map.coinCount));
+
+	coinText.setCharacterSize(24);
+	coinText.setFillColor(sf::Color::Black);
+	coinText.setPosition(10, 10);
+	
 
 	// Display the time
 	sf::Time elapsedTime = timeClock.getElapsedTime();
@@ -34,7 +36,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock)
 	scoreText.setPosition(610, 10);
 	// Draw the text to the window
 	window.setView(window.getDefaultView());
-	window.draw(text);
+	window.draw(coinText);
 	window.draw(timeText);
 	window.draw(levelText);
 	window.draw(scoreText);

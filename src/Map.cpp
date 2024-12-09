@@ -5,6 +5,7 @@
 Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Texture& Monstertexture)
     : tileSize(tileSize)
 {
+    coinCount = 0;
     std::ifstream file(filePath);
     std::string line;
     while (std::getline(file, line)) {
@@ -96,7 +97,15 @@ void Map::draw(sf::RenderWindow& window) {
     for (auto& coin : coins) {
         coin->draw(window);
     }
-    
+
+	//sf::Font font;
+	//font.loadFromFile("../resources/font/Pixel_NES.otf");
+	//sf::Text text;
+	//text.setFont(font);
+	//text.setString("Coins: " + std::to_string(coinCount));
+	//text.setCharacterSize(24);
+	//text.setFillColor(sf::Color::Black);
+	//text.setPosition(10, 10);
 }
 
 void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
@@ -106,7 +115,8 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
         coin->update(deltatime);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
             coin->collect(); // Collect the coin
-            // Update the score here if necessary
+            //Display coins
+			coinCount++;
         }
     }
 }

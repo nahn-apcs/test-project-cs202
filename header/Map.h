@@ -20,6 +20,8 @@ public:
 
     bool colliable(int x, int y) const;
     bool colliableChar(const char& c) const;
+    int coinCount;
+
   private:
     const std::string notCollidable = "0C";
     std::vector<std::string> mapData;

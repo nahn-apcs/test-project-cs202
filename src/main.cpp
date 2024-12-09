@@ -129,7 +129,7 @@ int main() {
         // Draw the message and time
         /*window.draw(messageText);
         window.draw(timeText);*/
-		drawEngine.displayGameInfo(window, timeClock);
+		drawEngine.displayGameInfo(window, timeClock, gameMap);
 
         // Display everything on the window
         window.display();
