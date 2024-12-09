@@ -17,12 +17,6 @@ namespace constants {
 	constexpr int frames_per_second = 60;
 
 	constexpr int tile_size = 32;
-
-	
-
-
-
-
 }
 
 #endif  // CONSTANTS_HPP_

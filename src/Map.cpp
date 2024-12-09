@@ -21,16 +21,18 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
                 coins.push_back(Coin(coinTexture, j * tileSize, i * tileSize));
             }
             if (mapData[i][j] == 'M') {
-              Monster* monster =
-                MonsterFactory::createMonster("Goomba", Monstertexture);
-              monster->setPosition(j * tileSize, i * tileSize);
+              Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
+              monsters.push_back(monster);
+            }
+            if (mapData[i][j] == 'B') {
+              Monster* monster = MonsterFactory::createMonster("Bat", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
             }
             if (mapData[i][j] == 'T') {
-              Monster* monster =
-                MonsterFactory::createMonster("Turtle", Monstertexture);
-              monster->setPosition(j * tileSize, i * tileSize);
-              monsters.push_back(monster);
+              Monster* monster = MonsterFactory::createMonster(
+                "Plant", Monstertexture, { j * tileSize, i * tileSize });
+             
+                monsters.push_back(monster);
             }
         }
     }
@@ -38,6 +40,9 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
 }
 
 void Map::draw(sf::RenderWindow& window) {
+  for (auto& monster : monsters) {
+    monster->draw(window);
+  }
     for (int i = 0; i < mapData.size(); ++i) {
         for (int j = 0; j < mapData[i].size(); ++j) {
             char tileType = mapData[i][j];
@@ -85,9 +90,7 @@ void Map::draw(sf::RenderWindow& window) {
     for (auto& coin : coins) {
         coin.draw(window);
     }
-    for (auto& monster : monsters) {
-      monster->draw(window);
-    }
+    
 }
 
 void Map::updateCoins(const sf::FloatRect& playerBounds) {
@@ -104,9 +107,58 @@ std::vector<std::string> Map::getMapData() const {
 	return mapData;
 }
 
-void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds)
+void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera)
 {
-  for (auto& monster : monsters) {
-    monster->update(deltatime);
+  for (auto it = monsters.begin(); it != monsters.end();) {
+    auto& monster = *it;  // Use reference for clarity and efficiency
+    if (!isVissible(monster->getSprite(), camera)) {
+      ++it;
+      continue;
+    }
+    monster->update(deltatime, mapData, tileSize);
+
+    // Get player and monster positions
+    sf::FloatRect monsterBounds = monster->getSprite().getGlobalBounds();
+
+    // Check intersection
+    if (monsterBounds.intersects(playerBounds)) {
+      // Check if the player is above the monster
+      float playerBottom =
+        playerBounds.top + playerBounds.height;  // Bottom of the player
+      float monsterTop = monsterBounds.top;      // Top of the monster
+
+      if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
+        // Monster is killed
+        auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+        auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+       
+        mapData[tileY][tileX] = '0';
+        monster->kill(true, "M");  // Kill the monster
+        if (monster->getIsKilled() && monster->isAnimationFinished()) {
+          std::cout << "Monster is killed" << std::endl;
+          
+          it = monsters.erase(it);  // Remove the monster
+          continue;  // Skip incrementing the iterator since we erased
+        }
+      }
+      else {
+        if (!monster->getIsKilled()) {
+          // Player is killed
+          std::cout << "Player is killed" << std::endl;
+          // Implement player death here
+        }
+      
+      }
+    }
+
+    ++it;  // Increment the iterator if no monster was removed
   }
+}
+
+bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)
+{
+  sf::FloatRect monsterBounds = sprite.getGlobalBounds();
+  sf::FloatRect viewBounds(camera.getCenter() - camera.getSize() / 2.f,
+                           camera.getSize());
+  return monsterBounds.intersects(viewBounds);
 }

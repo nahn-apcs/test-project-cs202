@@ -5,17 +5,18 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
 #include "render.h"
+#include "GameInfo.h"
 
 const int TILE_SIZE = 32;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(constants::scene_width,constants::scene_height), "Mario Game");
+    sf::RenderWindow window(sf::VideoMode(constants::scene_width, constants::scene_height), "Mario Game");
 
     // Load textures
     sf::Texture tileset, playerTexture, monsterset;
-    if (!tileset.loadFromFile("../resources/blocks.png") 
-        || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png") 
-        || !monsterset.loadFromFile("../resources/enemies.png")) { 
+    if (!tileset.loadFromFile("../resources/blocks.png")
+        || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
+        || !monsterset.loadFromFile("../resources/monster.png")) {
         return -1;
     }
     std::vector<sf::Texture> runTextures(4);
@@ -25,9 +26,10 @@ int main() {
         !runTextures[3].loadFromFile("../resources/run wk_sprite_4.png")) {
         return -1;  // Error loading run textures
     }
+
     // Create map and character
     Map gameMap("../resources/level.txt", TILE_SIZE, tileset, monsterset);
-    Character player(playerTexture,runTextures, 100, 100);
+    Character player(playerTexture, runTextures, 100, 100);
 
     sf::View camera(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
     camera.setCenter(player.getBounds().left + player.getBounds().width / 2, player.getBounds().top + player.getBounds().height / 2);
@@ -43,10 +45,32 @@ int main() {
     int screenHeight = window.getSize().y;
 
     // Calculate the number of repetitions
-    int xRepeatCount = gameMap.getMapData()[0].size()*32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+    int xRepeatCount = gameMap.getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
     int yRepeatCount = gameMap.getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
-    sf::Clock clock;
+    sf::Font font;
+    if (!font.loadFromFile("../resources/font/Pixel_NES.otf")) { // Replace with the correct font path
+        return -1; // Error loading font
+    }
+
+    sf::Text messageText;
+    messageText.setFont(font);
+    messageText.setCharacterSize(24);
+    messageText.setFillColor(sf::Color::Blue);
+    messageText.setPosition(10.f, 10.f);
+    messageText.setString("Coins: ");
+
+    // Game clock for updating player and other mechanics (deltaTime)
+    sf::Clock gameClock;
+
+    // Clock for tracking total time passed
+    sf::Clock timeClock;
+
+    sf::Text timeText;
+    timeText.setFont(font);
+    timeText.setCharacterSize(24);
+    timeText.setFillColor(sf::Color::Blue);
+    timeText.setPosition(10, 40);
 
     // Game loop
     while (window.isOpen()) {
@@ -56,16 +80,15 @@ int main() {
                 window.close();
         }
 
-        // Get elapsed time
-        float deltaTime = clock.restart().asSeconds();
+        // Get elapsed time since last frame (deltaTime)
+        float deltaTime = gameClock.restart().asSeconds();
 
+        // Update player and game state
         player.interact(deltaTime, gameMap);
-
-        // Update player
         player.update(deltaTime, gameMap);
-
         gameMap.updateCoins(player.getBounds());
 
+        // Update camera position based on player position
         int mapWidth = gameMap.getMapData()[0].size() * gameMap.getTileSize();
         int mapHeight = gameMap.getMapData().size() * gameMap.getTileSize();
 
@@ -74,9 +97,15 @@ int main() {
         float cameraY = std::max(constants::scene_height / 2.f, std::min(player.getBounds().top + player.getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
 
         camera.setCenter(cameraX, cameraY);
-
-        // Set the view of the window to the camera
         window.setView(camera);
+      
+        gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
+
+
+        // Update the time display
+        sf::Time elapsedTime = timeClock.getElapsedTime();
+        int seconds = static_cast<int>(elapsedTime.asSeconds()); // Convert time to seconds
+        timeText.setString("Time: " + std::to_string(seconds) + "s"); // Update the text with elapsed time
 
         // Clear the window
         window.clear();
@@ -91,15 +120,22 @@ int main() {
         gameMap.draw(window);
         player.draw(window);
         player.drawBounds(window);
-        gameMap.updateMonsters(deltaTime, player.getBounds());
+        //gameMap.updateMonsters(deltaTime, player.getBounds());
+
+        window.setView(window.getDefaultView());
+
+        // Draw the message and time
+        window.draw(messageText);
+        window.draw(timeText);
 
         // Display everything on the window
         window.display();
     }
 
-
     return 0;
 }
+
+
 
 
 
