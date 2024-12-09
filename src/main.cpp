@@ -1,11 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include "Map.h"
 #include "Character.h"
-#include "Physics.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
 #include "render.h"
-#include "GameInfo.h"
 #include "DrawEngine.h"
 
 const int TILE_SIZE = 32;
@@ -17,7 +15,8 @@ int main() {
     sf::Texture tileset, playerTexture, monsterset;
     if (!tileset.loadFromFile("../resources/blocks.png")
         || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
-        || !monsterset.loadFromFile("../resources/monster.png")) {
+        || !monsterset.loadFromFile("../resources/monster.png")
+        ) {
         return -1;
     }
     std::vector<sf::Texture> runTextures(4);
@@ -87,7 +86,7 @@ int main() {
         // Update player and game state
         player.interact(deltaTime, gameMap);
         player.update(deltaTime, gameMap);
-        gameMap.updateCoins(player.getBounds());
+        gameMap.updateCoins(player.getBounds(), deltaTime);
 
         // Update camera position based on player position
         int mapWidth = gameMap.getMapData()[0].size() * gameMap.getTileSize();

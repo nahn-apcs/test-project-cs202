@@ -14,7 +14,7 @@ public:
     void draw(sf::RenderWindow& window);
     std::vector<std::string> getMapData() const;
     int getTileSize() const { return tileSize; }
-    void updateCoins(const sf::FloatRect& playerBounds);
+    void updateCoins(const sf::FloatRect& playerBounds, float t);
     void updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera);
     bool isVissible(const sf::Sprite& sprite, const sf::View &camera);
 
@@ -25,7 +25,7 @@ public:
     std::vector<std::string> mapData;
     sf::Sprite tile;
     int tileSize;
-    std::vector<Coin> coins;
+    std::vector<Coin*> coins;
     std::vector<Monster*> monsters;
 };
 

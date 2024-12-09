@@ -30,16 +30,16 @@ void Character::interact(float deltatime, const Map& map) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
         setVelocityX(moveSpeed);
     }
-    
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         jump();
     }
 
-    
+
 }
 
 void Character::increaseSpeed() {
-	moveSpeed = 200.0f;
+    moveSpeed = 200.0f;
 }
 
 void Character::drawBounds(sf::RenderWindow& window) {
@@ -65,32 +65,32 @@ void Character::update(float deltaTime, const Map& map) {
     onGround = false; // Assume the character is not on the ground
 
     if (velocityX > 0) {
-		faceRight = true;
-	}
-	else if (velocityX < 0) {
-		faceRight = false;
-	}
+        faceRight = true;
+    }
+    else if (velocityX < 0) {
+        faceRight = false;
+    }
 
     // Check if we are about to hit a wall before moving
     if (velocityX == 0) {
         sprite.setTexture(idle);
     }
 
-    if (!checkWallCollision(velocityX*deltaTime, 0.f, map)) {
-        sprite.move(velocityX*deltaTime, 0); 
+    if (!checkWallCollision(velocityX * deltaTime, 0.f, map)) {
+        sprite.move(velocityX * deltaTime, 0);
         if (velocityX != 0) {
-            runAnimation->update(deltaTime); 
-            runAnimation->applyToSprite(sprite, faceRight);  
+            runAnimation->update(deltaTime);
+            runAnimation->applyToSprite(sprite, faceRight);
         }
     }
 
 
     // Move vertically
-    if (!onGround ) {
-        if (!checkWallCollision(0, velocityY * deltaTime, map)) sprite.move(0, velocityY*deltaTime);
+    if (!onGround) {
+        if (!checkWallCollision(0, velocityY * deltaTime, map)) sprite.move(0, velocityY * deltaTime);
         else {
-			velocityY = 0;
-		}
+            velocityY = 0;
+        }
     }
     handleCollisions(map);
 
@@ -100,8 +100,8 @@ void Character::update(float deltaTime, const Map& map) {
 
 void Character::move(float dx, float dy, const Map& map) {
     if (!checkWallCollision(dx, dy, map)) {
-		sprite.move(dx, dy);
-	}
+        sprite.move(dx, dy);
+    }
 }
 
 
@@ -127,31 +127,31 @@ sf::FloatRect Character::getBounds() const {
 
 void Character::applyGravity(float deltaTime) {
     if (!onGround) {
-        velocityY += gravity*deltaTime;
+        velocityY += gravity * deltaTime;
     }
 }
 
 void Character::applyFriction(float deltaTime) {
-	/*if (onGround) {
-		if (velocityX > 0) {
-			velocityX -= 5.0f*deltaTime;
-			if (velocityX < 0) velocityX = 0;
-		}
-		else if (velocityX < 0) {
-			velocityX += 5.0f*deltaTime;
-			if (velocityX > 0) velocityX = 0;
-		}
-	}*/
-    //std::cout << "velocityX: " << velocityX << std::endl;
+    /*if (onGround) {
         if (velocityX > 0) {
-            velocityX -= 100.0f * deltaTime;
+            velocityX -= 5.0f*deltaTime;
             if (velocityX < 0) velocityX = 0;
         }
         else if (velocityX < 0) {
-            velocityX += 100.0f * deltaTime;
+            velocityX += 5.0f*deltaTime;
             if (velocityX > 0) velocityX = 0;
         }
-    
+    }*/
+    //std::cout << "velocityX: " << velocityX << std::endl;
+    if (velocityX > 0) {
+        velocityX -= 100.0f * deltaTime;
+        if (velocityX < 0) velocityX = 0;
+    }
+    else if (velocityX < 0) {
+        velocityX += 100.0f * deltaTime;
+        if (velocityX > 0) velocityX = 0;
+    }
+
 }
 
 void Character::handleCollisions(const Map& map) {
@@ -170,24 +170,26 @@ void Character::handleCollisions(const Map& map) {
     // Check for collision with ground (the tile at the bottom of the character)
     if (tileY < map.getMapData().size() && tileX < map.getMapData()[tileY].size()) {
         char tile = map.getMapData()[tileY][middleTileX];
-        if (tile != '0') { // Colliding with the ground
+        char rigthTile = map.getMapData()[tileY][rightTileX];
+        char leftTile = map.getMapData()[tileY][tileX];
+        if (!map.colliableChar(tile) || !map.colliableChar(leftTile) || !map.colliableChar(rigthTile)) { // Colliding with the ground
             onGround = true;
             velocityY = 0;
             //sprite.setPosition(bounds.left, tileY * map.getTileSize() - bounds.height); // Adjust position to be on top of the tile
         }
         //char rightTile = map.getMapData()[tileY][rightTileX];
         //if (rightTile != '0') { // Colliding with the ground
-		//	onGround = true;
-		//	velocityY = 0;
-		//	//sprite.setPosition(bounds.left, tileY * map.getTileSize() - bounds.height); // Adjust position to be on top of the tile
-		//}
+        //	onGround = true;
+        //	velocityY = 0;
+        //	//sprite.setPosition(bounds.left, tileY * map.getTileSize() - bounds.height); // Adjust position to be on top of the tile
+        //}
     }
-    
+
     // Check for ceiling collision (stopping upward movement during jumps)
     int ceilingTileY = bounds.top / map.getTileSize();
     if (ceilingTileY >= 0 && tileX < map.getMapData()[ceilingTileY].size()) {
         char ceilingTile = map.getMapData()[ceilingTileY][tileX];
-        if (ceilingTile != '0' && velocityY < 0) { // Stop upward movement
+        if (!map.colliableChar(ceilingTile) && velocityY < 0) { // Stop upward movement
             velocityY = 0;
         }
     }
@@ -198,26 +200,26 @@ void Character::handleCollisions(const Map& map) {
     }
 
     if (rightTileX >= map.getMapData()[0].size() || topTileY < 0 || topTileY >= map.getMapData().size()) {
-		velocityX = 0; // Stop horizontal movement
-	}
+        velocityX = 0; // Stop horizontal movement
+    }
 
 
     // Check if moving left or right would cause the character to hit a wall
     if (tileX >= 0 && tileX < map.getMapData()[0].size()) {
         char tile = map.getMapData()[tileY][tileX];
-        if (tile != '0') {
+        if (!map.colliableChar(tile)) {
             //std::cout << "Stop tile: " << tileX << " " << tileY <<" " << tile << std::endl;
             velocityX = 0; // Stop horizontal movement
         }
     }
 
     if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size()) {
-		char tile = map.getMapData()[tileY][rightTileX];
-		if (tile != '0') {
-			//std::cout << "Stop tile: " << rightTileX << " " << tileY << " " << tile << std::endl;
-			velocityX = 0; // Stop horizontal movement
-		}
-	}
+        char tile = map.getMapData()[tileY][rightTileX];
+        if (!map.colliableChar(tile)) {
+            //std::cout << "Stop tile: " << rightTileX << " " << tileY << " " << tile << std::endl;
+            velocityX = 0; // Stop horizontal movement
+        }
+    }
 
 
 }
@@ -240,8 +242,8 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     //std::cout << "tileX: " << tileX << " tileY: " << tileY << std::endl;
 
     if (bottomTileY >= map.getMapData().size()) {
-		return -1;
-	}
+        return -1;
+    }
 
     // Check if the new position is outside the map
     if (rightTileX >= map.getMapData()[0].size() || bottomTileY >= map.getMapData().size()) {
@@ -263,21 +265,21 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
 
     // Check if the new position collides with the wall (tile == '1')
     if (tileX >= 0 && tileX < map.getMapData()[0].size() && tileY >= 0 && tileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][tileX] != '0') {
+        if (map.getMapData()[tileY][tileX] != '0' && map.getMapData()[tileY][tileX] != 'C') {
             //std::cout << "Check 1" << std::endl;
             return 1; // Collision detected
         }
     }
 
     if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size() && tileY >= 0 && tileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][rightTileX] != '0') {
+        if (map.getMapData()[tileY][rightTileX] != '0' && map.getMapData()[tileY][rightTileX] != 'C') {
             //std::cout << "Check 2" << std::endl;
             return 2; // Collision detected
         }
     }
 
     if (tileX >= 0 && tileX < map.getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][tileX] != '0') {
+        if (map.getMapData()[bottomTileY][tileX] != '0' && map.getMapData()[bottomTileY][tileX] != 'C') {
             //std::cout << "Check 3" << std::endl;
 
             return 3; // Collision detected
@@ -285,7 +287,7 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][rightTileX] != '0') {
+        if (map.getMapData()[bottomTileY][rightTileX] != '0' && map.getMapData()[bottomTileY][rightTileX] != 'C') {
             //std::cout << "Check 4" << std::endl;
 
             return 4; // Collision detected
@@ -293,7 +295,7 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[tileY][middleTileX] != '0') {
+        if (map.getMapData()[tileY][middleTileX] != '0' && map.getMapData()[tileY][middleTileX] != 'C') {
             //std::cout << "Check 5" << std::endl;
 
             return 5; // Collision detected
@@ -301,7 +303,7 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[middleTileY][rightTileX] != '0') {
+        if (map.getMapData()[middleTileY][rightTileX] != '0' && map.getMapData()[middleTileY][rightTileX] != 'C') {
             //std::cout << "Check 6" << std::endl;
 
             return 6; // Collision detected
@@ -309,7 +311,7 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[bottomTileY][middleTileX] != '0') {
+        if (map.getMapData()[bottomTileY][middleTileX] != '0' && map.getMapData()[bottomTileY][middleTileX] != 'C') {
             //std::cout << "Check 7" << std::endl;
 
             return 7; // Collision detected
@@ -317,7 +319,7 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     if (middleTileX >= 0 && middleTileX < map.getMapData()[0].size() && middleTileY >= 0 && middleTileY < map.getMapData().size()) {
-        if (map.getMapData()[middleTileY][tileX] != '0') {
+        if (map.getMapData()[middleTileY][tileX] != '0' && map.getMapData()[middleTileY][tileX] != 'C') {
             //std::cout << "Check 8" << std::endl;
 
             return 8; // Collision detected
@@ -325,4 +327,8 @@ int Character::checkWallCollision(float dx, float dy, const Map& map) {
     }
 
     return false; // No collision
+}
+
+Character::~Character() {
+	delete runAnimation;
 }

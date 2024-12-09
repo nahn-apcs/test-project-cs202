@@ -1,13 +1,8 @@
 #include "MonsterAnimation.h"
 
 
-MonsterAnimation::MonsterAnimation(sf::Sprite& sprite, float frameTime)
-  : sprite(sprite)
-  , frameTime(frameTime)
-  , elapsedTime(0)
-  , currentFrame(0)
-{
-}
+MonsterAnimation::MonsterAnimation(sf::Sprite& sprite, float frameTime) : ObjectAnimation(sprite, frameTime)
+{};
 
 void MonsterAnimation::addFrame(const sf::IntRect& frame)
 {

@@ -13,6 +13,5 @@ public:
   void update(float deltatime, bool loop=true);
   void applyToSprite(sf::Sprite& sprite);
   bool isFinished() const;
-  
 };
 #endif  // !MONSTERAL_H

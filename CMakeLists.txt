@@ -94,7 +94,7 @@ file(GLOB SRCS CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
-add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp" "header/Coin.h" "src/Coin.cpp" "header/Animation.h" "header/Monster.h" "src/Monster.cpp" "header/MonsterAnimation.h" "src/MonsterAnimation.cpp"  "header/DrawEngine.h" "src/DrawEngine.cpp")
+add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp" "header/Coin.h" "src/Coin.cpp" "header/Animation.h" "header/Monster.h" "src/Monster.cpp" "header/MonsterAnimation.h" "src/MonsterAnimation.cpp"  "header/DrawEngine.h" "src/DrawEngine.cpp" "header/ObjectAnimation.h" "header/CoinAnimation.h" "src/CoinAnimation.cpp")
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)

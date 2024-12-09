@@ -12,13 +12,14 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
     }
     tile.setTexture(texture);
     tile.setTextureRect(sf::IntRect(0, 0, constants::scene_width, constants::scene_height)); // Select first tile
-    sf::Sprite coinTexture = tile;
-    coinTexture.setTextureRect(sf::IntRect(9*32, 32, tileSize, tileSize)); 
+    //sf::Sprite coinTexture = tile;
+    //coinTexture.setTextureRect(sf::IntRect(9*32, 32, tileSize, tileSize)); 
     for (int i = 0; i < mapData.size(); ++i) {
         for (int j = 0; j < mapData[i].size(); ++j) {
             if (mapData[i][j] == 'C') {
                 // Create a coin at the corresponding position
-                coins.push_back(Coin(coinTexture, j * tileSize, i * tileSize));
+                Coin* temp = new Coin(texture, j * tileSize, i * tileSize);
+                coins.push_back(temp);
             }
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
@@ -88,16 +89,18 @@ void Map::draw(sf::RenderWindow& window) {
     }
 
     for (auto& coin : coins) {
-        coin.draw(window);
+        coin->draw(window);
     }
     
 }
 
-void Map::updateCoins(const sf::FloatRect& playerBounds) {
+void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     // Check for coin collection
+    
     for (auto& coin : coins) {
-        if (coin.getBounds().intersects(playerBounds) && !coin.isCollected()) {
-            coin.collect(); // Collect the coin
+        coin->update(deltatime);
+        if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
+            coin->collect(); // Collect the coin
             // Update the score here if necessary
         }
     }
@@ -161,4 +164,27 @@ bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)
   sf::FloatRect viewBounds(camera.getCenter() - camera.getSize() / 2.f,
                            camera.getSize());
   return monsterBounds.intersects(viewBounds);
+}
+
+
+bool Map::colliable(int x, int y) const
+{
+    if (x < 0 || y < 0 || x >= mapData[0].size() || y >= mapData.size())
+    {
+        return false;
+    }
+    if (mapData[y][x] == '1' || mapData[y][x] == '2' || mapData[y][x] == '5' || mapData[y][x] == '7' || mapData[y][x] == '8' || mapData[y][x] == 'P' || mapData[y][x] == 'p' || mapData[y][x] == 'H' || mapData[y][x] == 'h')
+    {
+        return false;
+    }
+    return true;
+}
+
+bool Map::colliableChar(const char& c) const
+{
+    if (c == '1' || c == '2' || c == '5' || c == '7' || c == '8' || c == 'P' || c == 'p' || c == 'H' || c == 'h')
+    {
+        return false;
+    }
+    return true;
 }

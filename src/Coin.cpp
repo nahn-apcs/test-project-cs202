@@ -1,9 +1,25 @@
 #include "Coin.h"
-
-Coin::Coin(sf::Sprite& texture, int x, int y)
+#include <iostream>
+Coin::Coin(sf::Texture& texture, int x, int y)
     : collected(false) {
-    sprite = texture;
+    sprite.setTexture(texture);
+    sprite.setTextureRect(sf::IntRect(9 * 32, 32, 32, 32));
+    sf::Sprite coinSprite;
+    coinSprite.setTexture(texture);
+    std::cout << "Coin created 1" << std::endl;
+    animation = new CoinAnimation(coinSprite, 0.3f);
+    
+    animation->addFrame(sf::IntRect(9 * 32, 32, 32, 32));
+    animation->addFrame(sf::IntRect(10 * 32, 32, 32, 32));
+    animation->addFrame(sf::IntRect(11 * 32, 32, 32, 32));
+    std::cout << "Coin created 2" << std::endl;
     sprite.setPosition(x, y);
+}
+
+Coin::~Coin() {
+	if (animation) {
+		delete animation;
+	}
 }
 
 void Coin::draw(sf::RenderWindow& window) {
@@ -23,3 +39,11 @@ bool Coin::isCollected() const {
 void Coin::collect() {
     collected = true; // Mark the coin as collected
 }
+
+void Coin::update(float deltatime) {
+	if (animation) {
+		animation->update(deltatime);
+		animation->applyToSprite(sprite);
+	}
+}
+

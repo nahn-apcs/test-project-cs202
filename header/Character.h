@@ -8,7 +8,7 @@
 class Character {
 public:
     Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, int x, int y);
-
+    ~Character();
     void update(float deltaTime, const Map& map);
     void move(float dx, float dy, const Map& map);
     void jump();
