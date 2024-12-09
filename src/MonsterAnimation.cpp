@@ -1,5 +1,5 @@
 #include "MonsterAnimation.h"
-
+#include "ObjectAnimation.h"
 
 MonsterAnimation::MonsterAnimation(sf::Sprite& sprite, float frameTime) : ObjectAnimation(sprite, frameTime)
 {};
