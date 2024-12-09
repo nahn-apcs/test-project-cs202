@@ -69,11 +69,11 @@ Goomba::~Goomba()
 {
 }
 
-Bat::Bat(sf::Texture& texture) : Monster(texture)
+Bee::Bee(sf::Texture& texture) : Monster(texture)
 {
 }
 
-Bat::~Bat()
+Bee::~Bee()
 {
 }
 
@@ -102,28 +102,31 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     goomba->setAnimation(animation);
     
   }
-  else if (type == "Bat")
+  else if (type == "Bee")
   {
-    Monster *bat = new Bat(texture);
-    bat->setPosition(position.x, position.y);
-    bat->setMovementStrategy(new XYmovement({50.0f,50.0f}));
-    auto animation = new MonsterAnimation(bat->getSprite(), 0.5f);
+    Monster *bee = new Bee(texture);
+    bee->setPosition(position.x, position.y);
+    bee->setMovementStrategy(new XYmovement({ 50.0f, 50.0f }, 200.0f, position.x));
+    auto animation = new MonsterAnimation(bee->getSprite(), 0.5f);
     animation->addFrame(sf::IntRect(0, 96, 64, 64));
     animation->addFrame(sf::IntRect(64, 96, 64, 64));
     animation->addFrame(sf::IntRect(128, 96, 64, 64));
     animation->addFrame(sf::IntRect(192, 96, 64, 64));
-    bat->setAnimation(animation);
+    bee->setAnimation(animation);
     
 
   }
-  else if (type == "Plant") {
-    Monster* plant = new Plant(texture);
-    plant->setPosition(position.x, position.y);
-    plant->setMovementStrategy(new UpDownmovement(position.y, 50.0f, 100.0f));
-    auto animation = new MonsterAnimation(plant->getSprite(), 0.5f);
-    animation->addFrame(sf::IntRect(0, 64, 31,31));
-    animation->addFrame(sf::IntRect(32, 64, 31, 31));
-    plant->setAnimation(animation);
+  else if (type == "bee") {
+    Monster* bee = new Bee(texture);
+    bee->setPosition(position.x, position.y);
+    bee->setMovementStrategy(
+      new UpDownmovement({ 50.0f, 50.0f }, 200.0f, position.x));
+    auto animation = new MonsterAnimation(bee->getSprite(), 0.5f);
+    animation->addFrame(sf::IntRect(0, 96, 64, 64));
+    animation->addFrame(sf::IntRect(64, 96, 64, 64));
+    animation->addFrame(sf::IntRect(128, 96, 64, 64));
+    animation->addFrame(sf::IntRect(192, 96, 64, 64));
+    bee->setAnimation(animation);
     
   }
   else
@@ -136,11 +139,12 @@ void Monster::kill(bool isKilled, const std::string& type)
     if (animation) {
       delete animation;
     }
+
     animation = new MonsterAnimation(sprite, 0.1f);
 
     if (type == "M") {
-      animation->addFrame(sf::IntRect(0, 32, 32, 32));  // Example death frames
-      animation->addFrame(sf::IntRect(32, 32, 32, 32));
+      animation->addFrame(sf::IntRect(0, 32, 48, 32));  // Example death frames
+      animation->addFrame(sf::IntRect(48, 32, 32, 32));
     }
     else if (type == "B") {
       animation->addFrame(sf::IntRect(0, 32, 32, 32));

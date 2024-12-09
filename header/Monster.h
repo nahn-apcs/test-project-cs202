@@ -38,10 +38,10 @@ public:
   ~Goomba();
 };
 
-class Bat : public Monster {
+class Bee : public Monster {
 public:
-  Bat(sf::Texture& texture);
-  ~Bat();
+  Bee(sf::Texture& texture);
+  ~Bee();
 };
 
 class Plant : public Monster {
