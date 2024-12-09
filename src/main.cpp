@@ -5,7 +5,6 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
 #include "render.h"
-#include "GameInfo.h"
 #include "DrawEngine.h"
 
 const int TILE_SIZE = 32;
@@ -17,7 +16,7 @@ int main() {
     sf::Texture tileset, playerTexture, monsterset;
     if (!tileset.loadFromFile("../resources/blocks.png")
         || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
-        || !monsterset.loadFromFile("../resources/monster.png")) {
+        || !monsterset.loadFromFile("../resources/Run-Sheet.png")) {
         return -1;
     }
     std::vector<sf::Texture> runTextures(4);
