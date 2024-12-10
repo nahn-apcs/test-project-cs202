@@ -25,7 +25,7 @@ public:
   virtual void draw(sf::RenderWindow& window);
   void setPosition(float x, float y);
   void setAnimation(MonsterAnimation* ani);
-  virtual void kill(bool isKilled,const std::string& type);
+  virtual void kill(bool isKilled, const Monster* monster);
 
   sf::Sprite& getSprite() { return sprite; }
   bool getIsKilled() { return isKilled; }
@@ -38,10 +38,10 @@ public:
   ~Goomba();
 };
 
-class Bat : public Monster {
+class Bee : public Monster {
 public:
-  Bat(sf::Texture& texture);
-  ~Bat();
+  Bee(sf::Texture& texture);
+  ~Bee();
 };
 
 class Plant : public Monster {

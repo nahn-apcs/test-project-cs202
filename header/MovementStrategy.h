@@ -46,9 +46,11 @@ public:
 class XYmovement : public MovementStrategy {
 private:
   sf::Vector2f velocity;
+  float movementrange;
+  float initialX;
 
 public:
-  XYmovement(sf::Vector2f velocity);
+  XYmovement(sf::Vector2f velocity, float movementrange, float initialX);
   void move(sf::Sprite& sprite,
             float deltatime,
             std::vector<std::string>& mapData,
@@ -57,12 +59,12 @@ public:
 
 class UpDownmovement : public MovementStrategy {
 private:
-  float initialY;
+  sf::Vector2f velocity;
   float movementrange;
-  float speed;
+  float initialX;
 
 public:
-  UpDownmovement(float initailY,float movementrange, float speed);
+  UpDownmovement(sf::Vector2f velocity, float movementrange, float initialX);
   void move(sf::Sprite& sprite,
             float deltatime,
             std::vector<std::string>& mapData,
