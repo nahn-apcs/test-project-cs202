@@ -1,16 +1,16 @@
-#include "CoinAnimation.h"
+#include "BlockAnimation.h"
 
-CoinAnimation::CoinAnimation(sf::Sprite& sprite, float frameTime) : ObjectAnimation(sprite, frameTime)
+BlockAnimation::BlockAnimation(sf::Sprite& sprite, float frameTime) : ObjectAnimation(sprite, frameTime)
 {
 };
 
 
-void CoinAnimation::addFrame(const sf::IntRect& frame)
+void BlockAnimation::addFrame(const sf::IntRect& frame)
 {
   frames.push_back(frame);
 }
 
-void CoinAnimation::update(float deltatime,bool loop, bool b)
+void BlockAnimation::update(float deltatime,bool loop, bool b)
 {
   if (finished)
 	return;
@@ -36,12 +36,12 @@ void CoinAnimation::update(float deltatime,bool loop, bool b)
 }
 
 
-void CoinAnimation::applyToSprite(sf::Sprite& sprite, bool b)
+void BlockAnimation::applyToSprite(sf::Sprite& sprite, bool b)
 {
   sprite.setTextureRect(frames[currentFrame]);
 }
 
-bool CoinAnimation::isFinished() const
+bool BlockAnimation::isFinished() const
 {
   return finished;
 }

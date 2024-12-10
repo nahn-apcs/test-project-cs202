@@ -101,6 +101,7 @@ int main() {
         window.setView(camera);
       
         gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
+        gameMap.updateBlocks(deltaTime);
 
 
         // Update the time display

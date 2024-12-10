@@ -5,6 +5,8 @@
 Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Texture& Monstertexture)
     : tileSize(tileSize)
 {
+    coinsNumber = 0;
+    monsterNumber = 0;
     coinCount = 0;
     score = 0;
     std::ifstream file(filePath);
@@ -24,6 +26,27 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
                 coins.push_back(temp);
 				coinsNumber++;
             }
+
+            if (mapData[i][j] == '5') {
+                Block* block = BlockFactory::createBlock("brick", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+              
+            }
+            if (mapData[i][j] == '7') {
+                Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+          
+                block->setItem("coin");
+              
+            }
+            if (mapData[i][j] == '8') {
+                Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+       
+                block->setItem("mushroom");
+            }
+
+
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
@@ -47,6 +70,7 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
                 monsterNumber++;
 
             }
+
         }
     }
    
@@ -68,13 +92,13 @@ void Map::draw(sf::RenderWindow& window) {
                 // Solid block
 				tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
             }
-            else if (tileType == '5')
-            {
-                tile.setTextureRect(sf::IntRect(32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
-            }
-            else if (tileType == '7' || tileType == '8') {
-                tile.setTextureRect(sf::IntRect(32*6, 32, tileSize, tileSize));  // Assuming the first tile is a solid block
-            }
+            //else if (tileType == '5')
+            //{
+            //    tile.setTextureRect(sf::IntRect(32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+            //}
+            //else if (tileType == '7' || tileType == '8') {
+            //    tile.setTextureRect(sf::IntRect(32*6, 32, tileSize, tileSize));  // Assuming the first tile is a solid block
+            //}
             else if (tileType == 'P')
             {
                 tile.setTextureRect(sf::IntRect(16*32, 7*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
@@ -102,6 +126,10 @@ void Map::draw(sf::RenderWindow& window) {
 
     for (auto& coin : coins) {
         coin->draw(window);
+    }
+
+    for (auto& block : blocks) {
+        block->draw(window);
     }
 
 	//sf::Font font;
@@ -176,7 +204,7 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
 bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)
 {
   sf::FloatRect monsterBounds = sprite.getGlobalBounds();
-  sf::FloatRect viewBounds(camera.getCenter() - camera.getSize() / 2.f,
+  sf::FloatRect viewBounds(camera.getCenter() - camera.getSize() / 2.1f,
                            camera.getSize());
   return monsterBounds.intersects(viewBounds);
 }
@@ -219,4 +247,11 @@ void Map::updateScore()
 		}
 	}
 	score = coi * 100 + mons * 200;
+}
+
+void Map::updateBlocks(float deltatime)
+{
+  for (auto& block : blocks) {
+        block->update(deltatime,mapData,tileSize);
+    }
 }

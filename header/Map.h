@@ -6,6 +6,7 @@
 #include <string>
 #include "Coin.h"
 #include"Monster.h"
+#include"Block.h"
 
 
 class Map {
@@ -23,6 +24,7 @@ public:
     int coinCount;
     int score;
 	void updateScore();
+    void updateBlocks(float deltatime);
 
   private:
     const std::string notCollidable = "0C";
@@ -31,6 +33,7 @@ public:
     int tileSize;
     std::vector<Coin*> coins;
     std::vector<Monster*> monsters;
+    std::vector<Block*> blocks;
 	int coinsNumber;
 	int monsterNumber;
 };

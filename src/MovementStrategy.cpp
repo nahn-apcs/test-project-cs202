@@ -25,25 +25,15 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
     direction = -direction;
   }
   else {
-    if (mapData[nextGridY + 1][prevGridX] != '0') {
-      if (mapData[nextGridY + 1][nextGridX] == '0') {
-          direction = -direction;
-        
-      }
+    int rightX = static_cast<int>((nextPosition.x + tileSize) / tileSize);
+    int bottomY = static_cast<int>((nextPosition.y + tileSize) / tileSize);
+    if (mapData[bottomY][rightX] == '0') {
+      direction = -direction;
+
     }
       // Update sprite position
       sprite.setPosition(nextPosition);
 
-      // Update mapData if the monster "occupies" a new tile
-      //if (nextGridX != prevGridX || nextGridY != prevGridY) {
-      //  // Clear previous tile
-      //  if (mapData[prevGridY][prevGridX] == 'M') {
-      //    mapData[prevGridY][prevGridX] = '0';
-      //  }
-
-      //  if (mapData[nextGridY][nextGridX] == '0')
-      //    mapData[nextGridY][nextGridX] = 'M';
-      //}
   }
     //check for throw
   }

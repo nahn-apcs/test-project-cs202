@@ -2,7 +2,7 @@
 #define COIN_H
 
 #include <SFML/Graphics.hpp>
-#include "CoinAnimation.h"
+#include "BlockAnimation.h"
 
 class Coin {
 public:
@@ -17,7 +17,7 @@ public:
 private:
     sf::Sprite sprite;
     bool collected;
-    CoinAnimation* animation;
+    BlockAnimation* animation;
 };
 
 
