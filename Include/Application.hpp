@@ -4,6 +4,7 @@
 #include <ResourceID.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
+#include <StateStack.hpp>
 
 class Application {
 
@@ -24,7 +25,7 @@ private:
     sf::RenderWindow            mWindow;
     TextureHolder               mTextures;
     FontHolder                  mFonts;
-    //StateStack                  mStateStack;
+    StateStack                  mStateStack;
 
 };
 

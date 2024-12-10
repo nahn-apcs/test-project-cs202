@@ -2,7 +2,8 @@
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
-Application::Application(): mWindow(sf::VideoMode(1200, 800), "Input", sf::Style::Close), mTextures(), mFonts() {
+Application::Application(): mWindow(sf::VideoMode(1200, 800), "Input", sf::Style::Close), mTextures(), mFonts(), mStateStack(State::Context(mWindow, mTextures, mFonts)) {
+    
     mWindow.setKeyRepeatEnabled(false);
     mWindow.setVerticalSyncEnabled(true);
 
@@ -10,6 +11,12 @@ Application::Application(): mWindow(sf::VideoMode(1200, 800), "Input", sf::Style
 
 
     //load Texture
+
+
+    //register states
+    // registerStates();
+    // mStateStack.pushState(States::Title);
+
 
 }
 
