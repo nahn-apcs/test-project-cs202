@@ -121,6 +121,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
         coin->update(deltatime);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
             coin->collect(); // Collect the coin
+			coinCount++;
         }
     }
 }
