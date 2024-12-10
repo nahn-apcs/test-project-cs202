@@ -32,15 +32,15 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
 
             }
             if (mapData[i][j] == 'B') {
-              Monster* monster = MonsterFactory::createMonster("Bat", Monstertexture, { j * tileSize, i * tileSize });
+              Monster* monster = MonsterFactory::createMonster("Bee", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
               mapData[i][j] = '0';
               monsterNumber++;
 
             }
-            if (mapData[i][j] == 'T') {
+            if (mapData[i][j] == 'b') {
               Monster* monster = MonsterFactory::createMonster(
-                "Plant", Monstertexture, { j * tileSize, i * tileSize });
+                "bee", Monstertexture, { j * tileSize, i * tileSize });
              
                 monsters.push_back(monster);
                 mapData[i][j] = '0';
@@ -156,7 +156,7 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
         auto tileY = static_cast<int>(monsterBounds.top / tileSize);
        
         mapData[tileY][tileX] = '0';
-        monster->kill(true, "M");  // Kill the monster
+        monster->kill(true, monster);  // Kill the monster
 
       }
       else {
