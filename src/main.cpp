@@ -9,13 +9,14 @@
 const int TILE_SIZE = 32;
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(constants::scene_width, constants::scene_height), "Mario Game");
+    sf::RenderWindow window(sf::VideoMode(constants::scene_width, constants::scene_height), "Mario Game", sf::Style::Close);
 
     // Load textures
-    sf::Texture tileset, playerTexture, monsterset;
+    sf::Texture tileset, playerTexture, monsterset, projectile;
     if (!tileset.loadFromFile("../resources/blocks.png")
         || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
         || !monsterset.loadFromFile("../resources/Run-sheet.png")
+        || !projectile.loadFromFile("../resources/bullet1_strip.png")
         ) {
         return -1;
     }
@@ -26,10 +27,19 @@ int main() {
         !runTextures[3].loadFromFile("../resources/run wk_sprite_4.png")) {
         return -1;  // Error loading run textures
     }
-
+    std::vector<sf::Texture> attackTextures(2);
+    if (!attackTextures[0].loadFromFile("../resources/atk wk 3_sprite_2.png") ||
+        !attackTextures[1].loadFromFile("../resources/atk wk 3_sprite_3.png")
+       ) {
+        return -1;  // Error loading run textures
+    }
+    std::vector<sf::Texture> mapTextures;
+    mapTextures.push_back(tileset);
+    mapTextures.push_back(monsterset);
+    mapTextures.push_back(projectile);
     // Create map and character
-    Map gameMap("../resources/level.txt", TILE_SIZE, tileset, monsterset);
-    Character player(playerTexture, runTextures, 100, 100);
+    Map gameMap("../resources/level.txt", TILE_SIZE, mapTextures);
+    Character player(playerTexture, runTextures, attackTextures, 100, 100);
 
     sf::View camera(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
     camera.setCenter(player.getBounds().left + player.getBounds().width / 2, player.getBounds().top + player.getBounds().height / 2);
@@ -102,6 +112,7 @@ int main() {
       
         gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
         gameMap.updateBlocks(deltaTime);
+        gameMap.updateProjectiles(deltaTime);
 
 
         // Update the time display

@@ -12,7 +12,7 @@ typedef enum TileType {
 
 namespace constants {
 
-	constexpr int scene_width = 1366;
+	constexpr int scene_width = 1280;
 	constexpr int scene_height = 640;
 	constexpr int frames_per_second = 60;
 

@@ -2,7 +2,16 @@
 #include <iostream>
 
 Animation::Animation(const std::vector<sf::Texture>& frames, float switchTime)
-    : frames(frames), switchTime(switchTime), totalTime(0), currentFrame(0) {}
+    : frames(frames), switchTime(switchTime), totalTime(0), currentFrame(0) {
+    if (!frames.empty()) {
+		w = frames[0].getSize().x;
+		h = frames[0].getSize().y;
+	}
+	else {
+		w = 0;
+		h = 0;
+	}
+}
 
 void Animation::update(float deltaTime) {
     totalTime += deltaTime;
@@ -19,12 +28,12 @@ void Animation::applyToSprite(sf::Sprite& sprite, bool faceRight) {
 
     // Flip sprite horizontally if not facing right
     if (!faceRight) {
-        sprite.setTextureRect(sf::IntRect(64, 0, -64, 64));
+        sprite.setTextureRect(sf::IntRect(w, 0, -w, h));
 
 
     }
     else {
-        sprite.setTextureRect(sf::IntRect(0, 0, 64, 64));
+        sprite.setTextureRect(sf::IntRect(0, 0, w, h));
 
     }
 }

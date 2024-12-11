@@ -6,13 +6,11 @@ Coin::Coin(sf::Texture& texture, int x, int y)
     sprite.setTextureRect(sf::IntRect(9 * 32, 32, 32, 32));
     sf::Sprite coinSprite;
     coinSprite.setTexture(texture);
-    std::cout << "Coin created 1" << std::endl;
     animation = new BlockAnimation(coinSprite, 0.3f);
     
     animation->addFrame(sf::IntRect(9 * 32, 32, 32, 32));
     animation->addFrame(sf::IntRect(10 * 32, 32, 32, 32));
     animation->addFrame(sf::IntRect(11 * 32, 32, 32, 32));
-    std::cout << "Coin created 2" << std::endl;
     sprite.setPosition(x, y);
 }
 

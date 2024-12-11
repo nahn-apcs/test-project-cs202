@@ -2,7 +2,7 @@
 #include "render.h"
 #include <fstream>
 
-Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Texture& Monstertexture)
+Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& mapTexture)
     : tileSize(tileSize)
 {
     coinsNumber = 0;
@@ -13,6 +13,13 @@ Map::Map(const std::string& filePath, int tileSize, sf::Texture& texture, sf::Te
     std::string line;
     while (std::getline(file, line)) {
         mapData.push_back(line);
+    }
+
+    //sf::Texture projectTile;
+    if (mapTexture.size() > 2) {
+        texture = mapTexture[0];
+        Monstertexture = mapTexture[1];
+        projectTile = mapTexture[2];
     }
     tile.setTexture(texture);
     tile.setTextureRect(sf::IntRect(0, 0, constants::scene_width, constants::scene_height)); // Select first tile
@@ -132,6 +139,9 @@ void Map::draw(sf::RenderWindow& window) {
         block->draw(window);
     }
 
+    projectiles.draw(window);
+
+
 	//sf::Font font;
 	//font.loadFromFile("../resources/font/Pixel_NES.otf");
 	//sf::Text text;
@@ -170,6 +180,18 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
 
     // Get player and monster positions
     sf::FloatRect monsterBounds = monster->getSprite().getGlobalBounds();
+    for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+       
+            if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+                projectiles.destroyProjectile(i);
+                auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+                auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+
+                mapData[tileY][tileX] = '0';
+                monster->kill(true, monster);  
+            }
+        
+    }
 
     // Check intersection
     if (monsterBounds.intersects(playerBounds)) {
@@ -192,14 +214,15 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
               // Player is killed
               std::cout << "Player is killed" << std::endl;
               // Implement player death here
-          }
-      
+          }   
       }
     }
 
     ++it;  // Increment the iterator if no monster was removed
   }
 }
+
+
 
 bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)
 {
@@ -254,4 +277,26 @@ void Map::updateBlocks(float deltatime)
   for (auto& block : blocks) {
         block->update(deltatime,mapData,tileSize);
     }
+}
+void Map::updateProjectiles(float deltatime)
+{
+   
+    for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+		int LeftX = projectiles.getProjectiles()[i]->getBounds().left/tileSize;
+        int RightX = (projectiles.getProjectiles()[i]->getBounds().left + projectiles.getProjectiles()[i]->getBounds().width) / tileSize;
+        int TopY = projectiles.getProjectiles()[i]->getBounds().top / tileSize;
+        int BottomY = (projectiles.getProjectiles()[i]->getBounds().top + projectiles.getProjectiles()[i]->getBounds().height) / tileSize;
+        int midY = (TopY + BottomY) / 2;
+        if (RightX >= mapData[0].size()) {
+			projectiles.destroyProjectile(i);
+		}
+        if (LeftX <= 0) {  
+            projectiles.destroyProjectile(i);
+        }
+        if (!colliable(LeftX, midY) || !colliable(RightX, midY)) {
+            projectiles.destroyProjectile(i);
+        }
+	}
+
+  projectiles.update(deltatime);
 }

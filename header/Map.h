@@ -7,11 +7,11 @@
 #include "Coin.h"
 #include"Monster.h"
 #include"Block.h"
-
+#include "Projectile.h"
 
 class Map {
 public:
-    Map(const std::string& filePath, int tileSize, sf::Texture& texture,sf::Texture& Monstertexture);
+    Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
     void draw(sf::RenderWindow& window);
     std::vector<std::string> getMapData() const;
     int getTileSize() const { return tileSize; }
@@ -25,6 +25,9 @@ public:
     int score;
 	void updateScore();
     void updateBlocks(float deltatime);
+    void updateProjectiles(float deltatime);
+    sf::Texture& getProjectileTexture ()  { return projectTile; }
+    ProjectileManager projectiles;
 
   private:
     const std::string notCollidable = "0C";
@@ -36,6 +39,9 @@ public:
     std::vector<Block*> blocks;
 	int coinsNumber;
 	int monsterNumber;
+    sf::Texture texture;
+    sf::Texture Monstertexture;
+    sf::Texture projectTile;
 };
 
 #endif // MAP_H

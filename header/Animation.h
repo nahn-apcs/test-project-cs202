@@ -16,6 +16,7 @@ private:
     float switchTime;  // Time interval to switch to the next frame
     float totalTime;   // Accumulated time for frame switching
     size_t currentFrame; // The current frame index
+    int w, h;
 };
 
 #endif // ANIMATION_H

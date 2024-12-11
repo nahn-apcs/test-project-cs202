@@ -16,7 +16,7 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
   int nextGridY = static_cast<int>(nextPosition.y / tileSize);
   //std::cout << nextGridY << std::endl;
   // Check for collision
-  if (nextGridX < 0 || nextGridX >= mapData[0].size() || nextGridY < 0 ||
+  if (nextGridX <= 0 || nextGridX >= mapData[0].size() || nextGridY <= 0 ||
       nextGridY >= mapData.size() || (mapData[nextGridY][nextGridX] != '0' && mapData[nextGridY][nextGridX]!='M')) {
       direction = -direction;  // Reverse direction on collision
   }

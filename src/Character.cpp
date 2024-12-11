@@ -2,18 +2,30 @@
 #include "Map.h"
 #include "render.h"
 
-Character::Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, int x, int y)
-    : velocityX(0), velocityY(0), onGround(false), isJumping(false), faceRight(true) {
+Character::Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, int x, int y)
+    : velocityX(0), velocityY(0), onGround(false), isJumping(false), attacking(false), faceRight(true) {
 
     // Set up idle animation (if needed, for example, when the character is not moving)
-
     sprite.setTexture(idleTexture);
     sprite.setPosition(x, y);
     idle = idleTexture; // Save the idle sprite for later use
     runAnimation = new Animation(runTextures, 0.1f);  // Assuming 0.1s per frame for the run animation
+    attackAnimation = new Animation(attackTextures, 0.075f);
 }
 
-void Character::interact(float deltatime, const Map& map) {
+void Character::shoot(Map& map) {
+	// Get the position of the character
+	sf::Vector2f position = sprite.getPosition();
+	// Create a new projectile
+    if (faceRight) {
+		map.projectiles.addProjectile(map.getProjectileTexture(), 400.0f, position.x + getBounds().width, position.y + getBounds().height/2, true);
+	}
+    else {
+        map.projectiles.addProjectile(map.getProjectileTexture(), 400.0f, position.x, position.y + getBounds().height / 2, false);
+    }
+}
+
+void Character::interact(float deltatime, Map& map) {
     // Handle movement
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
@@ -34,6 +46,14 @@ void Character::interact(float deltatime, const Map& map) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
         jump();
     }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+		if (cooldown <= 0) {
+			shoot(map);
+			cooldown = 1.0f;
+            attacking = true;
+		}
+	}
 
 
 }
@@ -61,7 +81,15 @@ void Character::update(float deltaTime, const Map& map) {
     applyGravity(deltaTime);
     applyFriction(deltaTime);
     //std::cout << "velocityX: " << velocityX << std::endl;
-
+    if (cooldown > 0) {
+		cooldown -= deltaTime;
+        if (cooldown > 0.75f) {
+            attacking = true;
+        }
+        else {
+			attacking = false;
+		}
+	}
     onGround = false; // Assume the character is not on the ground
 
     if (velocityX > 0) {
@@ -78,7 +106,12 @@ void Character::update(float deltaTime, const Map& map) {
 
     if (!checkWallCollision(velocityX * deltaTime, 0.f, map)) {
         sprite.move(velocityX * deltaTime, 0);
-        if (velocityX != 0) {
+        if (attacking)
+        {
+            attackAnimation->update(deltaTime);
+            attackAnimation->applyToSprite(sprite, faceRight);
+        }
+        else if (velocityX != 0) {
             runAnimation->update(deltaTime);
             runAnimation->applyToSprite(sprite, faceRight);
         }
@@ -221,6 +254,12 @@ void Character::handleCollisions(const Map& map) {
         }
     }
 
+    if (rightTileX >= 0 && rightTileX < map.getMapData()[0].size()) {
+		if(checkWallCollision(velocityX, 0, map) == 4 || checkWallCollision(velocityX, 0, map) == 8) {
+			velocityX = 0;
+		}
+
+	}
 
 }
 
