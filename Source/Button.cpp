@@ -10,11 +10,7 @@
 namespace GUI
 {
 
-Button::Button(State::Context context)
-: mCallback()
-, mSprite(context.textures->get(Textures::button))
-, mText("", context.fonts->get(Fonts::Main), 16)
-, mIsToggle(false)
+Button::Button(State::Context context): mCallback(), mSprite(context.textures->get(Textures::button)), mText("", context.fonts->get(Fonts::Main), 20), mIsToggle(false)
 {
 	changeTexture(Normal);
 
@@ -101,7 +97,7 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Button::changeTexture(Type buttonType)
 {
-	sf::IntRect textureRect(0, 50*buttonType, 200, 50);
+	sf::IntRect textureRect(0, 50*buttonType, 150, 45);
 	mSprite.setTextureRect(textureRect);
 }
 

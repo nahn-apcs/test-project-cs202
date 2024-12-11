@@ -1,4 +1,6 @@
 #include <Application.hpp>
+#include <MenuState.hpp>
+#include <iostream>
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
@@ -8,16 +10,17 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
     mWindow.setVerticalSyncEnabled(true);
 
     //load Font
-    mFonts.load(Fonts::Main, "Asset/Fonts/Sansation.ttf");
+    mFonts.load(Fonts::Main, "Asset/Fonts/pixel.ttf");
 
 
     //load Texture
-    mTextures.load(Textures::button, "Asset/Textures/button.png");
+    mTextures.load(Textures::ID::button, "Asset/Textures/button.png");
+	mTextures.load(Textures::ID::MainMenuBG, "Asset/Textures/Menu/menubg.png");
 
 
     //register states
-    // registerStates();
-    // mStateStack.pushState(States::Title);
+    registerStates();
+    mStateStack.pushState(States::ID::Menu);
 
 
 }
@@ -36,8 +39,9 @@ void Application::run() {
             update(TimePerFrame);
 
             // Check inside this loop, because stack might be empty before update() call
-			// if (mStateStack.isEmpty())
-			// 	mWindow.close();
+			if (mStateStack.isEmpty()) {
+				mWindow.close();
+			}
         }
         render();
     }
@@ -47,7 +51,7 @@ void Application::processInput() {
 	sf::Event event;
 	while (mWindow.pollEvent(event))
 	{
-		//mStateStack.handleEvent(event);
+		mStateStack.handleEvent(event);
 
 		if (event.type == sf::Event::Closed)
 			mWindow.close();
@@ -56,14 +60,14 @@ void Application::processInput() {
 
 void Application::update(sf::Time dt)
 {
-	//mStateStack.update(dt);
+	mStateStack.update(dt);
 }
 
 void Application::render()
 {
 	mWindow.clear();
 
-	//mStateStack.draw();
+	mStateStack.draw();
 
 	mWindow.setView(mWindow.getDefaultView());
 
@@ -72,8 +76,8 @@ void Application::render()
 
 void Application::registerStates()
 {
+	mStateStack.registerState<MenuState>(States::Menu);
 	// mStateStack.registerState<TitleState>(States::Title);
-	// mStateStack.registerState<MenuState>(States::Menu);
 	// mStateStack.registerState<GameState>(States::Game);
 	// mStateStack.registerState<MultiplayerGameState>(States::HostGame, true);
 	// mStateStack.registerState<MultiplayerGameState>(States::JoinGame, false);

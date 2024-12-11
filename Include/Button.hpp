@@ -28,8 +28,8 @@ class Button : public Component
 
 		enum Type
 		{
+            Selected,
 			Normal,
-			Selected,
 			Pressed,
 			ButtonCount
 		};
