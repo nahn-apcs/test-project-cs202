@@ -16,7 +16,7 @@ namespace Textures
 {
     enum ID
     {
-        Main,
+        button,
     };
 }
 
@@ -24,7 +24,7 @@ namespace Fonts
 {
 	enum ID
 	{
-		
+		Main,
 	};
 }
 

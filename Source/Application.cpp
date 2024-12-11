@@ -2,15 +2,17 @@
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
-Application::Application(): mWindow(sf::VideoMode(1200, 800), "Input", sf::Style::Close), mTextures(), mFonts(), mStateStack(State::Context(mWindow, mTextures, mFonts)) {
+Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style::Close), mTextures(), mFonts(), mStateStack(State::Context(mWindow, mTextures, mFonts)) {
     
     mWindow.setKeyRepeatEnabled(false);
     mWindow.setVerticalSyncEnabled(true);
 
     //load Font
+    mFonts.load(Fonts::Main, "Asset/Fonts/Sansation.ttf");
 
 
     //load Texture
+    mTextures.load(Textures::button, "Asset/Textures/button.png");
 
 
     //register states
