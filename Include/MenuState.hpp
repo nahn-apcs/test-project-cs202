@@ -22,8 +22,11 @@ private:
     GUI::Container mGUIContainer;
 
     sf::Text wukongText;
-    int alpha = 255;
-    bool fadingOut = true;
+    sf::Text shadowText;
+
+    float mWukongAlpha = 255;
+    bool mFadingOut = true;
+    float mScale = 1.0f;
 
     const double speed = 100.0;
 

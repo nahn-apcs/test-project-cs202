@@ -6,6 +6,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <iostream>
+#include <SFML/System/Time.hpp>
 
 MenuState::MenuState(StateStack& stack, Context context): State(stack, context), mBackgroundSprite(), mGUIContainer() {
     sf::Texture& texture = context.textures->get(Textures::MainMenuBG_1);
@@ -93,14 +94,18 @@ MenuState::MenuState(StateStack& stack, Context context): State(stack, context),
 
     wukongText.setFont(font);
     wukongText.setString("Journey to the west");
-    wukongText.setCharacterSize(110);
-    wukongText.setFillColor(sf::Color::Black);
+    wukongText.setCharacterSize(120);
+    wukongText.setFillColor(sf::Color(0, 0, 0));
 
     // Căn chỉnh chữ ở giữa màn hình
     sf::FloatRect textBounds = wukongText.getLocalBounds();
     wukongText.setOrigin(textBounds.left + textBounds.width / 2.0f,
                          textBounds.top + textBounds.height / 2.0f);
     wukongText.setPosition(640, 200);
+
+    shadowText = wukongText;
+    shadowText.setFillColor(sf::Color(0, 0, 0, 128)); // Màu đen mờ
+    shadowText.setPosition(wukongText.getPosition().x + 5, wukongText.getPosition().y + 5); // Lệch bóng
 
 }
 
@@ -117,11 +122,42 @@ void MenuState::draw() {
     }
 
     window.draw(mGUIContainer);
+
+
+
+    window.draw(shadowText);
     window.draw(wukongText);
 }
 
 bool MenuState::update(sf::Time deltatime)
 {
+
+    // Hiệu ứng fade in/out cho chữ chính
+    float alphaChange = 125.0f * deltatime.asSeconds();
+    if (mFadingOut) {
+        mWukongAlpha -= alphaChange;
+        if (mWukongAlpha <= 50) {
+            mWukongAlpha = 50;
+            mFadingOut = false;
+        }
+    } else {
+        mWukongAlpha += alphaChange;
+        if (mWukongAlpha >= 255) {
+            mWukongAlpha = 255;
+            mFadingOut = true;
+        }
+    }
+    wukongText.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(mWukongAlpha)));
+
+    float scaleChange = 0.5f * deltatime.asSeconds();
+    mScale += (mFadingOut ? -scaleChange : scaleChange);
+    wukongText.setScale(mScale, mScale);
+
+    shadowText.setScale(mScale, mScale);
+    shadowText.setPosition(wukongText.getPosition().x + 5, wukongText.getPosition().y + 5);
+    shadowText.setFillColor(sf::Color(0, 0, 0, static_cast<sf::Uint8>(mWukongAlpha / 2))); // Bóng mờ hơn chữ
+
+
     for(int i = 0; i < mCloundSprite.size(); i++) {
         sf::Sprite& sprite = mCloundSprite[i];
         sprite.move(-speed * deltatime.asSeconds(), 0);
@@ -130,23 +166,6 @@ bool MenuState::update(sf::Time deltatime)
         }
     }
 
-    if (fadingOut) {
-        alpha -= static_cast<int>(200 * deltatime.asSeconds());
-        if (alpha <= 50) {
-            alpha = 50;
-            fadingOut = false;
-        }
-    } 
-    else {
-        alpha += static_cast<int>(200 * deltatime.asSeconds());
-        if (alpha >= 255) {
-            alpha = 255;
-            fadingOut = true;
-        }
-    }
-
-    // Cập nhật màu chữ với alpha mới
-    wukongText.setFillColor(sf::Color(0, 0, 0, alpha));
 
 
 	return true;
