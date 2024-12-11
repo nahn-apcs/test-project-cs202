@@ -18,7 +18,14 @@ public:
 
 private:
     std::vector<sf::Sprite> mBackgroundSprite;
+    std::vector<sf::Sprite> mCloundSprite;
     GUI::Container mGUIContainer;
+
+    sf::Text wukongText;
+    int alpha = 255;
+    bool fadingOut = true;
+
+    const double speed = 100.0;
 
 };
 
