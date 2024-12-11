@@ -287,7 +287,7 @@ void Map::updateProjectiles(float deltatime)
         int TopY = projectiles.getProjectiles()[i]->getBounds().top / tileSize;
         int BottomY = (projectiles.getProjectiles()[i]->getBounds().top + projectiles.getProjectiles()[i]->getBounds().height) / tileSize;
         int midY = (TopY + BottomY) / 2;
-        if (RightX >= mapData[0].size()) {
+        if (RightX >= mapData[0].size()-1) {
 			projectiles.destroyProjectile(i);
 		}
         if (LeftX <= 0) {  
