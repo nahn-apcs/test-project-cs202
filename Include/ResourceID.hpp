@@ -16,6 +16,7 @@ namespace Textures
 {
     enum ID
     {
+		//Menu
         button,
 		MainMenuBG,
 		MainMenuBG_1,
@@ -30,6 +31,10 @@ namespace Textures
 		MainMenuClound_7,
 		MainMenuClound_8,
 		MainMenuClound_9,
+
+		//Guide
+		GuideBG,
+		CloseGuide,
     };
 }
 

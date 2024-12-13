@@ -1,5 +1,5 @@
-#ifndef MENU_MENU_STATE_HPP
-#define MENU_MENU_STATE_HPP
+#ifndef MENU_STATE_HPP
+#define MENU_STATE_HPP
 
 #include <SFML/Graphics.hpp>
 
@@ -17,19 +17,23 @@ public:
     virtual bool handleEvent(const sf::Event& event);
 
 private:
+
+    enum TextState {
+        ScalingUp,
+        None,
+    };
+
     std::vector<sf::Sprite> mBackgroundSprite;
     std::vector<sf::Sprite> mCloundSprite;
     GUI::Container mGUIContainer;
 
     sf::Text wukongText;
     sf::Text shadowText;
-
+    float mScale = 0.1f;
     float mWukongAlpha = 255;
     bool mFadingOut = true;
-    float mScale = 1.0f;
-
-    const double speed = 100.0;
+    TextState mTextState = ScalingUp;
 
 };
 
-#endif // MENU_MENU_STATE_HPP
+#endif // MENU_STATE_HPP

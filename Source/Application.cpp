@@ -1,5 +1,6 @@
 #include <Application.hpp>
 #include <MenuState.hpp>
+#include <GuideState.hpp>
 #include <iostream>
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
@@ -28,6 +29,9 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 	mTextures.load(Textures::ID::MainMenuClound_6, "Asset/Textures/Menu/cloud6.png");
 	mTextures.load(Textures::ID::MainMenuClound_7, "Asset/Textures/Menu/cloud7.png");
 	mTextures.load(Textures::ID::MainMenuClound_8, "Asset/Textures/Menu/cloud8.png");
+
+	mTextures.load(Textures::ID::GuideBG, "Asset/Textures/Guide/guide.png");
+	mTextures.load(Textures::ID::CloseGuide, "Asset/Textures/Guide/close_guide.png");
 	
 
 
@@ -90,6 +94,7 @@ void Application::render()
 void Application::registerStates()
 {
 	mStateStack.registerState<MenuState>(States::Menu);
+	mStateStack.registerState<GuideState>(States::Guide);
 	// mStateStack.registerState<TitleState>(States::Title);
 	// mStateStack.registerState<GameState>(States::Game);
 	// mStateStack.registerState<MultiplayerGameState>(States::HostGame, true);
