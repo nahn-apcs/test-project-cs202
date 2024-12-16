@@ -113,7 +113,7 @@ int main() {
         window.setView(camera);
 
         gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
-        gameMap.updateBlocks(deltaTime);
+        gameMap.updateBlocks(deltaTime,player.getBounds());
         gameMap.updateProjectiles(deltaTime);
 
         // Clear the window

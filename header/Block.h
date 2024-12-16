@@ -5,19 +5,28 @@
 #include "MovementStrategy.h"
 #include "BlockAnimation.h"
 #include "BlockState.h"
+#include "Item.h"
+#include <vector>
 
 class BlockState;
 
 class Block {
-private:
+protected:
   sf::Sprite sprite;
   BlockAnimation* animation;
   MovementStrategy* movement;
   BlockState* state;
+  float initY;
+  float velocityY;
   bool isSolid;
   bool isAnimated;
   bool isMoving;
+  bool isTouched = false;
+  float coinTime = 0.5f;
   std::string item;
+  Item* itemObject;
+  sf::Texture texture;
+
 public:
   Block(const sf::Texture& texture);
   ~Block();
@@ -26,7 +35,7 @@ public:
   sf::FloatRect getBounds() const;
   void setMovement(MovementStrategy* movement);
   void setState(BlockState* state);
-  void ontouch();
+  void ontouch(std::vector<std::string>& mapData, int tileSize);
   bool isSolidBlock() const;
   bool isMovingBlock() const;
   bool isAnimatedBlock() const;
@@ -36,10 +45,22 @@ public:
   void setAnimated(bool isAnimated);
   void setTextureRect(const sf::IntRect& rect);
   void setPosition(float x, float y);
-  sf::Sprite& getSprite();
+  void onTouch2(std::vector<std::string>& mapData,
+                int tileSize,
+                sf::Texture& texture);
+  void setItemObject(Item* item);
+  bool getIsTouched();
+  void move(float x, float y);
+  void setInitY(float y);
+  Item* getItemObject();
+  float getCoinTime();
+  sf::Sprite getSprite();
+
 
   virtual void setItem(const std::string& item);
   virtual std::string getItem();
+  sf::Vector2i	getPosition();
+  bool isCollission(const sf::FloatRect& playerbounds) const;
 };
 
 class QuestionBlock : public Block {

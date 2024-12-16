@@ -8,7 +8,10 @@ Block::Block(const sf::Texture& texture) : isSolid(false), isAnimated(false), is
   movement = nullptr;
   animation = nullptr;
   state = nullptr;
-
+  itemObject = nullptr;
+  velocityY = 0;
+  coinTime = 0.5f;
+  this->texture = texture;
 }
 
 Block::~Block()
@@ -26,6 +29,33 @@ Block::~Block()
 
 void Block::update(float deltatime, std::vector<std::string>& mapData, int tileSize)
 {
+  if (isTouched)
+  {
+ 
+
+    if (itemObject) {
+      itemObject->update(deltatime, mapData, tileSize);
+      if (coinTime < 0.01f) {
+        itemObject->collect();
+      }
+    }
+    if (item == "coin")
+      coinTime -= deltatime;
+    sprite.move(0, velocityY * deltatime);
+    velocityY += 10000.f * deltatime;
+    if (sprite.getPosition().y >= initY) {
+      sprite.setPosition(sprite.getPosition().x, initY);
+      velocityY = 0;
+      sprite.setTextureRect(sf::IntRect(5 * 32, 0, 32, 32));
+      return;
+    }
+
+
+    
+    
+    
+    return;
+  } 
   if (isMoving && movement) {
     movement->move(sprite, deltatime, mapData, tileSize);
   }
@@ -34,10 +64,20 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
     animation->update(deltatime);
     animation->applyToSprite(sprite, true);
   }
+  
+}
+
+void Block::move(float x, float y)
+{
+  sprite.move(x, y);
 }
 
 void Block::draw(sf::RenderWindow& window) {
   window.draw(sprite);
+  if (isTouched && coinTime > 0.01f) {
+    if (itemObject == nullptr) return;
+    itemObject->draw(window);
+  }
 }
 
 sf::FloatRect Block::getBounds() const {
@@ -54,10 +94,12 @@ void Block::setState(BlockState* state)
   this->state = state;
 }
 
-void Block::ontouch()
+void Block::ontouch(std::vector<std::string>& mapData, int tileSize)
 {
-  if (state)
-    state->ontouch(*this);
+  if (state) {
+    state->ontouch(*this, mapData, tileSize, texture);
+    isTouched = true;
+  }
 }
 
 bool Block::isSolidBlock() const
@@ -106,6 +148,25 @@ void Block::setPosition(float x, float y)
   sprite.setPosition(x, y);
 }
 
+sf::Vector2i	Block::getPosition()
+{
+  return sf::Vector2i(sprite.getPosition().x, sprite.getPosition().y);
+}
+
+
+bool Block::isCollission(const sf::FloatRect& playerbounds) const
+{
+   sf::FloatRect blockBounds= sprite.getGlobalBounds();
+  float dx = playerbounds.left - blockBounds.left;
+   float dy = playerbounds.top - blockBounds.top;
+  float intersectX =
+    std::abs(dx) - (playerbounds.width + blockBounds.width) / 2;
+   float intersectY =
+    std::abs(dy) - (playerbounds.height + blockBounds.height) / 2;
+  return intersectX < 0 && intersectY < 0;
+}
+
+
 QuestionBlock::QuestionBlock(const sf::Texture& texture)
   : Block(texture)
 {
@@ -114,10 +175,6 @@ QuestionBlock::QuestionBlock(const sf::Texture& texture)
 QuestionBlock::~QuestionBlock()
 {
 }
-
-
-
-
 
 BrickBlock::BrickBlock(const sf::Texture& texture)
   : Block(texture)
@@ -152,6 +209,7 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     Block* block = new QuestionBlock(texture);
     block->setPosition(position.x, position.y);
     block->setAnimated(true);
+    block->setInitY(position.y);
     auto ani = new BlockAnimation(block->getSprite(), 0.3f);
     ani->addFrame(sf::IntRect(32 * 6, 32, 32, 32));
     ani->addFrame(sf::IntRect(32 * 7, 32, 32, 32));
@@ -163,6 +221,7 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     BrickBlock* block = new BrickBlock(texture);
     block->setPosition(position.x, position.y);
     block->setTextureRect(sf::IntRect(32, 0, 32,32));
+    block->setInitY(position.y);
     return block;
   }
   else if (type == "hidden") {
@@ -187,7 +246,43 @@ std::string Block::getItem()
   return item;
 }
 
-sf::Sprite& Block::getSprite()
+sf::Sprite Block::getSprite()
 {
   return sprite;
 }
+
+
+void Block::onTouch2(std::vector<std::string>& mapData, int tileSize, sf::Texture& texture)
+{
+  if (state) {
+    state->ontouch(*this, mapData, tileSize, texture);
+  }
+  isTouched = true;
+  velocityY = -400.f;
+}
+
+bool Block::getIsTouched()
+{
+  return isTouched;
+}
+
+void Block::setInitY(float y)
+{
+  initY = y;
+}
+
+void Block::setItemObject(Item* item)
+{
+  this->itemObject = item;
+}
+
+Item* Block::getItemObject()
+{
+  return itemObject;
+}
+
+float Block::getCoinTime()
+{
+  return coinTime;
+}
+

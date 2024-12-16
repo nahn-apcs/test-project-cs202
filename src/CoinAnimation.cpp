@@ -1,5 +1,5 @@
 #include "BlockAnimation.h"
-
+#include <iostream>
 BlockAnimation::BlockAnimation(sf::Sprite& sprite, float frameTime) : ObjectAnimation(sprite, frameTime)
 {
 };
@@ -14,9 +14,8 @@ void BlockAnimation::update(float deltatime,bool loop, bool b)
 {
   if (finished)
 	return;
-
+  
   elapsedTime += deltatime;
-
   if (elapsedTime >= frameTime) {
 	elapsedTime -= frameTime;
 	currentFrame++;

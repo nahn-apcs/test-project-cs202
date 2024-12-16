@@ -29,7 +29,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
         for (int j = 0; j < mapData[i].size(); ++j) {
             if (mapData[i][j] == 'C') {
                 // Create a coin at the corresponding position
-                Coin* temp = new Coin(texture, j * tileSize, i * tileSize);
+                Item* temp = ItemFactory::createItem("Coin", texture, { j * tileSize, i * tileSize });
                 coins.push_back(temp);
 				coinsNumber++;
             }
@@ -156,7 +156,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     // Check for coin collection
     
     for (auto& coin : coins) {
-        coin->update(deltatime);
+        coin->update(deltatime, mapData, 32);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
             coin->collect(); // Collect the coin
 			coinCount++;
@@ -195,10 +195,12 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
 
     // Check intersection
     if (monsterBounds.intersects(playerBounds)) {
+      //std::cout<< "Monster collision detected" << std::endl;
       // Check if the player is above the monster
       float playerBottom =
         playerBounds.top + playerBounds.height;  // Bottom of the player
       float monsterTop = monsterBounds.top;      // Top of the monster
+
 
       if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
         // Monster is killed
@@ -208,8 +210,9 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
         mapData[tileY][tileX] = '0';
         monster->kill(true, monster);  // Kill the monster
 
-      }
+      }  
       else {
+          //std::cout<< "Player is killed" << std::endl;
           if (!monster->getIsKilled()) {
               // Player is killed
               std::cout << "Player is killed" << std::endl;
@@ -307,11 +310,29 @@ void Map::updateScore()
 	score = coi * 100 + mons * 200;
 }
 
-void Map::updateBlocks(float deltatime)
+void Map::updateBlocks(float deltatime,const sf::FloatRect& playerBounds)
 {
-  for (auto& block : blocks) {
-        block->update(deltatime,mapData,tileSize);
+ // std::cout << playerBounds.top << std::endl;
+  for (auto it = blocks.begin(); it != blocks.end();) {
+    auto& block = *it;
+    block->update(deltatime, mapData, tileSize);
+    if (block->isCollission(playerBounds)) {
+     
+      float playerTop = playerBounds.top;
+      float blockBottom = block->getBounds().top + block->getBounds().height;
+      float dy = blockBottom - playerTop;
+      if (dy < 5.0f) {
+        if (!block->getIsTouched()) {
+          block->setState(new ActiveState());
+          block->onTouch2(mapData, tileSize, texture);
+        }
+      }
     }
+   
+
+    it++;
+  }
+
 }
 void Map::updateProjectiles(float deltatime)
 {

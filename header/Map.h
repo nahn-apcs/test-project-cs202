@@ -26,7 +26,7 @@ public:
     int coinCount;
     int score;
 	void updateScore();
-    void updateBlocks(float deltatime);
+    void updateBlocks(float deltatime,const sf::FloatRect& playerBounds);
     void updateProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
@@ -36,7 +36,7 @@ public:
     std::vector<std::string> mapData;
     sf::Sprite tile;
     int tileSize;
-    std::vector<Coin*> coins;
+    std::vector<Item*> coins;
     std::vector<Monster*> monsters;
     std::vector<Block*> blocks;
 	int coinsNumber;

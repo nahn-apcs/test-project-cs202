@@ -8,18 +8,29 @@ class Block;
 
 class BlockState {
 public:
-  virtual void ontouch(Block& block) = 0;
+  virtual void ontouch(Block& block,
+                       std::vector<std::string>& mapData,
+                       int tileSize, sf::Texture& text) = 0;
 };
 class ActiveState : public BlockState {
-  void ontouch(Block& block) override;
+  void ontouch(Block& block,
+               std::vector<std::string>& mapData,
+               int tileSize,
+               sf::Texture& text) override;
 };
 
 class InactiveState : public BlockState {
-  void ontouch(Block& block) override;
+  void ontouch(Block& block,
+               std::vector<std::string>& mapData,
+               int tileSize,
+               sf::Texture& text) override;
 };
 
 class DestroyedState : public BlockState {
-  void ontouch(Block& block) override;
+  void ontouch(Block& block,
+               std::vector<std::string>& mapData,
+               int tileSize,
+               sf::Texture& text) override;
 };
 
 
