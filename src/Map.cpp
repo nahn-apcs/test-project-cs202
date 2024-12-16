@@ -84,9 +84,9 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 }
 
 void Map::draw(sf::RenderWindow& window) {
-  for (auto& monster : monsters) {
-    monster->draw(window);
-  }
+    for (auto& monster : monsters) {
+        monster->draw(window);
+    }
     for (int i = 0; i < mapData.size(); ++i) {
         for (int j = 0; j < mapData[i].size(); ++j) {
             char tileType = mapData[i][j];
@@ -222,6 +222,41 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
   }
 }
 
+void Map::printMapData() const
+{
+	for (int i = 0; i < mapData.size(); ++i) {
+		for (int j = 0; j < mapData[i].size(); ++j) {
+			std::cout << mapData[i][j];
+		}
+		std::cout << std::endl;
+	}
+}
+
+void Map::saveMapData(const std::string& filePath) {
+    // Print debug information
+    std::cout << "Saving map data to: " << filePath << std::endl;
+
+    // Open the file
+    std::ofstream file(filePath);
+    if (!file.is_open()) {
+        std::cerr << "Error: Unable to open file: " << filePath << std::endl;
+        return;
+    }
+
+    // Check mapData size
+    if (mapData.empty()) {
+        std::cerr << "Warning: mapData is empty. No data will be written." << std::endl;
+    }
+
+    // Write data
+    for (const auto& data : mapData) {
+        file << data << '\n';
+    }
+
+    // Optional flush
+    file.flush();
+    std::cout << "Map data saved successfully." << std::endl;
+}
 
 
 bool Map::isVissible(const sf::Sprite& sprite, const sf::View& camera)

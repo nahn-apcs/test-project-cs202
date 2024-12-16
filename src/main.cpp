@@ -1,15 +1,30 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Map.h"
 #include "Character.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
 #include "render.h"
 #include "DrawEngine.h"
+#include "Sound.h"
+#include <fstream>
 
 const int TILE_SIZE = 32;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(constants::scene_width, constants::scene_height), "Mario Game", sf::Style::Close);
+    //sf::Music backgroundMusic;
+    //if (!backgroundMusic.openFromFile("../resources/Journey to the West.ogg")) {
+    //    return -1; // Error loading the music
+    //}
+
+    Sound backgroundSound;
+	std::string filePath = "../resources/Journey to the West.ogg";
+	backgroundSound.playBackgroundMusic(filePath);
+
+    // Set the music to loop and play it once
+    //backgroundMusic.setLoop(true);
+    //backgroundMusic.play();
 
     // Load textures
     sf::Texture tileset, playerTexture, monsterset, projectile;
@@ -20,6 +35,7 @@ int main() {
         ) {
         return -1;
     }
+
     std::vector<sf::Texture> runTextures(4);
     if (!runTextures[0].loadFromFile("../resources/run wk_sprite_1.png") ||
         !runTextures[1].loadFromFile("../resources/run wk_sprite_2.png") ||
@@ -27,16 +43,19 @@ int main() {
         !runTextures[3].loadFromFile("../resources/run wk_sprite_4.png")) {
         return -1;  // Error loading run textures
     }
+
     std::vector<sf::Texture> attackTextures(2);
     if (!attackTextures[0].loadFromFile("../resources/atk wk 3_sprite_2.png") ||
         !attackTextures[1].loadFromFile("../resources/atk wk 3_sprite_3.png")
-       ) {
+        ) {
         return -1;  // Error loading run textures
     }
+
     std::vector<sf::Texture> mapTextures;
     mapTextures.push_back(tileset);
     mapTextures.push_back(monsterset);
     mapTextures.push_back(projectile);
+
     // Create map and character
     Map gameMap("../resources/level.txt", TILE_SIZE, mapTextures);
     Character player(playerTexture, runTextures, attackTextures, 100, 100);
@@ -62,26 +81,9 @@ int main() {
     if (!font.loadFromFile("../resources/font/Pixel_NES.otf")) { // Replace with the correct font path
         return -1; // Error loading font
     }
-
-    //sf::Text messageText;
-    //messageText.setFont(font);
-    //messageText.setCharacterSize(24);
-    //messageText.setFillColor(sf::Color::Blue);
-    //messageText.setPosition(10.f, 10.f);
-    //messageText.setString("Coins: ");
-
-    //// Game clock for updating player and other mechanics (deltaTime)
-    sf::Clock gameClock;
-
-    //// Clock for tracking total time passed
-    sf::Clock timeClock;
-
-    //sf::Text timeText;
-    //timeText.setFont(font);
-    //timeText.setCharacterSize(24);
-    //timeText.setFillColor(sf::Color::Blue);
-    //timeText.setPosition(10, 40);
-	DrawEngine drawEngine;
+	sf::Clock gameClock;
+	sf::Clock timeClock;
+    DrawEngine drawEngine;
     // Game loop
     while (window.isOpen()) {
         sf::Event event;
@@ -109,19 +111,11 @@ int main() {
 
         camera.setCenter(cameraX, cameraY);
         window.setView(camera);
-      
+
         gameMap.updateMonsters(deltaTime, player.getBounds(), camera);
         gameMap.updateBlocks(deltaTime);
         gameMap.updateProjectiles(deltaTime);
 
-
-        // Update the time display
-        //sf::Time elapsedTime = timeClock.getElapsedTime();
-        //int seconds = static_cast<int>(elapsedTime.asSeconds()); // Convert time to seconds
-        //timeText.setString("Time: " + std::to_string(seconds) + "s"); // Update the text with elapsed time
-
-		// Display the game info
-		//drawEngine.displayGameInfo(window, timeClock);
         // Clear the window
         window.clear();
         for (int i = 0; i < xRepeatCount; ++i) {
@@ -135,21 +129,35 @@ int main() {
         gameMap.draw(window);
         player.draw(window);
         player.drawBounds(window);
-        //gameMap.updateMonsters(deltaTime, player.getBounds());
 
-        //window.setView(window.getDefaultView());
-
-        // Draw the message and time
-        /*window.draw(messageText);
-        window.draw(timeText);*/
-		drawEngine.displayGameInfo(window, timeClock, gameMap);
+        // Display game info
+        drawEngine.displayGameInfo(window, timeClock, gameMap);
 
         // Display everything on the window
         window.display();
     }
 
+    std::string resourcePath = "../resources/Ouput.txt";
+
+    // Open the file
+    std::ifstream testFileTesting(resourcePath);
+    std::ofstream testFile;
+
+    testFile.open(resourcePath);
+
+    // Check if the file was opened successfully
+    if (testFile.is_open()) {
+        testFile << "Test data\n";
+        testFile.close();
+        std::cout << "File saved successfully at " << resourcePath << std::endl;
+    }
+    else {
+        std::cerr << "Failed to create test file at " << resourcePath << std::endl;
+    }
+
     return 0;
 }
+
 
 
 

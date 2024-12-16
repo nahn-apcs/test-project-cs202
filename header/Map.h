@@ -14,6 +14,8 @@ public:
     Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
     void draw(sf::RenderWindow& window);
     std::vector<std::string> getMapData() const;
+	void printMapData() const;
+	void saveMapData(const std::string& filePath);
     int getTileSize() const { return tileSize; }
     void updateCoins(const sf::FloatRect& playerBounds, float t);
     void updateMonsters(float deltatime, const sf::FloatRect& playerBounds, const sf::View& camera);
