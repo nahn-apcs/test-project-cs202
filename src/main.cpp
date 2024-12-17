@@ -28,7 +28,7 @@ int main() {
 
     // Load textures
     sf::Texture tileset, playerTexture, monsterset, projectile;
-    if (!tileset.loadFromFile("../resources/blocks.png")
+    if (!tileset.loadFromFile("../resources/level1/blocks.png")
         || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
         || !monsterset.loadFromFile("../resources/Run-sheet.png")
         || !projectile.loadFromFile("../resources/bullet1_strip.png")

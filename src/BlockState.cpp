@@ -12,6 +12,12 @@ void ActiveState::ontouch(Block& block,
 
         block.setItemObject(coin);
       }
+    else if (block.getItem() == "peach") {
+      
+      Item* peach = ItemFactory::createItem("Peach", texture, { block.getPosition().x, block.getPosition().y - 36 });
+      block.setItemObject(peach);
+
+    }
   
     }
     

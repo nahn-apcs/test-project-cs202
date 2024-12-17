@@ -30,6 +30,7 @@ public:
   bool isCollected() const;
   void collect();
   sf::Sprite& getSprite();
+  bool isCollision(const sf::FloatRect& rect);
 };
 
 class Coin : public Item {

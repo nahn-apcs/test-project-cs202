@@ -50,7 +50,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
                 Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
        
-                block->setItem("mushroom");
+                block->setItem("peach");
             }
 
 
@@ -108,17 +108,17 @@ void Map::draw(sf::RenderWindow& window) {
             //}
             else if (tileType == 'P')
             {
-                tile.setTextureRect(sf::IntRect(16*32, 7*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'p') {
-                tile.setTextureRect(sf::IntRect(17*32, 7*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(17*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'H') {
-                tile.setTextureRect(sf::IntRect(16*32, 6*32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'h')
             {
-                tile.setTextureRect(sf::IntRect(17*32, 6*32, tileSize, tileSize));  // Assuming the first tile is a solid block
+                tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
 
             }
             else /*if (tileType == '0' || tileType == 'C')*/ { // Empty space (no drawing needed)
@@ -159,7 +159,13 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
         coin->update(deltatime, mapData, 32);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
             coin->collect(); // Collect the coin
-			coinCount++;
+          if (dynamic_cast<Coin*>(coin)) {
+            coinCount++;
+          }
+          else if (dynamic_cast<PowerUp*>(coin)) {
+            //implement power up
+          }
+			      
         }
     }
 }
@@ -307,6 +313,15 @@ void Map::updateScore()
 			mons++;
 		}
 	}
+   for (auto& block : blocks) {
+          auto item = block->getItemObject();
+          if (dynamic_cast<Coin*>(item)) {
+            if (item->isCollected()) {
+              coi++;
+       }
+     }
+   }
+
 	score = coi * 100 + mons * 200;
 }
 
@@ -323,8 +338,19 @@ void Map::updateBlocks(float deltatime,const sf::FloatRect& playerBounds)
       float dy = blockBottom - playerTop;
       if (dy < 5.0f) {
         if (!block->getIsTouched()) {
-          block->setState(new ActiveState());
-          block->onTouch2(mapData, tileSize, texture);
+          if (dynamic_cast<QuestionBlock*>(block)) {
+            block->setState(new ActiveState());
+            block->onTouch2(mapData, tileSize, texture);
+            auto item = block->getItemObject();
+            if (dynamic_cast<Coin*>(item)) {
+  
+              coinCount++;
+            }
+            else if (dynamic_cast<PowerUp*>(item)) {
+              coins.push_back(item);
+            }
+          }
+          
         }
       }
     }

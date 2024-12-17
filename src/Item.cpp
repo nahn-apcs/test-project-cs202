@@ -2,6 +2,7 @@
 
 Item::Item(const sf::Texture& texture) {
   sprite.setTexture(texture);
+  sprite.setTextureRect(sf::IntRect(0, 0, 32, 32)); 
   collected = false;
   isAnimated = true;
   isMoving = true;
@@ -83,13 +84,6 @@ Coin::~Coin()
 {
 }
 
-Mushroom::Mushroom(const sf::Texture& texture) : Item(texture) {
-}
-
-Mushroom::~Mushroom()
-{
-}
-
 PowerUp::PowerUp(const sf::Texture& texture) : Item(texture) {
 }
 
@@ -111,18 +105,30 @@ Item* ItemFactory::createItem(const std::string& type,
     coin->setAnimation(animation);
     return coin;
   }
-  else if (type == "Mushroom") {
-    Item* mushroom = new Mushroom(texture);
-    mushroom->setPosition(position.x, position.y);
-    return mushroom;
-  
-  }
-  else if (type == "PowerUp") {
+  else if (type == "Peach") {
     Item* powerUp = new PowerUp(texture);
     powerUp->setPosition(position.x, position.y);
+    auto animation = new BlockAnimation(powerUp->getSprite(), 0.3f);
+    animation->addFrame(sf::IntRect(0, 64, 48, 36));
+    animation->addFrame(sf::IntRect(48,64, 48, 36));
+    animation->addFrame(sf::IntRect(92,64, 48, 36));
+    powerUp->setAnimation(animation);
+    auto movement = new PatrolMovement();
+    powerUp->setMovement(movement);
     return powerUp;
     
   }
   return nullptr;
 }
 
+bool Item::isCollision(const sf::FloatRect& rect)
+{
+  sf::FloatRect blockBounds = sprite.getGlobalBounds();
+  float dx = rect.left - blockBounds.left;
+  float dy = rect.top - blockBounds.top;
+  float intersectX =
+    std::abs(dx) - (rect.width + blockBounds.width) / 2;
+  float intersectY =
+    std::abs(dy) - (rect.height + blockBounds.height) / 2;
+  return intersectX < 4 && intersectY < 0;
+}

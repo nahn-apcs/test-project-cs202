@@ -39,8 +39,10 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
         itemObject->collect();
       }
     }
-    if (item == "coin")
+    if (item == "coin") {
       coinTime -= deltatime;
+     
+    }
     sprite.move(0, velocityY * deltatime);
     velocityY += 10000.f * deltatime;
     if (sprite.getPosition().y >= initY) {
@@ -49,11 +51,6 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
       sprite.setTextureRect(sf::IntRect(5 * 32, 0, 32, 32));
       return;
     }
-
-
-    
-    
-    
     return;
   } 
   if (isMoving && movement) {
@@ -258,6 +255,7 @@ void Block::onTouch2(std::vector<std::string>& mapData, int tileSize, sf::Textur
     state->ontouch(*this, mapData, tileSize, texture);
   }
   isTouched = true;
+  if (item == "coin")
   velocityY = -400.f;
 }
 
