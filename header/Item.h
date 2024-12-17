@@ -5,6 +5,8 @@
 #include "MovementStrategy.h"
 #include "ObjectAnimation.h"
 #include "BlockAnimation.h"
+#include <vector>
+#include <string>
 
 class Item {
 protected:
@@ -15,6 +17,7 @@ protected:
   bool isMoving;
   std::string item;
   bool collected;
+ 
 
 public:
   Item(const sf::Texture& texture);
@@ -31,6 +34,7 @@ public:
   void collect();
   sf::Sprite& getSprite();
   bool isCollision(const sf::FloatRect& rect);
+
 };
 
 class Coin : public Item {
@@ -40,11 +44,6 @@ public:
   ~Coin();
 };
 
-class Mushroom : public Item {
-public:
-    Mushroom(const sf::Texture& texture);
-    ~Mushroom();
-};
 
 class PowerUp : public Item {
 public:
