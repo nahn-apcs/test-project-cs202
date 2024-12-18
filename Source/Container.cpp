@@ -8,7 +8,7 @@
 namespace GUI
 {
 
-Container::Container() : mChildren(), mSelectedChild(-1) {}
+Container::Container(Type _type) : mChildren(), mSelectedChild(-1), type(_type) {}
 
 void Container::pack(Component::Ptr component)
 {
@@ -34,11 +34,17 @@ void Container::handleEvent(const sf::Event& event)
 	{
 		if (event.key.code == sf::Keyboard::W || event.key.code == sf::Keyboard::Up)
 		{
-			selectPrevious();
+			if(type == TopDown) selectPrevious();
+		}
+		else if(event.key.code == sf::Keyboard::Left) {
+			if(type == LeftRight) selectPrevious();
 		}
 		else if (event.key.code == sf::Keyboard::S || event.key.code == sf::Keyboard::Down)
 		{
-			selectNext();
+			if(type == TopDown) selectNext();
+		}
+		else if(event.key.code == sf::Keyboard::Right) {
+			if(type == LeftRight) selectNext();
 		}
 		else if (event.key.code == sf::Keyboard::Return || event.key.code == sf::Keyboard::Space)
 		{

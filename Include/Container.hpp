@@ -12,12 +12,18 @@ namespace GUI
 
 class Container : public Component
 {
+
     public:
         typedef std::shared_ptr<Container> Ptr;
+
+        enum Type {
+            TopDown,
+            LeftRight,
+        };
             
 
 	public:
-							Container();
+							Container(Type _type);
 
         void				pack(Component::Ptr component);
 
@@ -32,6 +38,7 @@ class Container : public Component
         void				select(std::size_t index);
         void				selectNext();
         void				selectPrevious();
+        Type                type;
 
 
     private:

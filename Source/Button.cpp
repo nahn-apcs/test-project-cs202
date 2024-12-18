@@ -10,7 +10,7 @@
 namespace GUI
 {
 
-Button::Button(State::Context context): mCallback(), mSprite(context.textures->get(Textures::button)), mText("", context.fonts->get(Fonts::Main), 20), mIsToggle(false)
+Button::Button(State::Context context, Textures::ID TextureID, double _width, double _height): mCallback(), mSprite(context.textures->get(TextureID)), mText("", context.fonts->get(Fonts::Main), 20), mIsToggle(false), height(_height), width(_width)
 {
 	changeTexture(Normal);
 
@@ -25,6 +25,14 @@ void Button::setCallback(Callback callback)
 
 void Button::setText(const std::string& text)
 {
+	mText.setString(text);
+	centerOrigin(mText);
+}
+
+void Button::setText(const std::string& text, double height)
+{
+	sf::FloatRect bounds = mSprite.getLocalBounds();
+	mText.setPosition(bounds.width / 2.f, bounds.height / 2.f + height);
 	mText.setString(text);
 	centerOrigin(mText);
 }
@@ -97,8 +105,14 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Button::changeTexture(Type buttonType)
 {
-	sf::IntRect textureRect(0, 50*buttonType, 150, 45);
+	sf::IntRect textureRect(0, buttonType * height, width, height);
 	mSprite.setTextureRect(textureRect);
+	if(buttonType == Normal) {
+		mSprite.setColor(sf::Color(255, 255, 255, 128));
+	}
+	else {
+		mSprite.setColor(sf::Color(255, 255, 255, 255));
+	}
 }
 
 }

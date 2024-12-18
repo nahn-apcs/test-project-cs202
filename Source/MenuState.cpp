@@ -10,7 +10,7 @@
 
 const double speed[] = {90,90,90,75,75,75,60,60};
 
-MenuState::MenuState(StateStack& stack, Context context): State(stack, context), mBackgroundSprite(), mGUIContainer() {
+MenuState::MenuState(StateStack& stack, Context context): State(stack, context), mBackgroundSprite(), mGUIContainer(GUI::Container::TopDown) {
     sf::Texture& texture = context.textures->get(Textures::MainMenuBG_1);
     mBackgroundSprite.push_back(sf::Sprite(texture));
 
@@ -63,16 +63,16 @@ MenuState::MenuState(StateStack& stack, Context context): State(stack, context),
     mCloundSprite.push_back(tmp);
 
 
-    auto playButton = std::make_shared<GUI::Button>(context);
+    auto playButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     playButton->setPosition(565, 380);
     playButton->setText("Play");
     playButton->setCallback([this] () {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Level);
         std::cout << "Play button pressed" << std::endl;
     });
 
-    auto guideButton = std::make_shared<GUI::Button>(context);
+    auto guideButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     guideButton->setPosition(565, 440);
     guideButton->setText("Guide");
     guideButton->setCallback([this] () {
@@ -82,7 +82,7 @@ MenuState::MenuState(StateStack& stack, Context context): State(stack, context),
     });
 
 
-    auto settingButton = std::make_shared<GUI::Button>(context);
+    auto settingButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     settingButton->setPosition(565, 500);
     settingButton->setText("Setting");
     settingButton->setCallback([this] () {
@@ -91,7 +91,7 @@ MenuState::MenuState(StateStack& stack, Context context): State(stack, context),
         std::cout << "Setting button pressed" << std::endl;
     });
     
-    auto exitButton = std::make_shared<GUI::Button>(context);
+    auto exitButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     exitButton->setPosition(565, 560);
     exitButton->setText("Quit");
     exitButton->setCallback([this] () {

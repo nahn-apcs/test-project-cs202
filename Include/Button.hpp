@@ -36,10 +36,11 @@ class Button : public Component
 
 
 	public:
-								Button(State::Context context);
+								Button(State::Context context, Textures::ID textureID, double _width, double _height);
 
         void					setCallback(Callback callback);
         void					setText(const std::string& text);
+        void					setText(const std::string& text, double height);
         void					setToggle(bool flag);
 
         virtual bool			isSelectable() const;
@@ -62,6 +63,8 @@ class Button : public Component
         sf::Sprite				mSprite;
         sf::Text				mText;
         bool					mIsToggle;
+        double                  width;
+        double                  height;
 };
 
 }

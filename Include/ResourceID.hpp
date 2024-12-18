@@ -35,6 +35,10 @@ namespace Textures
 		//Guide
 		GuideBG,
 		CloseGuide,
+
+		//Level
+		LevelBG,
+		TestLevel,
     };
 }
 

@@ -8,7 +8,7 @@ namespace States
         None,
         Menu,
         Guide,
-        Game,
+        Level,
         Pause,
     };
 }

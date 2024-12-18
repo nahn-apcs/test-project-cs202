@@ -1,6 +1,7 @@
 #include <Application.hpp>
 #include <MenuState.hpp>
 #include <GuideState.hpp>
+#include <LevelState.hpp>
 #include <iostream>
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
@@ -32,6 +33,9 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::GuideBG, "Asset/Textures/Guide/guide.png");
 	mTextures.load(Textures::ID::CloseGuide, "Asset/Textures/Guide/close_guide.png");
+
+	mTextures.load(Textures::ID::LevelBG, "Asset/Textures/Level/level_bg.png");
+	mTextures.load(Textures::ID::TestLevel, "Asset/Textures/Level/test_level.png");
 	
 
 
@@ -95,6 +99,7 @@ void Application::registerStates()
 {
 	mStateStack.registerState<MenuState>(States::Menu);
 	mStateStack.registerState<GuideState>(States::Guide);
+	mStateStack.registerState<LevelState>(States::Level);
 	// mStateStack.registerState<TitleState>(States::Title);
 	// mStateStack.registerState<GameState>(States::Game);
 	// mStateStack.registerState<MultiplayerGameState>(States::HostGame, true);
