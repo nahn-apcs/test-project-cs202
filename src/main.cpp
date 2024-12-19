@@ -7,6 +7,8 @@
 #include "render.h"
 #include "DrawEngine.h"
 #include "Sound.h"
+#include "Map.h"
+#include "AudioManagement.h"
 #include <fstream>
 
 const int TILE_SIZE = 32;
@@ -20,8 +22,9 @@ int main() {
 
     Sound backgroundSound;
 	std::string filePath = "../resources/Journey to the West.ogg";
-	backgroundSound.playBackgroundMusic(filePath);
-
+	//backgroundSound.playBackgroundMusic(filePath);
+	AudioManagement audioManager;
+	audioManager.playMainMusic();
     // Set the music to loop and play it once
     //backgroundMusic.setLoop(true);
     //backgroundMusic.play();

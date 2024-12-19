@@ -44,6 +44,7 @@ void Character::interact(float deltatime, Map& map) {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
         jump();
     }
 
