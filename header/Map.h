@@ -27,11 +27,11 @@ public:
     int coinCount;
     int score;
 	void updateScore();
-    void updateBlocks(float deltatime,const sf::FloatRect& playerBounds);
+    void updateBlocks(float deltatime, sf::FloatRect& playerBounds);
     void updateProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
-    Map operator=(const Map& other);
+    Map operator&=(const Map& other);
 
   private:
     const std::string notCollidable = "0C";

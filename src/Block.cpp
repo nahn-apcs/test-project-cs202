@@ -160,7 +160,8 @@ bool Block::isCollission(const sf::FloatRect& playerbounds) const
     std::abs(dx) - (playerbounds.width + blockBounds.width) / 2;
    float intersectY =
     std::abs(dy) - (playerbounds.height + blockBounds.height) / 2;
-  return intersectX < 0 && intersectY < 0;
+   float midX = playerbounds.left + playerbounds.width / 2;
+   return intersectX < 0 && intersectY < 0 && midX > blockBounds.left && midX < blockBounds.left + blockBounds.width;
 }
 
 

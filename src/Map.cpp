@@ -333,12 +333,13 @@ void Map::updateScore()
 	score = coi * 100 + mons * 200;
 }
 
-void Map::updateBlocks(float deltatime,const sf::FloatRect& playerBounds)
+void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
 {
  // std::cout << playerBounds.top << std::endl;
   for (auto it = blocks.begin(); it != blocks.end();) {
     auto& block = *it;
     block->update(deltatime, mapData, tileSize);
+   // playerBounds.left += 2.0f;
     if (block->isCollission(playerBounds)) {
      
       float playerTop = playerBounds.top;
@@ -391,7 +392,7 @@ void Map::updateProjectiles(float deltatime)
   projectiles.update(deltatime);
 }
 
-Map Map::operator=(const Map& other)
+Map Map::operator&=(const Map& other)
 {
 	mapData = other.mapData;
 	tileSize = other.tileSize;

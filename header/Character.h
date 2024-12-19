@@ -10,15 +10,15 @@ public:
     Character() = default;
     Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& aTextures, int x, int y);
     ~Character();
-    void update(float deltaTime, const Map& map);
-    void move(float dx, float dy, const Map& map);
+    void update(float deltaTime, Map* map);
+    void move(float dx, float dy, Map* map);
     void jump();
-    void shoot( Map& map);
+    void shoot(Map* map);
     void draw(sf::RenderWindow& window);
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }
     void drawBounds(sf::RenderWindow& window);
-    void interact(float d,  Map& map);
+    void interact(float d, Map* map);
     void increaseSpeed();
     sf::FloatRect getBounds() const;
 
@@ -37,10 +37,10 @@ private:
     float cooldown = 0.f;
     bool faceRight;
 
-    void handleCollisions(const Map& map);
+    void handleCollisions(Map* map);
     void applyGravity(float deltaTime);
     void applyFriction(float deltaTime);
-    int checkWallCollision(float dx, float dy, const Map& map);
+    int checkWallCollision(float dx, float dy, Map* map);
 };
 
 #endif

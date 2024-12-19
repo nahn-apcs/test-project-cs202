@@ -58,9 +58,9 @@ private:
     std::vector<sf::Texture> runTextures;
     std::vector<sf::Texture> attackTextures;
     std::vector<sf::Texture> mapTextures;
-    Map gameMap;   
+    Map* gameMap;   
     Character* player;
-    DrawEngine drawEngine;
+    DrawEngine* drawEngine;
     sf::Clock gameClock;
     sf::Clock timeClock;
     float elapsedTime = 0;

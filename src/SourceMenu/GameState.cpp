@@ -12,6 +12,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 	projectile = context.textures->get(Textures::Bullet);
 	camera = sf::View(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
 	std::cout << "GameState" << "\n";
+	drawEngine = new DrawEngine();
 	
 	switch (character)
 	{
@@ -34,19 +35,17 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 	switch (level)
 	{
 		case 1:
-			std::cout << "GameState 2.1" << "\n";
 
 			tileset = context.textures->get(Textures::Blocks);
 			mapTextures.push_back(tileset);
 			mapTextures.push_back(monsterset);
 			mapTextures.push_back(projectile);
-			gameMap = Map("../ resources / Level1 / level.txt", 32, mapTextures);
+			gameMap = new Map("../resources/Level1/level.txt", 32, mapTextures);
 			backgroundTexture = context.textures->get(Textures::Bg1);
 			backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
-			std::cout << gameMap.getMapData().size() << "\n";
-			xRepeatCount = gameMap.getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
-			yRepeatCount = gameMap.getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-			std::cout << "GameState 2.2" << "\n";
+			std::cout << gameMap->getMapData().size() << "\n";
+			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
 			break;
 	default:
@@ -57,19 +56,18 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 }
 
 bool GameState::update(sf::Time dt) {
-	std::cout << "GameState 3" << "\n";
 
 	float deltaTime = gameClock.restart().asSeconds();
 	sf::RenderWindow& window = *getContext().window;
 	        // Update player and game state
 	        player->interact(deltaTime, gameMap);
 	        player->update(deltaTime, gameMap);
-	        gameMap.updateCoins(player->getBounds(), deltaTime);
-	        gameMap.updateScore();
+	        gameMap->updateCoins(player->getBounds(), deltaTime);
+	        gameMap->updateScore();
 	
 	        // Update camera position based on player position
-	        int mapWidth = gameMap.getMapData()[0].size() * gameMap.getTileSize();
-	        int mapHeight = gameMap.getMapData().size() * gameMap.getTileSize();
+	        int mapWidth = gameMap->getMapData()[0].size() * gameMap->getTileSize();
+	        int mapHeight = gameMap->getMapData().size() * gameMap->getTileSize();
 	
 	        // Make sure the camera stays within the bounds of the map
 	        float cameraX = std::max(constants::scene_width / 2.f, std::min(player->getBounds().left + player->getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
@@ -78,20 +76,23 @@ bool GameState::update(sf::Time dt) {
 	        camera.setCenter(cameraX, cameraY);
 	        window.setView(camera);
 	
-	        gameMap.updateMonsters(deltaTime, player->getBounds(), camera);
-	        gameMap.updateBlocks(deltaTime,player->getBounds());
-	        gameMap.updateProjectiles(deltaTime);
-			std::cout << "GameState 4" << "\n";
+	        gameMap->updateMonsters(deltaTime, player->getBounds(), camera);
+	        gameMap->updateBlocks(deltaTime,player->getBounds());
+	        gameMap->updateProjectiles(deltaTime);
 
 			return false;
 }
 
 void GameState::draw() {
 	sf::RenderWindow& window = *getContext().window;
-	window.setView(window.getDefaultView());
-
-	window.draw(backgroundSprite);
-	gameMap.draw(window);
+	window.setView(camera);
+	for (int i = 0; i < xRepeatCount; ++i) {
+		            for (int j = 0; j < yRepeatCount; ++j) {
+		                backgroundSprite.setPosition(i * backgroundTexture.getSize().x, j * backgroundTexture.getSize().y);
+		                window.draw(backgroundSprite); 
+		            }
+		        }
+	gameMap->draw(window);
 	player->draw(window);
 }
 
