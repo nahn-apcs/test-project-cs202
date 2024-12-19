@@ -1,15 +1,80 @@
-//#include <SFML/Graphics.hpp>
-//#include <SFML/Audio.hpp>
-//#include "Map.h"
-//#include "Character.h"
-//#include <SFML/Window/Keyboard.hpp>
-//#include <SFML/System/Clock.hpp>
-//#include "render.h"
-//#include "DrawEngine.h"
-//#include "Sound.h"
-//#include "Map.h"
-//#include "AudioManagement.h"
-//#include <fstream>
+#pragma once
+
+#include <SFML/Graphics.hpp>
+
+#include <State.hpp>
+#include <Container.hpp>
+#include <vector>
+
+#include <SFML/Audio.hpp>
+#include "Map.h"
+#include "Character.h"
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/System/Clock.hpp>
+#include "render.h"
+#include "DrawEngine.h"
+#include "Sound.h"
+#include "Map.h"
+#include "AudioManagement.h"
+#include <fstream>
+#include "constant.h"
+
+
+class GameState : public State {
+
+public:
+    GameState(StateStack& stack, Context context, int level = 1, int charac =1);
+
+    virtual void draw();
+    virtual bool update(sf::Time dt);
+    virtual bool handleEvent(const sf::Event& event);
+
+private:
+
+    int level = 1;
+
+  /*  std::vector<sf::Sprite> mBackgroundSprite;
+    std::vector<sf::Sprite> mCloundSprite;
+    GUI::Container mGUIContainer;
+
+    sf::Text wukongText;
+    sf::Text shadowText;
+    float mScale = 0.1f;
+    float mWukongAlpha = 255;
+    bool mFadingOut = true;
+    TextState mTextState = ScalingUp;*/
+    //    // Load textures
+//    sf::Texture tileset, playerTexture, monsterset, projectile;
+//    if (!tileset.loadFromFile("../resources/level1/blocks.png")
+//        || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
+//        || !monsterset.loadFromFile("../resources/Run-sheet.png")
+//        || !projectile.loadFromFile("../resources/bullet1_strip.png")
+//        ) {
+//        return -1;
+//    }
+
+    sf::Texture tileset, playerTexture, monsterset, projectile;
+    sf::Sprite backgroundSprite;
+    std::vector<sf::Texture> runTextures;
+    std::vector<sf::Texture> attackTextures;
+    std::vector<sf::Texture> mapTextures;
+    Map gameMap;   
+    Character* player;
+    DrawEngine drawEngine;
+    sf::Clock gameClock;
+    sf::Clock timeClock;
+    float elapsedTime = 0;
+    int character = 1;
+    int xRepeatCount, yRepeatCount;
+    sf::Texture backgroundTexture;
+    sf::View camera;
+
+};
+
+
+
+
+
 //
 //const int TILE_SIZE = 32;
 //

@@ -92,9 +92,38 @@ FetchContent_MakeAvailable(json)
 # để khi chạy có thể tìm thấy hết file
 file(GLOB SRCS CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/SourceMenu/*.cpp
 )
 
-add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp" "header/Coin.h" "src/Coin.cpp" "header/Animation.h" "header/Monster.h" "src/Monster.cpp" "header/MonsterAnimation.h" "src/MonsterAnimation.cpp"  "header/DrawEngine.h" "src/DrawEngine.cpp" "header/ObjectAnimation.h" "header/BlockAnimation.h" "src/CoinAnimation.cpp" "header/Block.h"  "src/Block.cpp" "header/BlockState.h" "src/BlockState.cpp" "header/Projectile.h" "header/ProjectileAnimation.h" "src/Projectile.cpp" "src/ProjectileAnimation.cpp" "header/Item.h" "src/Item.cpp" "src/AudioManagement.cpp")
+add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp" "header/Coin.h" "src/Coin.cpp" "header/Animation.h" "header/Monster.h" "src/Monster.cpp" "header/MonsterAnimation.h" "src/MonsterAnimation.cpp"  "header/DrawEngine.h" "src/DrawEngine.cpp" "header/ObjectAnimation.h" "header/BlockAnimation.h" "src/CoinAnimation.cpp" "header/Block.h"  "src/Block.cpp" "header/BlockState.h" "src/BlockState.cpp" "header/Projectile.h" "header/ProjectileAnimation.h" "src/Projectile.cpp" "src/ProjectileAnimation.cpp" "header/Item.h" "src/Item.cpp" "src/AudioManagement.cpp" 
+    # Source files
+"src/SourceMenu/Animation.cpp"
+"src/SourceMenu/Application.cpp"
+"src/SourceMenu/Button.cpp"
+"src/SourceMenu/Component.cpp"
+"src/SourceMenu/Container.cpp"
+"src/SourceMenu/GuideState.cpp"
+"src/SourceMenu/LevelState.cpp"
+"src/SourceMenu/main.cpp"
+"src/SourceMenu/MenuState.cpp"
+"src/SourceMenu/State.cpp"
+"src/SourceMenu/StateStack.cpp"
+"src/SourceMenu/Utility.cpp"
+
+# Header files
+"header/Include/Animation.hpp"
+"header/Include/Application.hpp"
+"header/Include/Button.hpp"
+"header/Include/Component.hpp"
+"header/Include/Container.hpp"
+"header/Include/GuideState.hpp"
+"header/Include/LevelState.hpp"
+"header/Include/MenuState.hpp"
+"header/Include/State.hpp"
+"header/Include/StateStack.hpp"
+"header/Include/Utility.hpp"
+
+ "src/SourceMenu/GameState.cpp")
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)
@@ -110,6 +139,8 @@ target_include_directories(game PRIVATE
     #${CMAKE_SOURCE_DIR}/include
     header
     resources
+    Asset
+    header/Include
 )
 
 if(WIN32)
@@ -124,6 +155,8 @@ add_custom_target(copy_resources_images ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources
     ${CMAKE_BINARY_DIR}/resources
+    ${CMAKE_SOURCE_DIR}/Asset
+    ${CMAKE_BINARY_DIR}/Asset
 )
 add_dependencies(game copy_resources_images)
 

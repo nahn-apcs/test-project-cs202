@@ -8,6 +8,8 @@ AudioManagement audioManager;
 Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& mapTexture)
     : tileSize(tileSize)
 {
+    
+    std::cout << "Map constructor called" << std::endl;
     coinsNumber = 0;
     monsterNumber = 0;
     coinCount = 0;
@@ -15,6 +17,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
     std::ifstream file(filePath);
     std::string line;
     while (std::getline(file, line)) {
+        std::cout << line << std::endl;
         mapData.push_back(line);
     }
 
@@ -386,4 +389,20 @@ void Map::updateProjectiles(float deltatime)
 	}
 
   projectiles.update(deltatime);
+}
+
+Map Map::operator=(const Map& other)
+{
+	mapData = other.mapData;
+	tileSize = other.tileSize;
+	texture = other.texture;
+	Monstertexture = other.Monstertexture;
+	projectTile = other.projectTile;
+	tile = other.tile;
+	coins = other.coins;
+	monsters = other.monsters;
+	blocks = other.blocks;
+	coinCount = other.coinCount;
+	score = other.score;
+	return *this;
 }

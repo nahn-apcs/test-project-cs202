@@ -11,6 +11,7 @@
 
 class Map {
 public:
+    Map() = default;
     Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
     void draw(sf::RenderWindow& window);
     std::vector<std::string> getMapData() const;
@@ -30,6 +31,7 @@ public:
     void updateProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
+    Map operator=(const Map& other);
 
   private:
     const std::string notCollidable = "0C";

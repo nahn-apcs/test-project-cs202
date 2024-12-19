@@ -7,6 +7,7 @@
 
 class Character {
 public:
+    Character() = default;
     Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& aTextures, int x, int y);
     ~Character();
     void update(float deltaTime, const Map& map);
