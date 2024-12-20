@@ -59,6 +59,13 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
                 block->setItem("peach");
             }
 
+            if (mapData[i][j] == 'W') {
+            
+                Block* block = BlockFactory::createBlock(
+                "water", texture, { j * tileSize, i * tileSize });
+              blocks.push_back(block);
+            }
+
 
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
@@ -128,7 +135,34 @@ void Map::draw(sf::RenderWindow& window) {
                 tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
 
             }
-            else /*if (tileType == '0' || tileType == 'C')*/ { // Empty space (no drawing needed)
+            else if (tileType == 'X') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 2*32, tileSize, tileSize));
+            }
+            else if (tileType =='Y') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 32, tileSize, tileSize));
+            }
+            else if (tileType == 'Z') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'L') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 2 * 32, tileSize, tileSize));
+            }
+            else if (tileType == 'c') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 32, tileSize, tileSize));
+            }
+            else if (tileType == 'R') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'x') {
+              tile.setTextureRect(sf::IntRect(20 * 32, 2*32, tileSize, tileSize));
+            }
+            else if (tileType == 'y') {
+              tile.setTextureRect(sf::IntRect(20 * 32,32, tileSize, tileSize));
+            }
+            else if (tileType == 'z') {
+              tile.setTextureRect(sf::IntRect(20 * 32, 0, tileSize, tileSize));
+            }
+            else{
                 continue;
             }
 

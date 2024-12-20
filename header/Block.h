@@ -76,10 +76,10 @@ public:
   ~BrickBlock();
 };
 
-class HiddenBlock : public Block {
+class WaterBlock : public Block {
 public:
-	HiddenBlock(const sf::Texture& texture);
-	~HiddenBlock();
+	WaterBlock(const sf::Texture& texture);
+	~WaterBlock();
 
 };
 

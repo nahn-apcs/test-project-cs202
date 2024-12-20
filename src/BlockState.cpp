@@ -29,10 +29,6 @@ void ActiveState::ontouch(Block& block,
     block.setState(new DestroyedState());
   }
 
-  if (dynamic_cast<HiddenBlock*>(&block)) {
-    //implement animation
-    block.setState(new InactiveState());
-  }
 
   if (dynamic_cast<CoinBlock*>(&block)) {
     //implement animation

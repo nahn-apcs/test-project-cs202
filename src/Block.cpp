@@ -183,12 +183,12 @@ BrickBlock::~BrickBlock()
 {
 }
 
-HiddenBlock::HiddenBlock(const sf::Texture& texture)
+WaterBlock::WaterBlock(const sf::Texture& texture)
   : Block(texture)
 {
 }
 
-HiddenBlock::~HiddenBlock()
+WaterBlock::~WaterBlock()
 {
 }
 
@@ -222,9 +222,20 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     block->setInitY(position.y);
     return block;
   }
-  else if (type == "hidden") {
-    HiddenBlock* block = new HiddenBlock(texture);
+  else if (type == "water") {
+    WaterBlock* block = new WaterBlock(texture);
     block->setPosition(position.x, position.y);
+    auto ani = new BlockAnimation(block->getSprite(), 0.3f);
+    ani->addFrame(sf::IntRect(32 * 6, 32*2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 7, 32*2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 8, 32*2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 9, 32*2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 10, 32 * 2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 11, 32 * 2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 12, 32 * 2, 31, 31));
+    ani->addFrame(sf::IntRect(32 * 13, 32 * 2, 31, 31));
+    block->setAnimated(true);
+    block->setAnimation(ani);
     return block;
   }
   else if (type == "coin") {
