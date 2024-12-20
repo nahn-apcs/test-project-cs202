@@ -1,9 +1,8 @@
 #include "Map.h"
 #include "render.h"
 #include <fstream>
-#include "AudioManagement.h"
 
-AudioManagement audioManager;
+
 
 Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& mapTexture)
     : tileSize(tileSize)
@@ -90,7 +89,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 }
 
 void Map::draw(sf::RenderWindow& window) {
-	audioManager.playMainMusic();
+	//audioManager.playMainMusic();
     for (auto& monster : monsters) {
         monster->draw(window);
     }
@@ -165,7 +164,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     for (auto& coin : coins) {
         coin->update(deltatime, mapData, 32);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
-            audioManager.playCoinSound();
+            //audioManager.playCoinSound();
             coin->collect(); // Collect the coin
           if (dynamic_cast<Coin*>(coin)) {
             coinCount++;
@@ -352,7 +351,7 @@ void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
             block->onTouch2(mapData, tileSize, texture);
             auto item = block->getItemObject();
             if (dynamic_cast<Coin*>(item)) {
-  
+                //audioManager.playCoinSound();
               coinCount++;
             }
             else if (dynamic_cast<PowerUp*>(item)) {
@@ -405,5 +404,8 @@ Map Map::operator&=(const Map& other)
 	blocks = other.blocks;
 	coinCount = other.coinCount;
 	score = other.score;
+    coinsNumber = other.coinsNumber;
+    monsterNumber = other.monsterNumber;
+    projectiles = other.projectiles;
 	return *this;
 }

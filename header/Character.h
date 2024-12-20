@@ -8,10 +8,12 @@
 class Character {
 public:
     Character() = default;
-    Character(sf::Texture& idleTexture, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& aTextures, int x, int y);
+    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, int x, int y);
     ~Character();
     void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
+    void pushBack(Map*);
+    void dead(Map*);
     void jump();
     void shoot(Map* map);
     void draw(sf::RenderWindow& window);
@@ -20,6 +22,8 @@ public:
     void drawBounds(sf::RenderWindow& window);
     void interact(float d, Map* map);
     void increaseSpeed();
+    void levelUp(Map* map);
+    void damaged(Map* map);
     sf::FloatRect getBounds() const;
 
 private:
@@ -28,14 +32,20 @@ private:
     bool onGround;
     bool isJumping;
     bool attacking;
-    Animation* runAnimation;  // Pointer to the running animation
-    Animation* attackAnimation;
-    sf::Texture idle;
+
+    int status = 0;
+
+    std::vector<Animation*> runAnimations;  // Vector of running animations
+    std::vector<Animation*> attackAnimations;
+    std::vector<Animation*> idleAnimations;
+    std::vector<Animation*> jumpAnimations;
+
     const float gravity = 600.f;
     const float jumpStrength = -400.f;
     float moveSpeed = 100.f;
     float cooldown = 0.f;
     bool faceRight;
+    int level = 1;
 
     void handleCollisions(Map* map);
     void applyGravity(float deltaTime);

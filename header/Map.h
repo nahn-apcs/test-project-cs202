@@ -8,10 +8,12 @@
 #include"Monster.h"
 #include"Block.h"
 #include "Projectile.h"
+#include "AudioManagement.h"
 
 class Map {
 public:
     Map() = default;
+    Map(const Map& other) = default;
     Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
     void draw(sf::RenderWindow& window);
     std::vector<std::string> getMapData() const;
@@ -31,8 +33,17 @@ public:
     void updateProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
+    //AudioManagement audioManager;
     Map operator&=(const Map& other);
-
+    std::vector<Block*> getBlocks() const { return blocks; }
+    void increaseCoinsNumber(){ coinsNumber++; }
+    void addCoins(Item* coin) { coins.push_back(coin); }
+    sf::Texture& getTexture() { return texture; }
+    std::vector<Item*> getCoins() const { return coins; }
+    std::vector<Monster*> getMonsters() const { return monsters; }
+    std::vector<Block*> getBlocks() { return blocks; }
+    ProjectileManager& getProjectiles() { return projectiles; }
+    //AudioManagement& getAudioManager() { return audioManager; }
   private:
     const std::string notCollidable = "0C";
     std::vector<std::string> mapData;

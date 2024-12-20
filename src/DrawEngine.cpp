@@ -1,10 +1,10 @@
 #include "DrawEngine.h"
 
-void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map& map) {
+void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map* map) {
 	// Display the game info
 	sf::Text coinText;
 	coinText.setFont(font);
-	coinText.setString("Coins: " + std::to_string(map.coinCount));
+	coinText.setString("Coins: " + std::to_string(map->coinCount));
 
 	coinText.setCharacterSize(24);
 	coinText.setFillColor(sf::Color::Black);
@@ -30,7 +30,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock,
 
 	sf::Text scoreText;
 	scoreText.setFont(font);
-	scoreText.setString("Score: " + std::to_string(map.score));
+	scoreText.setString("Score: " + std::to_string(map->score));
 	scoreText.setCharacterSize(24);
 	scoreText.setFillColor(sf::Color::Black);
 	scoreText.setPosition(610, 10);

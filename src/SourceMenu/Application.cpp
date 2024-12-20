@@ -37,15 +37,30 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::LevelBG, "../Asset/Textures/Level/level_bg.png");
 	mTextures.load(Textures::ID::TestLevel, "../Asset/Textures/Level/test_level.png");
+
+	mTextures.load(Textures::ID::WukongStand1, "../resources/wukong16bit/stand wk_sprite_1.png");
+	mTextures.load(Textures::ID::WukongStand2, "../resources/wukong16bit/stand wk_sprite_2.png");
+	mTextures.load(Textures::ID::WukongStand3, "../resources/wukong16bit/stand wk_sprite_3.png");
+	mTextures.load(Textures::ID::WukongStand4, "../resources/wukong16bit/stand wk_sprite_4.png");
+	mTextures.load(Textures::ID::WukongJump1, "../resources/wukong16bit/jumpwk_sprite_1.png");
+	mTextures.load(Textures::ID::WukongJump2, "../resources/wukong16bit/jumpwk_sprite_2.png");
+	mTextures.load(Textures::ID::WukongJump3, "../resources/wukong16bit/jumpwk_sprite_3.png");
+	mTextures.load(Textures::ID::WukongJump4, "../resources/wukong16bit/jumpwk_sprite_4.png");
+	mTextures.load(Textures::ID::WukongRun1, "../resources/wukong16bit/run wk_sprite_1.png");
+	mTextures.load(Textures::ID::WukongRun2, "../resources/wukong16bit/run wk_sprite_2.png");
+	mTextures.load(Textures::ID::WukongRun3, "../resources/wukong16bit/run wk_sprite_3.png");
+	mTextures.load(Textures::ID::WukongRun4, "../resources/wukong16bit/run wk_sprite_4.png");
+	mTextures.load(Textures::ID::WukongAttack1, "../resources/wukong16bit/atk wk 3_sprite_2.png");
+	mTextures.load(Textures::ID::WukongAttack2, "../resources/wukong16bit/atk wk 3_sprite_3.png");
+
+	mTextures.load(Textures::ID::SmallWukongStand1, "../resources/smallwukong/stand_sprite_1.png");
+	mTextures.load(Textures::ID::SmallWukongStand2, "../resources/smallwukong/stand_sprite_2.png");
+	mTextures.load(Textures::ID::SmallWukongStand3, "../resources/smallwukong/stand_sprite_3.png");
+	mTextures.load(Textures::ID::SmallWukongStand4, "../resources/smallwukong/stand_sprite_4.png");
+
 	
-	mTextures.load(Textures::ID::WukongIdle, "../resources/atk wk 2_sprite_2.png");
-	mTextures.load(Textures::ID::WukongRun1, "../resources/run wk_sprite_1.png");
-	mTextures.load(Textures::ID::WukongRun2, "../resources/run wk_sprite_2.png");
-	mTextures.load(Textures::ID::WukongRun3, "../resources/run wk_sprite_3.png");
-	mTextures.load(Textures::ID::WukongRun4, "../resources/run wk_sprite_4.png");
-	mTextures.load(Textures::ID::WukongAttack1, "../resources/atk wk 3_sprite_2.png");
-	mTextures.load(Textures::ID::WukongAttack2, "../resources/atk wk 3_sprite_3.png");
-	mTextures.load(Textures::ID::Bullet, "../resources/bullet1_strip2.png");
+	
+	mTextures.load(Textures::ID::Bullet, "../resources/bullet1_strip.png");
 	mTextures.load(Textures::ID::Enemies, "../resources/Run-sheet.png");
 	mTextures.load(Textures::ID::Bg1, "../resources/Level1/bg.png");
 	mTextures.load(Textures::ID::Blocks, "../resources/Level1/blocks.png");
