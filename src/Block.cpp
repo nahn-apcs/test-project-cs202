@@ -31,28 +31,44 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
 {
   if (isTouched)
   {
- 
-
-    if (itemObject) {
-      itemObject->update(deltatime, mapData, tileSize);
-      if (coinTime < 0.01f) {
-        itemObject->collect();
+    if (dynamic_cast<QuestionBlock*>(this)) {
+      if (itemObject) {
+        itemObject->update(deltatime, mapData, tileSize);
+        if (coinTime < 0.01f) {
+          itemObject->collect();
+        }
       }
-    }
-    if (item == "coin") {
-      coinTime -= deltatime;
-     
-    }
-    sprite.move(0, velocityY * deltatime);
-    velocityY += 10000.f * deltatime;
-    if (sprite.getPosition().y >= initY) {
-      sprite.setPosition(sprite.getPosition().x, initY);
-      velocityY = 0;
-      sprite.setTextureRect(sf::IntRect(5 * 32, 0, 32, 32));
+      if (item == "coin") {
+        coinTime -= deltatime;
+      }
+      sprite.move(0, velocityY * deltatime);
+      velocityY += 10000.f * deltatime;
+      if (sprite.getPosition().y >= initY) {
+        sprite.setPosition(sprite.getPosition().x, initY);
+        velocityY = 0;
+        sprite.setTextureRect(sf::IntRect(5 * 32, 0, 32, 32));
+        return;
+      }
       return;
     }
-    return;
+    
   } 
+  if (dynamic_cast<BrickBlock*>(this) && this->isDestroyed) {
+    if (animation) {
+      animation->update(deltatime, false);
+      animation->applyToSprite(sprite, true);
+      if (animation->isFinished()) {
+        sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
+        sprite.setPosition(-1000, -1000);
+      }
+      if (isMoving && movement) {
+        movement->move(sprite, deltatime, mapData, tileSize);
+      }
+    }
+    return;
+  }
+  
+
   if (isMoving && movement) {
     movement->move(sprite, deltatime, mapData, tileSize);
   }
@@ -164,6 +180,11 @@ bool Block::isCollission(const sf::FloatRect& playerbounds) const
    return intersectX < 0 && intersectY < 0 && midX > blockBounds.left && midX < blockBounds.left + blockBounds.width;
 }
 
+void Block::setDestroyed(bool isDestroyed)
+{
+  this->isDestroyed = isDestroyed;
+}
+
 
 QuestionBlock::QuestionBlock(const sf::Texture& texture)
   : Block(texture)
@@ -190,16 +211,16 @@ WaterBlock::WaterBlock(const sf::Texture& texture)
 
 WaterBlock::~WaterBlock()
 {
-}
-
-CoinBlock::CoinBlock(sf::Texture& texture)
+}DestroyedBlock::DestroyedBlock(const sf::Texture& texture)
   : Block(texture)
 {
 }
 
-CoinBlock::~CoinBlock()
+DestroyedBlock::~DestroyedBlock()
 {
 }
+
+
 
 Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, sf::Vector2i position)
 {
@@ -238,11 +259,21 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     block->setAnimation(ani);
     return block;
   }
-  else if (type == "coin") {
-    CoinBlock* block = new CoinBlock(texture);
+  else if (type == "destroyed") {
+    DestroyedBlock* block = new DestroyedBlock(texture);
     block->setPosition(position.x, position.y);
+    auto ani = new BlockAnimation(block->getSprite(), 0.4f);
+    //ani->addFrame(sf::IntRect(32 * 4, 0, 32, 32));
+    //ani->addFrame(sf::IntRect(32 * 3, 0, 32, 32));
+    ani->addFrame(sf::IntRect(32 * 2, 0, 32, 32));
+    ani->addFrame(sf::IntRect(32 * 2, 32, 32, 32));
+    block->setAnimated(true);
+    block->setAnimation(ani);
+    block->setDestroyed(true);
+    block->setMoving(true);
     return block;
   }
+
 }
 
 void Block::setItem(const std::string& item)

@@ -47,7 +47,36 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
 			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
+
 			break;
+    case 2:
+      tileset = context.textures->get(Textures::Blocks2);
+      mapTextures.push_back(tileset);
+      mapTextures.push_back(monsterset);
+      mapTextures.push_back(projectile);
+      gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
+      backgroundTexture = context.textures->get(Textures::Bg2);
+      backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
+      std::cout << gameMap->getMapData().size() << "\n";
+      xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+      yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+
+      break;
+    case 3:
+      tileset = context.textures->get(Textures::Blocks3);
+      mapTextures.push_back(tileset);
+      mapTextures.push_back(monsterset);
+      mapTextures.push_back(projectile);
+      gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+      backgroundTexture = context.textures->get(Textures::Bg3);
+      backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
+      std::cout << gameMap->getMapData().size() << "\n";
+      xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+      yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+
+      break;
+
+
 	default:
 		break;
 	}

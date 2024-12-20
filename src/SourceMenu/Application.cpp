@@ -37,6 +37,11 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::LevelBG, "../Asset/Textures/Level/level_bg.png");
 	mTextures.load(Textures::ID::TestLevel, "../Asset/Textures/Level/test_level.png");
+  mTextures.load(Textures::ID::Bg2, "../resources/Level2/bg.png");
+  mTextures.load(Textures::ID::Blocks2, "../resources/Level2/blocks.png");
+  mTextures.load(Textures::ID::Bg3, "../resources/Level3/bg.png");
+  mTextures.load(Textures::ID::Blocks3, "../resources/Level3/blocks.png");
+
 	
 	mTextures.load(Textures::ID::WukongIdle, "../resources/atk wk 2_sprite_2.png");
 	mTextures.load(Textures::ID::WukongRun1, "../resources/run wk_sprite_1.png");

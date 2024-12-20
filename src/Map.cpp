@@ -147,7 +147,7 @@ void Map::draw(sf::RenderWindow& window) {
             else if (tileType == 'L') {
               tile.setTextureRect(sf::IntRect(19 * 32, 2 * 32, tileSize, tileSize));
             }
-            else if (tileType == 'c') {
+            else if (tileType == 'Q') {
               tile.setTextureRect(sf::IntRect(19 * 32, 32, tileSize, tileSize));
             }
             else if (tileType == 'R') {
@@ -162,11 +162,22 @@ void Map::draw(sf::RenderWindow& window) {
             else if (tileType == 'z') {
               tile.setTextureRect(sf::IntRect(20 * 32, 0, tileSize, tileSize));
             }
+            else if (tileType == 'c') {
+              tile.setTextureRect(sf::IntRect(21 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'a') {
+              tile.setTextureRect(sf::IntRect(23 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'd') {
+              tile.setTextureRect(
+                sf::IntRect(21 * 32, 2 * 32, tileSize, tileSize));
+            }
+            else if (tileType == 'q') {
+              tile.setTextureRect(sf::IntRect(23 * 32, 2 * 32, tileSize, tileSize));
+            }
             else{
                 continue;
             }
-
-
             tile.setPosition(j * tileSize, i * tileSize);
             window.draw(tile);
         }
@@ -191,6 +202,19 @@ void Map::draw(sf::RenderWindow& window) {
 	//text.setCharacterSize(24);
 	//text.setFillColor(sf::Color::Black);
 	//text.setPosition(10, 10);
+}
+
+Map::~Map() {
+   // std::cout << "Map destructor called" << std::endl;
+    for (auto& coin : coins) {
+        delete coin;
+    }
+    for (auto& monster : monsters) {
+        delete monster;
+    }
+    for (auto& block : blocks) {
+        delete block;
+    }
 }
 
 void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
@@ -392,6 +416,11 @@ void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
             else if (dynamic_cast<PowerUp*>(item)) {
               coins.push_back(item);
             }
+          }
+          else if (dynamic_cast<BrickBlock*>(block)) {
+            block->setState(new DestroyedState());
+            block->onTouch2(mapData, tileSize, texture);
+            auto item = block->getItemObject();
           }
           
         }

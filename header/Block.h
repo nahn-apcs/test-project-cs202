@@ -26,6 +26,7 @@ protected:
   std::string item;
   Item* itemObject;
   sf::Texture texture;
+  bool isDestroyed = false;
 
 public:
   Block(const sf::Texture& texture);
@@ -49,6 +50,7 @@ public:
                 int tileSize,
                 sf::Texture& texture);
   void setItemObject(Item* item);
+  void setDestroyed(bool isDestroyed);
   bool getIsTouched();
   void move(float x, float y);
   void setInitY(float y);
@@ -83,10 +85,11 @@ public:
 
 };
 
-class CoinBlock : public Block {
+class DestroyedBlock : public Block {
 public:
-  CoinBlock(sf::Texture& texture);
-  ~CoinBlock();
+  DestroyedBlock(const sf::Texture& texture);
+  ~DestroyedBlock();
+
 };
 
 class BlockFactory {

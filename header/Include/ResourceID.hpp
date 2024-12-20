@@ -53,6 +53,14 @@ namespace Textures
 		Enemies,
 		Bg1,
 		Blocks,
+        Bg2,
+        Blocks2,
+
+		Bg3,
+        Blocks3,
+
+
+
 
 
 
