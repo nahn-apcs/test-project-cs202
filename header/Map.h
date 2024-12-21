@@ -17,7 +17,7 @@ public:
     Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
     ~Map();
     void draw(sf::RenderWindow& window);
-    std::vector<std::string> getMapData() const;
+    std::vector<std::string>& getMapData() ;
 	void printMapData() const;
 	void saveMapData(const std::string& filePath);
     int getTileSize() const { return tileSize; }

@@ -192,8 +192,8 @@ void Character::draw(sf::RenderWindow& window) {
 
 sf::FloatRect Character::getBounds() const {
     sf::FloatRect temp = sprite.getGlobalBounds();
-    temp.left += 15.f;
-    temp.width -= 32.f;
+    temp.left += 20.f;
+    temp.width -= 41.f;
     //std::cout << "left: " << temp.left << " top: " << temp.top << " width: " << temp.width << " height: " << temp.height << std::endl;
     //std::cout << "left: " << sprite.getGlobalBounds().left << " top: " << sprite.getGlobalBounds().top << " width: " << sprite.getGlobalBounds().width << " height: " << sprite.getGlobalBounds().height << std::endl;
     return temp;

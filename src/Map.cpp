@@ -42,6 +42,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
             if (mapData[i][j] == '5') {
                 Block* block = BlockFactory::createBlock("brick", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
+               
               
             }
             if (mapData[i][j] == '7') {
@@ -108,6 +109,10 @@ void Map::draw(sf::RenderWindow& window) {
             if (tileType == '1') { // Solid block
                 tile.setTextureRect(sf::IntRect(32*3, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
             }
+            else if (tileType == '6') {
+                tile.setTextureRect(sf::IntRect(32 * 4, 0, tileSize, tileSize)); 
+              
+            }
             else if (tileType == '2') {
                 // Solid block
 				tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
@@ -121,17 +126,17 @@ void Map::draw(sf::RenderWindow& window) {
             //}
             else if (tileType == 'P')
             {
-                tile.setTextureRect(sf::IntRect(16*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 32, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'p') {
-                tile.setTextureRect(sf::IntRect(17*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(17*32, 32, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'H') {
-                tile.setTextureRect(sf::IntRect(16*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 0, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'h')
             {
-                tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
+                tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize-1));  // Assuming the first tile is a solid block
 
             }
             else if (tileType == 'X') {
@@ -235,7 +240,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     }
 }
 
-std::vector<std::string> Map::getMapData() const {
+std::vector<std::string>& Map::getMapData(){
 	return mapData;
 }
 

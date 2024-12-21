@@ -59,10 +59,7 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
       animation->applyToSprite(sprite, true);
       if (animation->isFinished()) {
         sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
-        sprite.setPosition(-1000, -1000);
-      }
-      if (isMoving && movement) {
-        movement->move(sprite, deltatime, mapData, tileSize);
+        //sprite.setPosition(-1000, -1000);
       }
     }
     return;
@@ -247,14 +244,14 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     WaterBlock* block = new WaterBlock(texture);
     block->setPosition(position.x, position.y);
     auto ani = new BlockAnimation(block->getSprite(), 0.3f);
-    ani->addFrame(sf::IntRect(32 * 6, 32*2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 7, 32*2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 8, 32*2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 9, 32*2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 10, 32 * 2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 11, 32 * 2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 12, 32 * 2, 31, 24));
-    ani->addFrame(sf::IntRect(32 * 13, 32 * 2, 31, 24));
+    ani->addFrame(sf::IntRect(32 * 6, 32*2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 7, 32*2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 8, 32*2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 9, 32*2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 10, 32 * 2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 11, 32 * 2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 12, 32 * 2, 33, 32));
+    ani->addFrame(sf::IntRect(32 * 13, 32 * 2, 32, 32));
     block->setAnimated(true);
     block->setAnimation(ani);
     return block;
@@ -262,7 +259,7 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
   else if (type == "destroyed") {
     DestroyedBlock* block = new DestroyedBlock(texture);
     block->setPosition(position.x, position.y);
-    auto ani = new BlockAnimation(block->getSprite(), 0.4f);
+    auto ani = new BlockAnimation(block->getSprite(), 0.2f);
     //ani->addFrame(sf::IntRect(32 * 4, 0, 32, 32));
     //ani->addFrame(sf::IntRect(32 * 3, 0, 32, 32));
     ani->addFrame(sf::IntRect(32 * 2, 0, 32, 32));
@@ -270,7 +267,6 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
     block->setAnimated(true);
     block->setAnimation(ani);
     block->setDestroyed(true);
-    block->setMoving(true);
     return block;
   }
 

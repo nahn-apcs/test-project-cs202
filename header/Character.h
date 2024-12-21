@@ -30,6 +30,7 @@ public:
     void knockUp();
     int getLevel() const { return level; }
     sf::FloatRect getBounds() const;
+    bool isEvoled() const { return status == 1; }
 
 private:
     sf::Sprite sprite;

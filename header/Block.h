@@ -52,6 +52,7 @@ public:
   void setItemObject(Item* item);
   void setDestroyed(bool isDestroyed);
   bool getIsTouched();
+  bool getIsDestroyed() { return isDestroyed; }
   void move(float x, float y);
   void setInitY(float y);
   Item* getItemObject();
