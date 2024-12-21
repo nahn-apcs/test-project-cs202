@@ -29,15 +29,7 @@ void ActiveState::ontouch(Block& block,
     block.setState(new DestroyedState());
   }
 
-  if (dynamic_cast<HiddenBlock*>(&block)) {
-    //implement animation
-    block.setState(new InactiveState());
-  }
 
-  if (dynamic_cast<CoinBlock*>(&block)) {
-    //implement animation
-    block.setState(new DestroyedState());
-  }
 }
 
 void InactiveState::ontouch(Block& block,
@@ -59,7 +51,10 @@ void DestroyedState::ontouch(Block& block,
                              int tileSize,
                              sf::Texture& text)
 {
-  //destroy block
-  block.setTextureRect(sf::Rect(0, 0, 0, 0));
-  block.setPosition(-1000, -1000);
+  auto destroyblock = BlockFactory::createBlock("destroyed", text, {block.getPosition().x, block.getPosition().y});
+  if (destroyblock == nullptr) {
+    return;
+  }
+  block = *destroyblock;
+
 }

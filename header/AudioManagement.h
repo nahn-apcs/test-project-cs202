@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Audio.hpp>
 #include <iostream>
 
@@ -13,6 +15,9 @@ private:
 	sf::Sound jumpSound;
 public:
 	AudioManagement();
+	AudioManagement(const AudioManagement&) = default;
+	AudioManagement& operator=(const AudioManagement& other) = default;
+	~AudioManagement() = default;
 	void loadAudioResources();
 	void playMainMusic();
 	void playCoinSound();

@@ -1,14 +1,13 @@
 #include "Map.h"
 #include "render.h"
 #include <fstream>
-#include "AudioManagement.h"
 
-AudioManagement audioManager;
+
 
 Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& mapTexture)
     : tileSize(tileSize)
 {
-    
+    audioManager = new AudioManagement();
     std::cout << "Map constructor called" << std::endl;
     coinsNumber = 0;
     monsterNumber = 0;
@@ -59,6 +58,13 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
                 block->setItem("peach");
             }
 
+            if (mapData[i][j] == 'W') {
+            
+                Block* block = BlockFactory::createBlock(
+                "water", texture, { j * tileSize, i * tileSize });
+              blocks.push_back(block);
+            }
+
 
             if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
@@ -90,7 +96,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 }
 
 void Map::draw(sf::RenderWindow& window) {
-	audioManager.playMainMusic();
+	audioManager->playMainMusic();
     for (auto& monster : monsters) {
         monster->draw(window);
     }
@@ -128,11 +134,49 @@ void Map::draw(sf::RenderWindow& window) {
                 tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
 
             }
-            else /*if (tileType == '0' || tileType == 'C')*/ { // Empty space (no drawing needed)
+            else if (tileType == 'X') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 2*32, tileSize, tileSize));
+            }
+            else if (tileType =='Y') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 32, tileSize, tileSize));
+            }
+            else if (tileType == 'Z') {
+              tile.setTextureRect(sf::IntRect(18 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'L') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 2 * 32, tileSize, tileSize));
+            }
+            else if (tileType == 'Q') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 32, tileSize, tileSize));
+            }
+            else if (tileType == 'R') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'x') {
+              tile.setTextureRect(sf::IntRect(20 * 32, 2*32, tileSize, tileSize));
+            }
+            else if (tileType == 'y') {
+              tile.setTextureRect(sf::IntRect(20 * 32,32, tileSize, tileSize));
+            }
+            else if (tileType == 'z') {
+              tile.setTextureRect(sf::IntRect(20 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'c') {
+              tile.setTextureRect(sf::IntRect(21 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'a') {
+              tile.setTextureRect(sf::IntRect(23 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'd') {
+              tile.setTextureRect(
+                sf::IntRect(21 * 32, 2 * 32, tileSize, tileSize));
+            }
+            else if (tileType == 'q') {
+              tile.setTextureRect(sf::IntRect(23 * 32, 2 * 32, tileSize, tileSize));
+            }
+            else{
                 continue;
             }
-
-
             tile.setPosition(j * tileSize, i * tileSize);
             window.draw(tile);
         }
@@ -159,13 +203,26 @@ void Map::draw(sf::RenderWindow& window) {
 	//text.setPosition(10, 10);
 }
 
+Map::~Map() {
+   // std::cout << "Map destructor called" << std::endl;
+    for (auto& coin : coins) {
+        delete coin;
+    }
+    for (auto& monster : monsters) {
+        delete monster;
+    }
+    for (auto& block : blocks) {
+        delete block;
+    }
+}
+
 void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     // Check for coin collection
     
     for (auto& coin : coins) {
         coin->update(deltatime, mapData, 32);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
-            audioManager.playCoinSound();
+            audioManager->playCoinSound();
             coin->collect(); // Collect the coin
           if (dynamic_cast<Coin*>(coin)) {
             coinCount++;
@@ -196,7 +253,7 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
     sf::FloatRect monsterBounds = monster->getSprite().getGlobalBounds();
     for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
        
-            if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+            if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds) && !monster->getIsKilled()) {
                 projectiles.destroyProjectile(i);
                 auto tileX = static_cast<int>(monsterBounds.left / tileSize);
                 auto tileY = static_cast<int>(monsterBounds.top / tileSize);
@@ -352,12 +409,17 @@ void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
             block->onTouch2(mapData, tileSize, texture);
             auto item = block->getItemObject();
             if (dynamic_cast<Coin*>(item)) {
-  
+                audioManager->playCoinSound();
               coinCount++;
             }
             else if (dynamic_cast<PowerUp*>(item)) {
               coins.push_back(item);
             }
+          }
+          else if (dynamic_cast<BrickBlock*>(block)) {
+            block->setState(new DestroyedState());
+            block->onTouch2(mapData, tileSize, texture);
+            auto item = block->getItemObject();
           }
           
         }
@@ -405,5 +467,9 @@ Map Map::operator&=(const Map& other)
 	blocks = other.blocks;
 	coinCount = other.coinCount;
 	score = other.score;
+    coinsNumber = other.coinsNumber;
+    monsterNumber = other.monsterNumber;
+    projectiles = other.projectiles;
+    audioManager = other.audioManager;
 	return *this;
 }

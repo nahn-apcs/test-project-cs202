@@ -5,7 +5,7 @@
 #include <SFML/Graphics/View.hpp>
 #include <iostream>
 #include <SFML/System/Time.hpp>
-
+#include "AudioManagement.h"
 
 GameState::GameState(StateStack& stack, Context context, int level, int character) : State(stack, context), character(character) {
 	monsterset = context.textures->get(Textures::Enemies);
@@ -17,14 +17,39 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 	switch (character)
 	{
 	case 1:
-		playerTexture = context.textures->get(Textures::WukongIdle);
+		std::cout << "GameState 1" << "\n";
+
+		idleTextures.push_back(context.textures->get(Textures::WukongStand1));
+		idleTextures.push_back(context.textures->get(Textures::WukongStand2));
+		idleTextures.push_back(context.textures->get(Textures::WukongStand3));
+		idleTextures.push_back(context.textures->get(Textures::WukongStand4));
+		
 		runTextures.push_back(context.textures->get(Textures::WukongRun1));
 		runTextures.push_back(context.textures->get(Textures::WukongRun2));
 		runTextures.push_back(context.textures->get(Textures::WukongRun3));
 		runTextures.push_back(context.textures->get(Textures::WukongRun4));
+
+		jumpTextures.push_back(context.textures->get(Textures::WukongJump1));
+		jumpTextures.push_back(context.textures->get(Textures::WukongJump2));
+		jumpTextures.push_back(context.textures->get(Textures::WukongJump3));
+		jumpTextures.push_back(context.textures->get(Textures::WukongJump4));
+		std::cout << "GameState 22" << "\n";
+
 		attackTextures.push_back(context.textures->get(Textures::WukongAttack1));
 		attackTextures.push_back(context.textures->get(Textures::WukongAttack2));
-		player = new Character(playerTexture, runTextures, attackTextures, 100, 100);
+
+		sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand1));
+		sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand2));
+		sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand3));
+		sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand4));
+		std::cout << "GameState 33" << "\n";
+
+		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun1));
+		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun2));
+		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun3));
+		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun4));
+
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, 100, 100);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
@@ -47,7 +72,36 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
 			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
 
+
 			break;
+    case 2:
+      tileset = context.textures->get(Textures::Blocks2);
+      mapTextures.push_back(tileset);
+      mapTextures.push_back(monsterset);
+      mapTextures.push_back(projectile);
+      gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
+      backgroundTexture = context.textures->get(Textures::Bg2);
+      backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
+      std::cout << gameMap->getMapData().size() << "\n";
+      xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+      yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+
+      break;
+    case 3:
+      tileset = context.textures->get(Textures::Blocks3);
+      mapTextures.push_back(tileset);
+      mapTextures.push_back(monsterset);
+      mapTextures.push_back(projectile);
+      gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+      backgroundTexture = context.textures->get(Textures::Bg3);
+      backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
+      std::cout << gameMap->getMapData().size() << "\n";
+      xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+      yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+
+      break;
+
+
 	default:
 		break;
 	}
@@ -59,25 +113,140 @@ bool GameState::update(sf::Time dt) {
 
 	float deltaTime = gameClock.restart().asSeconds();
 	sf::RenderWindow& window = *getContext().window;
-	        // Update player and game state
+	std::vector<std::string> mapData = gameMap->getMapData();
+				sf::FloatRect playerBounds = player->getBounds();
+				std::vector<Monster*> monsters = gameMap->getMonsters();
+				ProjectileManager& projectiles = gameMap->getProjectiles();
+				AudioManagement* audioManager = gameMap->getAudioManager();
+				int tileSize = gameMap->getTileSize();
+
+				// Update camera position based on player position
+				int mapWidth = gameMap->getMapData()[0].size() * gameMap->getTileSize();
+				int mapHeight = gameMap->getMapData().size() * gameMap->getTileSize();
+
+				// Make sure the camera stays within the bounds of the map
+				float cameraX = std::max(constants::scene_width / 2.f, std::min(player->getBounds().left + player->getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
+				float cameraY = std::max(constants::scene_height / 2.f, std::min(player->getBounds().top + player->getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
+
+				camera.setCenter(cameraX, cameraY);
+				window.setView(camera);
+
+
+	// Update player and game state
 	        player->interact(deltaTime, gameMap);
 	        player->update(deltaTime, gameMap);
-	        gameMap->updateCoins(player->getBounds(), deltaTime);
+
+			
+	        //gameMap->updateCoins(player->getBounds(), deltaTime);
+			std::vector<Item*> coins = gameMap->getCoins();
+			for (auto& coin : coins) {
+				coin->update(deltaTime, mapData, 32);
+				if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
+					audioManager->playCoinSound();
+					coin->collect(); // Collect the coin
+					if (dynamic_cast<Coin*>(coin)) {
+						gameMap->increaseCoinsNumber();
+					}
+					else if (dynamic_cast<PowerUp*>(coin)) {
+						player->levelUp(gameMap);
+					}
+
+				}
+			}
+
 	        gameMap->updateScore();
 	
-	        // Update camera position based on player position
-	        int mapWidth = gameMap->getMapData()[0].size() * gameMap->getTileSize();
-	        int mapHeight = gameMap->getMapData().size() * gameMap->getTileSize();
-	
-	        // Make sure the camera stays within the bounds of the map
-	        float cameraX = std::max(constants::scene_width / 2.f, std::min(player->getBounds().left + player->getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
-	        float cameraY = std::max(constants::scene_height / 2.f, std::min(player->getBounds().top + player->getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
-		
-	        camera.setCenter(cameraX, cameraY);
-	        window.setView(camera);
-	
-	        gameMap->updateMonsters(deltaTime, player->getBounds(), camera);
-	        gameMap->updateBlocks(deltaTime,player->getBounds());
+	      
+	        //gameMap->updateMonsters(deltaTime, player->getBounds(), camera);
+			for (auto it = monsters.begin(); it != monsters.end();) {
+				auto& monster = *it;  // Use reference for clarity and efficiency
+				if (!gameMap->isVissible(monster->getSprite(), camera)) {
+					++it;
+					continue;
+				}
+				monster->update(deltaTime, mapData, tileSize);
+
+				// Get player and monster positions
+				sf::FloatRect monsterBounds = monster->getBounds();
+				for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+
+					if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+						projectiles.destroyProjectile(i);
+						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+
+						mapData[tileY][tileX] = '0';
+						monster->kill(true, monster);
+					}
+
+				}
+
+				// Check intersection
+				if (monsterBounds.intersects(playerBounds) && !monster->getIsKilled()) {
+					//std::cout<< "Monster collision detected" << std::endl;
+					// Check if the player is above the monster
+					float playerBottom =
+						playerBounds.top + playerBounds.height;  // Bottom of the player
+					float monsterTop = monsterBounds.top;      // Top of the monster
+
+
+					if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
+						// Monster is killed
+						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+
+						mapData[tileY][tileX] = '0';
+						monster->kill(true, monster);  // Kill the monster
+
+					}
+					else {
+						//std::cout<< "Player is killed" << std::endl;
+						if (!monster->getIsKilled()) {
+							// Player is killed
+							std::cout << "Player is killed" << std::endl;
+							player->damaged(gameMap);
+						}
+					}
+				}
+
+				++it;  // Increment the iterator if no monster was removed
+			}
+			
+			
+			
+			//gameMap->updateBlocks(deltaTime,player->getBounds());
+			std::vector<Block*> blocks = gameMap->getBlocks();
+			for (auto it = blocks.begin(); it != blocks.end();) {
+				auto& block = *it;
+				block->update(deltaTime, mapData, tileSize);
+				// playerBounds.left += 2.0f;
+				if (block->isCollission(playerBounds)) {
+
+					float playerTop = playerBounds.top;
+					float blockBottom = block->getBounds().top + block->getBounds().height;
+					float dy = blockBottom - playerTop;
+					if (dy < 5.0f) {
+						if (!block->getIsTouched()) {
+							if (dynamic_cast<QuestionBlock*>(block)) {
+								block->setState(new ActiveState());
+								block->onTouch2(mapData, tileSize, gameMap->getTexture());
+								auto item = block->getItemObject();
+								if (dynamic_cast<Coin*>(item)) {
+									audioManager->playCoinSound();
+									gameMap->increaseCoinsNumber();
+								}
+								else if (dynamic_cast<PowerUp*>(item)) {
+									gameMap->addCoins(item);
+								}
+							}
+
+						}
+					}
+				}
+				it++;
+			}
+
+
 	        gameMap->updateProjectiles(deltaTime);
 
 			return false;
@@ -94,6 +263,11 @@ void GameState::draw() {
 		        }
 	gameMap->draw(window);
 	player->draw(window);
+	player->drawBounds(window);
+	for (auto& monster : gameMap->getMonsters()) {
+		monster->drawBounds(window);
+	}
+	drawEngine->displayGameInfo(window, timeClock, gameMap);
 }
 
 bool GameState::handleEvent(const sf::Event& event) {

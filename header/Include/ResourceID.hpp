@@ -41,7 +41,14 @@ namespace Textures
 		TestLevel,
 
 		//WukongAsset1
-		WukongIdle,
+		WukongStand1,
+		WukongStand2,
+		WukongStand3,
+		WukongStand4,
+		WukongJump1,
+		WukongJump2,
+		WukongJump3,
+		WukongJump4,
 		WukongRun1,
 		WukongRun2,
 		WukongRun3,
@@ -49,10 +56,28 @@ namespace Textures
 		WukongAttack1,
 		WukongAttack2,
 
+		SmallWukongStand1,
+		SmallWukongStand2,
+		SmallWukongStand3,
+		SmallWukongStand4,
+
+		SmallWukongRun1,
+		SmallWukongRun2,
+		SmallWukongRun3,
+		SmallWukongRun4,
+
 		Bullet,
 		Enemies,
 		Bg1,
 		Blocks,
+        Bg2,
+        Blocks2,
+
+		Bg3,
+        Blocks3,
+
+
+
 
 
 
