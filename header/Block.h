@@ -1,5 +1,4 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include "MovementStrategy.h"
@@ -103,4 +102,4 @@ public:
 
 
 
-#endif  // !BLOCK_H
+
