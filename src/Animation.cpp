@@ -13,7 +13,10 @@ Animation::Animation(const std::vector<sf::Texture>& frames, float switchTime)
 	}
 }
 
-void Animation::update(float deltaTime) {
+void Animation::update(float deltaTime, bool loop) {
+
+    if (!loop && currentFrame >= frames.size() - 1) return;  // No need to update if the animation is finished
+
     totalTime += deltaTime;
 
     if (totalTime >= switchTime) {

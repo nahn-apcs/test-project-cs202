@@ -60,7 +60,7 @@ private:
     std::vector<sf::Texture> mapTextures;
     std::vector<sf::Texture> jumpTextures;
     std::vector<sf::Texture> idleTextures;
-
+    std::vector<sf::Texture> deadTextures;
 
     std::vector<sf::Texture> sRunTextures;
     std::vector<sf::Texture> sIdleTextures;

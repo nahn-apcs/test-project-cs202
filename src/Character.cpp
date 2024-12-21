@@ -11,6 +11,7 @@ Character::Character(
     std::vector<sf::Texture>& srunTextures,
     std::vector<sf::Texture>& sattackTextures, 
     std::vector<sf::Texture>& sjumpT, 
+    std::vector<sf::Texture>& dead,
     int x, int y)
 : velocityX(0), velocityY(0), onGround(false), isJumping(false), attacking(false), faceRight(true) {
     attacked = true;
@@ -22,6 +23,7 @@ Character::Character(
     attackAnimations.push_back(new Animation(attackTextures, 0.1f));
     jumpAnimations.push_back(new Animation(sjumpT, 0.1f));
     jumpAnimations.push_back(new Animation(jumpT, 0.1f));
+    deadAnimation = new Animation(dead, 0.1f);
     sprite.setPosition(x, y);
 }
 
@@ -61,7 +63,7 @@ void Character::interact(float deltatime, Map* map) {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		if (cooldown <= 0 && level >= 2) {
+		if (cooldown <= 0 && level >= 5) {
 			shoot(map);
 			cooldown = 1.0f;
             attacking = true;
@@ -91,6 +93,12 @@ void Character::drawBounds(sf::RenderWindow& window) {
 }
 
 void Character::update(float deltaTime, Map* map) {
+    if (Dead) {
+		deadAnimation->update(deltaTime, false);
+		deadAnimation->applyToSprite(sprite, faceRight);
+		return;
+	}
+
     applyGravity(deltaTime);
     applyFriction(deltaTime);
     if (attacked) {
@@ -429,15 +437,15 @@ void Character::pushBack(Map* map){
 }
 
 void Character::dead(Map* map){
-	//
+	Dead = true;
 }
 
 void Character::damaged(Map* map){
     if (attacked) return;
     pushBack(map);
 	if (level > 0) level--;
-    if (level == 1) status = 0;
-	if (level == 0) {
+    if (level < 5) status = 0;
+    if (level <= 0) {
         dead(map);
 	}
     unDamagedTime = 0.5f;
@@ -445,15 +453,20 @@ void Character::damaged(Map* map){
 }
 
 void Character::levelUp(Map* map){
-    if (level == 1) {
+    if (level >= 2 && level < 5) {
         sprite.move(0, -10);
         setVelocityY(-200.0f);
     }
-    level++;
-    if (level >= 2) {
+    level+=2;
+    if (level >= 5) {
 		status = 1;
 	}
     else {
         status = 0;
     }
+}
+
+void Character::knockUp(){
+	sprite.move(0, -10);
+	setVelocityY(-200.0f);
 }

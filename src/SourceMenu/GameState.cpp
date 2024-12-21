@@ -49,7 +49,17 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun3));
 		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun4));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, 100, 100);
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong1));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong2));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong3));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong4));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong5));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong6));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong7));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
+
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 100, 100);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
@@ -196,14 +206,13 @@ bool GameState::update(sf::Time dt) {
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
 
 						mapData[tileY][tileX] = '0';
+						player->knockUp();
 						monster->kill(true, monster);  // Kill the monster
 
 					}
 					else {
 						//std::cout<< "Player is killed" << std::endl;
 						if (!monster->getIsKilled()) {
-							// Player is killed
-							std::cout << "Player is killed" << std::endl;
 							player->damaged(gameMap);
 						}
 					}
@@ -267,7 +276,7 @@ void GameState::draw() {
 	for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
 	}
-	drawEngine->displayGameInfo(window, timeClock, gameMap);
+	drawEngine->displayGameInfo(window, timeClock, gameMap, player);
 }
 
 bool GameState::handleEvent(const sf::Event& event) {

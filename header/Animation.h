@@ -8,7 +8,7 @@ class Animation {
 public:
     Animation(const std::vector<sf::Texture>& frames, float switchTime);
 
-    void update(float deltaTime);
+    void update(float deltaTime, bool loop = true);
     void applyToSprite(sf::Sprite& sprite, bool faceRight);
 
 private:
