@@ -282,7 +282,7 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
 	  FlagBlock* block = new FlagBlock(texture);
 	  block->setPosition(position.x, position.y);
 	  auto ani = new BlockAnimation(block->getSprite(), 0.3f);
-      ani->addFrame(sf::IntRect(0, 32*3, 35, 50));
+    ani->addFrame(sf::IntRect(0, 32*3, 35, 50));
 	  ani->addFrame(sf::IntRect(35, 32 * 3, 35, 50));
 	  ani->addFrame(sf::IntRect(70, 32 * 3, 35, 50));
 	  ani->addFrame(sf::IntRect(105, 32 * 3, 35, 50));

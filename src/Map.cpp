@@ -90,8 +90,8 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
                 monsterNumber++;
             }
             else if (mapData[i][j] == 'F') {
-				Block* block = BlockFactory::createBlock("flag", texture, { j * tileSize, i * tileSize });
-				blocks.push_back(block);
+			    	Block* block = BlockFactory::createBlock("flag", texture, { j * tileSize, i * tileSize });
+				    blocks.push_back(block);
             }
         }
     }
