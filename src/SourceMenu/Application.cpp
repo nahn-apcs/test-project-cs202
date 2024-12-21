@@ -32,12 +32,7 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 	mTextures.load(Textures::ID::MainMenuClound_7, "../resources/Asset/Textures/Menu/cloud7.png");
 	mTextures.load(Textures::ID::MainMenuClound_8, "../resources/Asset/Textures/Menu/cloud8.png");
 
-	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
-	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
-
-	mTextures.load(Textures::ID::LevelBG, "../resources/Asset/Textures/Level/level_bg.png");
-	mTextures.load(Textures::ID::TestLevel, "../resources/Asset/Textures/Level/test_level.png");
-
+	
 	mTextures.load(Textures::ID::WukongStand1, "../resources/wukong16bit/stand wk_sprite_1.png");
 	mTextures.load(Textures::ID::WukongStand2, "../resources/wukong16bit/stand wk_sprite_2.png");
 	mTextures.load(Textures::ID::WukongStand3, "../resources/wukong16bit/stand wk_sprite_3.png");
@@ -63,11 +58,11 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 	mTextures.load(Textures::ID::SmallWukongRun3, "../resources/wukong16bit/run_sprite_3.png");
 	mTextures.load(Textures::ID::SmallWukongRun4, "../resources/wukong16bit/run_sprite_4.png");
 
-	mTextures.load(Textures::ID::GuideBG, "../Asset/Textures/Guide/guide.png");
-	mTextures.load(Textures::ID::CloseGuide, "../Asset/Textures/Guide/close_guide.png");
+	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
+	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
 
-	mTextures.load(Textures::ID::LevelBG, "../Asset/Textures/Level/level_bg.png");
-	mTextures.load(Textures::ID::TestLevel, "../Asset/Textures/Level/test_level.png");
+	mTextures.load(Textures::ID::LevelBG, "../resources/Asset/Textures/Level/level_bg.png");
+	mTextures.load(Textures::ID::TestLevel, "../resources/Asset/Textures/Level/test_level.png");
   mTextures.load(Textures::ID::Bg2, "../resources/Level2/bg.png");
   mTextures.load(Textures::ID::Blocks2, "../resources/Level2/blocks.png");
   mTextures.load(Textures::ID::Bg3, "../resources/Level3/bg.png");
