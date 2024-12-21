@@ -18,9 +18,9 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
     mText.setOrigin(mText.getLocalBounds().width / 2.0f, mText.getLocalBounds().height / 2.0f);
     mText.setPosition(640, 100);
 
-    PauseButton.setTexture(context.textures->get(Textures::TestLevel));
+    PauseButton.setTexture(context.textures->get(Textures::PauseButton));
     PauseButton.setTextureRect(sf::IntRect(0, 0, 80, 50));
-    PauseButton.setPosition(0, 590);
+    PauseButton.setPosition(1230, 0);
 
 
 

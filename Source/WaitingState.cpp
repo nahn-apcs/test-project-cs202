@@ -15,7 +15,7 @@ WaitingState::WaitingState(StateStack& stack, Context context): State(stack, con
     mText.setCharacterSize(50);
     mText.setFillColor(sf::Color(255, 255, 255, 255));
     mText.setOrigin(mText.getLocalBounds().width / 2.0f, mText.getLocalBounds().height / 2.0f);
-    mText.setPosition(640, 100);
+    mText.setPosition(640, 300);
 
 
 

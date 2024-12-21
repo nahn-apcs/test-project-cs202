@@ -17,7 +17,20 @@ public:
     virtual bool handleEvent(const sf::Event& event);
 
 private:
+    sf::Text mTextLevel;
+    sf::Text mTextSound;
+    int cnt_sound = 0;
+    sf::Text mTextMusic;
+    int cnt_music = 0;
+    sf::Sprite SoundButton;
+    sf::Sprite MusicButton;
+
     sf::Sprite ContinueButton;
+    sf::Sprite RestartButton;
+    sf::Sprite MenuButton;
+    sf::Sprite SaveButton;
+    sf::Sprite PauseBG;
+
 
 };
 

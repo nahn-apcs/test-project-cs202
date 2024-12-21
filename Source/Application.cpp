@@ -40,6 +40,17 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::LevelBG, "Asset/Textures/Level/level_bg.png");
 	mTextures.load(Textures::ID::TestLevel, "Asset/Textures/Level/test_level.png");
+
+	mTextures.load(Textures::ID::PauseBG, "Asset/Textures/Pause/PauseBG.png");
+	mTextures.load(Textures::ID::PauseContinueButton, "Asset/Textures/Pause/ContinueButton.png");
+	mTextures.load(Textures::ID::PauseRestartButton, "Asset/Textures/Pause/RestartButton.png");
+	mTextures.load(Textures::ID::PauseMenuButton, "Asset/Textures/Pause/MenuButton.png");
+	mTextures.load(Textures::ID::PauseSaveButton, "Asset/Textures/Pause/SaveButton.png");
+	mTextures.load(Textures::ID::PauseSoundButton, "Asset/Textures/Pause/SoundButton.png");
+	mTextures.load(Textures::ID::PauseMusicButton, "Asset/Textures/Pause/MusicButton.png");
+
+	mTextures.load(Textures::ID::PauseButton, "Asset/Textures/Game/PauseButton.png");
+
 	
 
 

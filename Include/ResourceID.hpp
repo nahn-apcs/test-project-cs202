@@ -39,6 +39,18 @@ namespace Textures
 		//Level
 		LevelBG,
 		TestLevel,
+
+		//Pause
+		PauseBG,
+		PauseContinueButton,
+		PauseRestartButton,
+		PauseMenuButton,
+		PauseSaveButton,
+		PauseSoundButton,
+		PauseMusicButton,
+
+		//Game
+		PauseButton,
     };
 }
 
