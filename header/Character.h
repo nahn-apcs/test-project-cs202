@@ -46,6 +46,8 @@ private:
     float cooldown = 0.f;
     bool faceRight;
     int level = 1;
+    float unDamagedTime = 0.f;
+    bool attacked = false;
 
     void handleCollisions(Map* map);
     void applyGravity(float deltaTime);

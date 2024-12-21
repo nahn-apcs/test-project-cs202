@@ -33,7 +33,7 @@ public:
     void updateProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
-    //AudioManagement audioManager;
+    AudioManagement* audioManager;
     Map operator&=(const Map& other);
     std::vector<Block*> getBlocks() const { return blocks; }
     void increaseCoinsNumber(){ coinsNumber++; }
@@ -43,7 +43,7 @@ public:
     std::vector<Monster*> getMonsters() const { return monsters; }
     std::vector<Block*> getBlocks() { return blocks; }
     ProjectileManager& getProjectiles() { return projectiles; }
-    //AudioManagement& getAudioManager() { return audioManager; }
+    AudioManagement* getAudioManager() { return audioManager; }
   private:
     const std::string notCollidable = "0C";
     std::vector<std::string> mapData;

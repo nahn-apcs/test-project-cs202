@@ -2,17 +2,26 @@
 #include "Map.h"
 #include "render.h"
 
-Character::Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& sjumpT, int x, int y)
+Character::Character(
+    std::vector<sf::Texture>& idleTextures, 
+    std::vector<sf::Texture>& runTextures, 
+    std::vector<sf::Texture>& attackTextures, 
+    std::vector<sf::Texture>& jumpT,
+     std::vector<sf::Texture>& sidleTextures,
+    std::vector<sf::Texture>& srunTextures,
+    std::vector<sf::Texture>& sattackTextures, 
+    std::vector<sf::Texture>& sjumpT, 
+    int x, int y)
 : velocityX(0), velocityY(0), onGround(false), isJumping(false), attacking(false), faceRight(true) {
-
-    idleAnimations.push_back(new Animation(idleTextures, 0.1f));
+    attacked = true;
     idleAnimations.push_back(new Animation(sidleTextures, 0.1f));
-    runAnimations.push_back(new Animation(runTextures, 0.1f));
+    idleAnimations.push_back(new Animation(idleTextures, 0.1f));
     runAnimations.push_back(new Animation(srunTextures, 0.1f));
-    attackAnimations.push_back(new Animation(attackTextures, 0.1f));
+    runAnimations.push_back(new Animation(runTextures, 0.1f));
     attackAnimations.push_back(new Animation(sattackTextures, 0.1f));
-    jumpAnimations.push_back(new Animation(jumpT, 0.1f));
+    attackAnimations.push_back(new Animation(attackTextures, 0.1f));
     jumpAnimations.push_back(new Animation(sjumpT, 0.1f));
+    jumpAnimations.push_back(new Animation(jumpT, 0.1f));
     sprite.setPosition(x, y);
 }
 
@@ -40,10 +49,10 @@ void Character::interact(float deltatime, Map* map) {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        setVelocityX(-moveSpeed);
+        if (!attacked) setVelocityX(-moveSpeed);
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        setVelocityX(moveSpeed);
+        if (!attacked) setVelocityX(moveSpeed);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
@@ -84,6 +93,12 @@ void Character::drawBounds(sf::RenderWindow& window) {
 void Character::update(float deltaTime, Map* map) {
     applyGravity(deltaTime);
     applyFriction(deltaTime);
+    if (attacked) {
+		unDamagedTime -= deltaTime;
+		if (unDamagedTime <= 0) {
+			attacked = false;
+		}
+	}
     //std::cout << "velocityX: " << velocityX << std::endl;
     if (cooldown > 0) {
 		cooldown -= deltaTime;
@@ -96,24 +111,22 @@ void Character::update(float deltaTime, Map* map) {
 	}
     onGround = false; // Assume the character is not on the ground
 
-    if (velocityX > 0) {
+    if (!attacked){
+        if (velocityX > 0) {
         faceRight = true;
-    }
-    else if (velocityX < 0) {
+        }
+        else if (velocityX < 0) {
         faceRight = false;
+        }
     }
+
+  
 
     // Check if we are about to hit a wall before moving
     if (velocityX == 0) {
-        if (attacking)
-		{
-			attackAnimations[status]->update(deltaTime);
-            attackAnimations[status]->applyToSprite(sprite, faceRight);
-		}
-		else {
 			idleAnimations[status]->update(deltaTime);
 			idleAnimations[status]->applyToSprite(sprite, faceRight);
-		}
+		
     }
 
     if (!checkWallCollision(velocityX * deltaTime, 0.f, map)) {
@@ -123,23 +136,25 @@ void Character::update(float deltaTime, Map* map) {
             attackAnimations[status]->update(deltaTime);
             attackAnimations[status]->applyToSprite(sprite, faceRight);
         }
-        else if (velocityX != 0) {
+        else if ( abs(velocityX-0.f)>0.001f ) {
             runAnimations[status]->update(deltaTime);
             runAnimations[status]->applyToSprite(sprite, faceRight);
         }
     }
 
+    if (abs(velocityY) > 0.1f) {
+        jumpAnimations[status]->update(deltaTime);
+        jumpAnimations[status]->applyToSprite(sprite, faceRight);
+    }
+
+    if (attacking)
+    {
+        attackAnimations[status]->update(deltaTime);
+        attackAnimations[status]->applyToSprite(sprite, faceRight);
+    }
 
     // Move vertically
     if (!onGround) {
-        if (isJumping) {
-			jumpAnimations[status]->update(deltaTime);
-			jumpAnimations[status]->applyToSprite(sprite, faceRight);
-		}
-		else {
-			jumpAnimations[status]->update(deltaTime);
-			jumpAnimations[status]->applyToSprite(sprite, faceRight);
-		}
         if (!checkWallCollision(0, velocityY * deltaTime, map)) sprite.move(0, velocityY * deltaTime);
         else {
             velocityY = 0;
@@ -402,8 +417,15 @@ Character::~Character() {
 }
 
 void Character::pushBack(Map* map){
+    if (faceRight) {
+		sprite.move(-10, 0);
+        setVelocityX(-200.0f);
+	}
+	else {
+		sprite.move(10, 0);
+        setVelocityX(200.0f);
+	}
     setVelocityY(-100.0f);
-    setVelocityX(-100.0f);
 }
 
 void Character::dead(Map* map){
@@ -411,15 +433,27 @@ void Character::dead(Map* map){
 }
 
 void Character::damaged(Map* map){
+    if (attacked) return;
     pushBack(map);
 	if (level > 0) level--;
-    if (level == 1) status = 1;
+    if (level == 1) status = 0;
 	if (level == 0) {
         dead(map);
 	}
+    unDamagedTime = 0.5f;
+    attacked = true;
 }
 
 void Character::levelUp(Map* map){
-	level++;
-    if (level >= 2) status = 2;
+    if (level == 1) {
+        sprite.move(0, -10);
+        setVelocityY(-200.0f);
+    }
+    level++;
+    if (level >= 2) {
+		status = 1;
+	}
+    else {
+        status = 0;
+    }
 }

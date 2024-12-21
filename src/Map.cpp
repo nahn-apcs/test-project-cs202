@@ -7,7 +7,7 @@
 Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& mapTexture)
     : tileSize(tileSize)
 {
-    
+    audioManager = new AudioManagement();
     std::cout << "Map constructor called" << std::endl;
     coinsNumber = 0;
     monsterNumber = 0;
@@ -89,7 +89,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 }
 
 void Map::draw(sf::RenderWindow& window) {
-	//audioManager.playMainMusic();
+	audioManager->playMainMusic();
     for (auto& monster : monsters) {
         monster->draw(window);
     }
@@ -164,7 +164,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     for (auto& coin : coins) {
         coin->update(deltatime, mapData, 32);
         if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
-            //audioManager.playCoinSound();
+            audioManager->playCoinSound();
             coin->collect(); // Collect the coin
           if (dynamic_cast<Coin*>(coin)) {
             coinCount++;
@@ -195,7 +195,7 @@ void Map::updateMonsters(float deltatime, const sf::FloatRect& playerBounds, con
     sf::FloatRect monsterBounds = monster->getSprite().getGlobalBounds();
     for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
        
-            if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+            if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds) && !monster->getIsKilled()) {
                 projectiles.destroyProjectile(i);
                 auto tileX = static_cast<int>(monsterBounds.left / tileSize);
                 auto tileY = static_cast<int>(monsterBounds.top / tileSize);
@@ -351,7 +351,7 @@ void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
             block->onTouch2(mapData, tileSize, texture);
             auto item = block->getItemObject();
             if (dynamic_cast<Coin*>(item)) {
-                //audioManager.playCoinSound();
+                audioManager->playCoinSound();
               coinCount++;
             }
             else if (dynamic_cast<PowerUp*>(item)) {
@@ -407,5 +407,6 @@ Map Map::operator&=(const Map& other)
     coinsNumber = other.coinsNumber;
     monsterNumber = other.monsterNumber;
     projectiles = other.projectiles;
+    audioManager = other.audioManager;
 	return *this;
 }

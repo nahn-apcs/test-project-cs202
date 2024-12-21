@@ -60,10 +60,7 @@ namespace Textures
 		SmallWukongStand2,
 		SmallWukongStand3,
 		SmallWukongStand4,
-		/*SmallWukongJump1,
-		SmallWukongJump2,
-		SmallWukongJump3,
-		SmallWukongJump4,*/
+
 		SmallWukongRun1,
 		SmallWukongRun2,
 		SmallWukongRun3,
