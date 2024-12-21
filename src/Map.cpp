@@ -39,27 +39,27 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 				coinsNumber++;
             }
 
-            if (mapData[i][j] == '5') {
+            else if (mapData[i][j] == '5') {
                 Block* block = BlockFactory::createBlock("brick", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
                
               
             }
-            if (mapData[i][j] == '7') {
+            else if (mapData[i][j] == '7') {
                 Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
           
                 block->setItem("coin");
               
             }
-            if (mapData[i][j] == '8') {
+            else if (mapData[i][j] == '8') {
                 Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
        
                 block->setItem("peach");
             }
 
-            if (mapData[i][j] == 'W') {
+            else if (mapData[i][j] == 'W') {
             
                 Block* block = BlockFactory::createBlock(
                 "water", texture, { j * tileSize, i * tileSize });
@@ -67,30 +67,32 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
             }
 
 
-            if (mapData[i][j] == 'M') {
+            else if (mapData[i][j] == 'M') {
               Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
               mapData[i][j] = '0';
 			  monsterNumber++;
 
             }
-            if (mapData[i][j] == 'B') {
+            else if (mapData[i][j] == 'B') {
               Monster* monster = MonsterFactory::createMonster("Bee", Monstertexture, { j * tileSize, i * tileSize });
               monsters.push_back(monster);
               mapData[i][j] = '0';
               monsterNumber++;
 
             }
-            if (mapData[i][j] == 'b') {
+            else if (mapData[i][j] == 'b') {
               Monster* monster = MonsterFactory::createMonster(
                 "bee", Monstertexture, { j * tileSize, i * tileSize });
              
                 monsters.push_back(monster);
                 mapData[i][j] = '0';
                 monsterNumber++;
-
             }
-
+            else if (mapData[i][j] == 'F') {
+				Block* block = BlockFactory::createBlock("flag", texture, { j * tileSize, i * tileSize });
+				blocks.push_back(block);
+            }
         }
     }
    
