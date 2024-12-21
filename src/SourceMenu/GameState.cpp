@@ -49,7 +49,17 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun3));
 		sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun4));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, 100, 100);
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong1));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong2));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong3));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong4));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong5));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong6));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong7));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
+		deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
+
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 100, 100);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
@@ -71,7 +81,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 			std::cout << gameMap->getMapData().size() << "\n";
 			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
 			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-
+              
 
 			break;
     case 2:
@@ -113,7 +123,7 @@ bool GameState::update(sf::Time dt) {
 
 	float deltaTime = gameClock.restart().asSeconds();
 	sf::RenderWindow& window = *getContext().window;
-	std::vector<std::string> mapData = gameMap->getMapData();
+	std::vector<std::string>& mapData = gameMap->getMapData();
 				sf::FloatRect playerBounds = player->getBounds();
 				std::vector<Monster*> monsters = gameMap->getMonsters();
 				ProjectileManager& projectiles = gameMap->getProjectiles();
@@ -196,14 +206,13 @@ bool GameState::update(sf::Time dt) {
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
 
 						mapData[tileY][tileX] = '0';
+						player->knockUp();
 						monster->kill(true, monster);  // Kill the monster
 
 					}
 					else {
 						//std::cout<< "Player is killed" << std::endl;
 						if (!monster->getIsKilled()) {
-							// Player is killed
-							std::cout << "Player is killed" << std::endl;
 							player->damaged(gameMap);
 						}
 					}
@@ -220,8 +229,9 @@ bool GameState::update(sf::Time dt) {
 				auto& block = *it;
 				block->update(deltaTime, mapData, tileSize);
 				// playerBounds.left += 2.0f;
-				if (block->isCollission(playerBounds)) {
-
+				if (block->isCollission(playerBounds) && !block->getIsDestroyed()) {
+          
+         
 					float playerTop = playerBounds.top;
 					float blockBottom = block->getBounds().top + block->getBounds().height;
 					float dy = blockBottom - playerTop;
@@ -239,8 +249,21 @@ bool GameState::update(sf::Time dt) {
 									gameMap->addCoins(item);
 								}
 							}
+              else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
+                block->setState(new DestroyedState());
+                block->onTouch2(mapData,tileSize,
+                  gameMap->getTexture());
+                int tileX = (block->getBounds().left + 5.0f) / tileSize;
+                int tileY = (block->getBounds().top + 5.0f)  / tileSize;
+                std::cout<< tileY << " " << tileX << std::endl;
+                std::cout << mapData[tileY][tileX] << std::endl;
+                mapData[tileY][tileX] = '0';
+                block->setDestroyed(true);
+              }
+
 
 						}
+
 					}
 				}
 				it++;
@@ -267,7 +290,7 @@ void GameState::draw() {
 	for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
 	}
-	drawEngine->displayGameInfo(window, timeClock, gameMap);
+	drawEngine->displayGameInfo(window, timeClock, gameMap, player);
 }
 
 bool GameState::handleEvent(const sf::Event& event) {

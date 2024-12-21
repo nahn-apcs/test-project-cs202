@@ -42,6 +42,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
             if (mapData[i][j] == '5') {
                 Block* block = BlockFactory::createBlock("brick", texture, { j * tileSize, i * tileSize });
                 blocks.push_back(block);
+               
               
             }
             if (mapData[i][j] == '7') {
@@ -108,6 +109,10 @@ void Map::draw(sf::RenderWindow& window) {
             if (tileType == '1') { // Solid block
                 tile.setTextureRect(sf::IntRect(32*3, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
             }
+            else if (tileType == '6') {
+                tile.setTextureRect(sf::IntRect(32 * 4, 0, tileSize, tileSize)); 
+              
+            }
             else if (tileType == '2') {
                 // Solid block
 				tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
@@ -121,58 +126,58 @@ void Map::draw(sf::RenderWindow& window) {
             //}
             else if (tileType == 'P')
             {
-                tile.setTextureRect(sf::IntRect(16*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 32, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'p') {
-                tile.setTextureRect(sf::IntRect(17*32, 32, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(17*32, 32, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'H') {
-                tile.setTextureRect(sf::IntRect(16*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc
+                tile.setTextureRect(sf::IntRect(16*32, 0, tileSize, tileSize-1));  // Assuming the first tile is a solid bloc
             }
             else if (tileType == 'h')
             {
-                tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
+                tile.setTextureRect(sf::IntRect(17*32, 0, tileSize, tileSize-1));  // Assuming the first tile is a solid block
 
             }
             else if (tileType == 'X') {
-              tile.setTextureRect(sf::IntRect(18 * 32, 2*32, tileSize, tileSize));
-            }
-            else if (tileType =='Y') {
-              tile.setTextureRect(sf::IntRect(18 * 32, 32, tileSize, tileSize));
-            }
-            else if (tileType == 'Z') {
               tile.setTextureRect(sf::IntRect(18 * 32, 0, tileSize, tileSize));
             }
+            else if (tileType =='Y') {
+              tile.setTextureRect(sf::IntRect(19 * 32, 0, tileSize, tileSize));
+            }
+            else if (tileType == 'Z') {
+              tile.setTextureRect(sf::IntRect(20 * 32, 0, tileSize, tileSize));
+            }
             else if (tileType == 'L') {
-              tile.setTextureRect(sf::IntRect(19 * 32, 2 * 32, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(18 * 32,  32, tileSize, tileSize));
             }
             else if (tileType == 'Q') {
               tile.setTextureRect(sf::IntRect(19 * 32, 32, tileSize, tileSize));
             }
             else if (tileType == 'R') {
-              tile.setTextureRect(sf::IntRect(19 * 32, 0, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(20 * 32, 32, tileSize, tileSize));
             }
             else if (tileType == 'x') {
-              tile.setTextureRect(sf::IntRect(20 * 32, 2*32, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(18 * 32, 2*32, tileSize, tileSize));
             }
             else if (tileType == 'y') {
-              tile.setTextureRect(sf::IntRect(20 * 32,32, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(19 * 32,2*32, tileSize, tileSize));
             }
             else if (tileType == 'z') {
-              tile.setTextureRect(sf::IntRect(20 * 32, 0, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(20 * 32, 2*32, tileSize, tileSize));
             }
             else if (tileType == 'c') {
-              tile.setTextureRect(sf::IntRect(21 * 32, 0, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(23 * 32, 0, tileSize, tileSize));
             }
             else if (tileType == 'a') {
-              tile.setTextureRect(sf::IntRect(23 * 32, 0, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(23 * 32, 2*32, tileSize, tileSize));
             }
             else if (tileType == 'd') {
               tile.setTextureRect(
-                sf::IntRect(21 * 32, 2 * 32, tileSize, tileSize));
+                sf::IntRect(21 * 32, 0, tileSize, tileSize));
             }
             else if (tileType == 'q') {
-              tile.setTextureRect(sf::IntRect(23 * 32, 2 * 32, tileSize, tileSize));
+              tile.setTextureRect(sf::IntRect(21 * 32, 2 * 32, tileSize, tileSize));
             }
             else{
                 continue;
@@ -235,7 +240,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
     }
 }
 
-std::vector<std::string> Map::getMapData() const {
+std::vector<std::string>& Map::getMapData(){
 	return mapData;
 }
 
@@ -348,7 +353,15 @@ bool Map::colliable(int x, int y) const
     {
         return false;
     }
-    if (mapData[y][x] == '1' || mapData[y][x] == '2' || mapData[y][x] == '5' || mapData[y][x] == '7' || mapData[y][x] == '8' || mapData[y][x] == 'P' || mapData[y][x] == 'p' || mapData[y][x] == 'H' || mapData[y][x] == 'h')
+    // X,Y,Z,L,R, x,y,z,q, a, b, c, d
+    if (mapData[y][x] == '1' || mapData[y][x] == '2' || mapData[y][x] == '5' || mapData[y][x] == '7' || mapData[y][x] == '8' || mapData[y][x] == 'P' || mapData[y][x] == 'p' || mapData[y][x] == 'H' || mapData[y][x] == 'h' 
+      ||
+        mapData[y][x] == 'X' || mapData[y][x] == 'Y' || mapData[y][x] == 'Z' ||
+        mapData[y][x] == 'L' || mapData[y][x] == 'Q' || mapData[y][x] == 'R' ||
+        mapData[y][x] == 'x' || mapData[y][x] == 'y' || mapData[y][x] == 'z' ||
+        mapData[y][x] == 'q' || mapData[y][x] == 'a' || mapData[y][x] == 'b' ||
+        mapData[y][x] == 'c' || mapData[y][x] == 'd'
+      )
     {
         return false;
     }
@@ -357,7 +370,9 @@ bool Map::colliable(int x, int y) const
 
 bool Map::colliableChar(const char& c) const
 {
-    if (c == '1' || c == '2' || c == '5' || c == '7' || c == '8' || c == 'P' || c == 'p' || c == 'H' || c == 'h')
+    if (c == '1' || c == '2' || c == '5' || c == '7' || c == '8' || c == 'P' || c == 'p' || c == 'H' || c == 'h' || c == 'X' || c == 'Y' || c == 'Z' ||
+      c == 'L' || c == 'Q' || c == 'R' || c == 'x' || c == 'y' || c == 'z' ||
+      c == 'q' || c == 'a' || c == 'b' || c == 'c' || c == 'd')
     {
         return false;
     }

@@ -1,5 +1,4 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include "MovementStrategy.h"
@@ -52,6 +51,7 @@ public:
   void setItemObject(Item* item);
   void setDestroyed(bool isDestroyed);
   bool getIsTouched();
+  bool getIsDestroyed() { return isDestroyed; }
   void move(float x, float y);
   void setInitY(float y);
   Item* getItemObject();
@@ -102,4 +102,4 @@ public:
 
 
 
-#endif  // !BLOCK_H
+

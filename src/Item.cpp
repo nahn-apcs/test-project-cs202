@@ -109,9 +109,10 @@ Item* ItemFactory::createItem(const std::string& type,
     Item* powerUp = new PowerUp(texture);
     powerUp->setPosition(position.x, position.y);
     auto animation = new BlockAnimation(powerUp->getSprite(), 0.3f);
-    animation->addFrame(sf::IntRect(0, 64, 36, 36));
-    animation->addFrame(sf::IntRect(56, 64, 36, 36));
-    animation->addFrame(sf::IntRect(112, 64, 36, 36));
+    animation->addFrame(sf::IntRect(0, 64, 32, 32));
+    animation->addFrame(sf::IntRect(32, 64, 32, 32));
+    animation->addFrame(sf::IntRect(64, 64, 32, 32));
+    animation->addFrame(sf::IntRect(96, 64, 32, 32));
     powerUp->setAnimation(animation);
     auto movement = new PatrolMovement();
     powerUp->setMovement(movement);

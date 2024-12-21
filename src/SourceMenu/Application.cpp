@@ -58,6 +58,16 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 	mTextures.load(Textures::ID::SmallWukongRun3, "../resources/wukong16bit/run_sprite_3.png");
 	mTextures.load(Textures::ID::SmallWukongRun4, "../resources/wukong16bit/run_sprite_4.png");
 
+	mTextures.load(Textures::ID::DeadWukong1, "../resources/wukong16bit/dead_sprite_1.png");
+	mTextures.load(Textures::ID::DeadWukong2, "../resources/wukong16bit/dead_sprite_2.png");
+	mTextures.load(Textures::ID::DeadWukong3, "../resources/wukong16bit/dead_sprite_3.png");
+	mTextures.load(Textures::ID::DeadWukong4, "../resources/wukong16bit/dead_sprite_4.png");
+	mTextures.load(Textures::ID::DeadWukong5, "../resources/wukong16bit/dead_sprite_5.png");
+	mTextures.load(Textures::ID::DeadWukong6, "../resources/wukong16bit/dead_sprite_6.png");
+	mTextures.load(Textures::ID::DeadWukong7, "../resources/wukong16bit/dead_sprite_7.png");
+	mTextures.load(Textures::ID::DeadWukong8, "../resources/wukong16bit/dead_sprite_8.png");
+	mTextures.load(Textures::ID::DeadWukong9, "../resources/wukong16bit/dead_sprite_9.png");
+
 	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
 	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
 

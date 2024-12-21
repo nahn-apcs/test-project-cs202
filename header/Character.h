@@ -8,7 +8,8 @@
 class Character {
 public:
     Character() = default;
-    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, int x, int y);
+    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& dead
+        , int x, int y);
     ~Character();
     void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
@@ -24,7 +25,12 @@ public:
     void increaseSpeed();
     void levelUp(Map* map);
     void damaged(Map* map);
+    bool isAttacking() const { return attacking; }
+    bool isDead() const { return Dead; }
+    void knockUp();
+    int getLevel() const { return level; }
     sf::FloatRect getBounds() const;
+    bool isEvoled() const { return status == 1; }
 
 private:
     sf::Sprite sprite;
@@ -39,15 +45,17 @@ private:
     std::vector<Animation*> attackAnimations;
     std::vector<Animation*> idleAnimations;
     std::vector<Animation*> jumpAnimations;
+    Animation* deadAnimation;
 
     const float gravity = 600.f;
     const float jumpStrength = -400.f;
     float moveSpeed = 100.f;
     float cooldown = 0.f;
     bool faceRight;
-    int level = 1;
+    int level = 3;
     float unDamagedTime = 0.f;
     bool attacked = false;
+    bool Dead = false;
 
     void handleCollisions(Map* map);
     void applyGravity(float deltaTime);

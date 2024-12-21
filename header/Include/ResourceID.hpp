@@ -66,6 +66,16 @@ namespace Textures
 		SmallWukongRun3,
 		SmallWukongRun4,
 
+		DeadWukong1,
+		DeadWukong2,
+		DeadWukong3,
+		DeadWukong4,
+		DeadWukong5,
+		DeadWukong6,
+		DeadWukong7,
+		DeadWukong8,
+		DeadWukong9,
+
 		Bullet,
 		Enemies,
 		Bg1,

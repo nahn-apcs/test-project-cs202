@@ -56,5 +56,4 @@ void DestroyedState::ontouch(Block& block,
     return;
   }
   block = *destroyblock;
-
 }

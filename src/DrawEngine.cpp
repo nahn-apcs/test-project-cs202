@@ -1,6 +1,6 @@
 #include "DrawEngine.h"
 
-void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map* map) {
+void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map* map, Character* charac) {
 	// Display the game info
 	sf::Text coinText;
 	coinText.setFont(font);
@@ -34,10 +34,19 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock,
 	scoreText.setCharacterSize(24);
 	scoreText.setFillColor(sf::Color::Black);
 	scoreText.setPosition(610, 10);
+
+	sf::Text lvText;
+	lvText.setFont(font);
+	lvText.setString("HP: " + std::to_string(charac->getLevel()));
+	lvText.setCharacterSize(24);
+	lvText.setFillColor(sf::Color::Black);
+	lvText.setPosition(810, 10);
+
 	// Draw the text to the window
 	window.setView(window.getDefaultView());
 	window.draw(coinText);
 	window.draw(timeText);
 	window.draw(levelText);
 	window.draw(scoreText);
+	window.draw(lvText);
 }
