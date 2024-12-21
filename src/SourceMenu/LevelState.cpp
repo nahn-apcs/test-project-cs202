@@ -27,7 +27,7 @@ LevelState::LevelState(StateStack& stack, Context context): State(stack, context
     level1Button->setText("Level 1", 130);
     level1Button->setCallback([this] () {
         //requestStackPop();
-        requestStackPush(States::Game);
+        requestStackPush(States::Game1_1);
         std::cout << "Level 1 button pressed" << std::endl;
     });
 
@@ -36,7 +36,7 @@ LevelState::LevelState(StateStack& stack, Context context): State(stack, context
     level2Button->setText("Level 2", 130);
     level2Button->setCallback([this] () {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Game2_1);
         std::cout << "Level 2 button pressed" << std::endl;
     });
 
@@ -45,7 +45,7 @@ LevelState::LevelState(StateStack& stack, Context context): State(stack, context
     level3Button->setText("Level 3", 130);
     level3Button->setCallback([this] () {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Game3_1);
         std::cout << "Level 3 button pressed" << std::endl;
     });
 
@@ -54,7 +54,7 @@ LevelState::LevelState(StateStack& stack, Context context): State(stack, context
     level4Button->setText("Level 4", 130);
     level4Button->setCallback([this] () {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Game4_1);
         std::cout << "Level 4 button pressed" << std::endl;
     });
 
@@ -63,7 +63,7 @@ LevelState::LevelState(StateStack& stack, Context context): State(stack, context
     level5Button->setText("Level 5", 130);
     level5Button->setCallback([this] () {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Game5_1);
         std::cout << "Level 5 button pressed" << std::endl;
     });
 

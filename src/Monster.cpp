@@ -16,6 +16,21 @@ Monster::~Monster()
     delete animation;
 }
 
+sf::FloatRect Monster::getBounds()
+{
+  return sprite.getGlobalBounds();
+}
+
+void Monster::drawBounds(sf::RenderWindow& window)
+{
+  sf::RectangleShape rect = sf::RectangleShape(sf::Vector2f(getBounds().width, getBounds().height));
+  rect.setPosition(getBounds().getPosition());
+  rect.setFillColor(sf::Color::Transparent);
+  rect.setOutlineColor(sf::Color::Red);
+  rect.setOutlineThickness(1.f);
+  window.draw(rect);
+}
+
 void Monster::setMovementStrategy(MovementStrategy* movementStrategy)
 {
   this->movementStrategy = movementStrategy;
@@ -67,6 +82,23 @@ Goomba::Goomba(sf::Texture& texture) : Monster(texture)
 
 Goomba::~Goomba()
 {
+}
+sf::FloatRect Goomba::getBounds()
+{
+    sf::FloatRect temp = sprite.getGlobalBounds();
+    temp.left += temp.width / 4;
+    temp.width -= temp.width / 4;
+    return temp;
+}
+
+sf::FloatRect Bee::getBounds()
+{
+  sf::FloatRect temp = sprite.getGlobalBounds();
+  temp.left += temp.width / 4;
+  temp.width -= temp.width / 2;
+  temp.top += temp.height / 4;
+  temp.height -= temp.height / 2;
+  return temp;
 }
 
 Bee::Bee(sf::Texture& texture) : Monster(texture)

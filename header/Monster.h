@@ -26,6 +26,8 @@ public:
   void setPosition(float x, float y);
   void setAnimation(MonsterAnimation* ani);
   virtual void kill(bool isKilled, const Monster* monster);
+  virtual sf::FloatRect getBounds();
+  void drawBounds(sf::RenderWindow& window);
 
   sf::Sprite& getSprite() { return sprite; }
   bool getIsKilled() { return isKilled; }
@@ -36,12 +38,14 @@ class Goomba : public Monster {
 public:
   Goomba(sf::Texture& texture);
   ~Goomba();
+  sf::FloatRect getBounds();
 };
 
 class Bee : public Monster {
 public:
   Bee(sf::Texture& texture);
   ~Bee();
+  sf::FloatRect getBounds();
 };
 
 class Plant : public Monster {

@@ -155,8 +155,7 @@ add_custom_target(copy_resources_images ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/resources
     ${CMAKE_BINARY_DIR}/resources
-    ${CMAKE_SOURCE_DIR}/Asset
-    ${CMAKE_BINARY_DIR}/Asset
+
 )
 add_dependencies(game copy_resources_images)
 

@@ -9,7 +9,16 @@ namespace States
         Menu,
         Guide,
         Level,
-        Game,
+        Game1_1,
+        Game1_2,
+        Game2_1,
+        Game2_2,
+        Game3_1,
+        Game3_2,
+        Game4_1,
+        Game4_2,
+        Game5_1,
+        Game5_2,
         Pause,
     };
 }
