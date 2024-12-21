@@ -2,6 +2,10 @@
 #include <MenuState.hpp>
 #include <GuideState.hpp>
 #include <LevelState.hpp>
+#include <GameState.hpp>
+#include <PauseState.hpp>
+#include <WaitingState.hpp>
+#include <TransitionState.hpp>
 #include <iostream>
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
@@ -100,6 +104,60 @@ void Application::registerStates()
 	mStateStack.registerState<MenuState>(States::Menu);
 	mStateStack.registerState<GuideState>(States::Guide);
 	mStateStack.registerState<LevelState>(States::Level);
+	mStateStack.registerState<GameState>(States::GameLevel1_1, 1, 1);
+	mStateStack.registerState<GameState>(States::GameLevel1_2, 1, 2);
+	mStateStack.registerState<GameState>(States::GameLevel2_1, 2, 1);
+	mStateStack.registerState<GameState>(States::GameLevel2_2, 2, 2);
+	mStateStack.registerState<GameState>(States::GameLevel3_1, 3, 1);
+	mStateStack.registerState<GameState>(States::GameLevel3_2, 3, 2);
+	mStateStack.registerState<GameState>(States::GameLevel4_1, 4, 1);
+	mStateStack.registerState<GameState>(States::GameLevel4_2, 4, 2);
+	mStateStack.registerState<GameState>(States::GameLevel5_1, 5, 1);
+	mStateStack.registerState<GameState>(States::GameLevel5_2, 5, 2);
+
+	mStateStack.registerState<PauseState>(States::Pause);
+	mStateStack.registerState<WaitingState>(States::Waiting);
+	mStateStack.registerState<TransitionState>(States::TransitionLevel1_1, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel1_1);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel1_2, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel1_2);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel2_1, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel2_1);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel2_2, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel2_2);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel3_1, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel3_1);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel3_2, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel3_2);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel4_1, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel4_1);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel4_2, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel4_2);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel5_1, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel5_1);
+	});
+	mStateStack.registerState<TransitionState>(States::TransitionLevel5_2, [this]() {
+		this->mStateStack.popState();
+		this->mStateStack.pushState(States::GameLevel5_2);
+	});
+	//mStateStack.registerState<TransitionState>(States::Transition);
 	// mStateStack.registerState<TitleState>(States::Title);
 	// mStateStack.registerState<GameState>(States::Game);
 	// mStateStack.registerState<MultiplayerGameState>(States::HostGame, true);

@@ -37,6 +37,10 @@ class StateStack : private sf::NonCopyable
 		void				registerState(States::ID stateID);
 		template <typename T, typename Param1>
 		void				registerState(States::ID stateID, Param1 arg1);
+		template <typename T>
+		void 				registerState(States::ID stateID, std::function<void()> callback);
+		template <typename T, typename Param1, typename Param2>
+		void 				registerState(States::ID stateID, Param1 arg1, Param2 arg2);
 
 		void				update(sf::Time dt);
 		void				draw();
@@ -89,6 +93,23 @@ void StateStack::registerState(States::ID stateID, Param1 arg1) {
 		return State::Ptr(new T(*this, mContext, arg1));
 	};
 }
+
+template <typename T, typename Param1, typename Param2>
+void StateStack::registerState(States::ID stateID, Param1 arg1, Param2 arg2) {
+	mFactories[stateID] = [this, arg1, arg2] ()
+	{
+		return State::Ptr(new T(*this, mContext, arg1, arg2));
+	};
+}
+
+template <typename T>
+void StateStack::registerState(States::ID stateID, std::function<void()> callback) {
+    mFactories[stateID] = [this, callback]() {
+        return State::Ptr(new T(*this, mContext, callback));
+    };
+}
+
+
 
 
 #endif // STATE_STACK_HPP
