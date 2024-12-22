@@ -124,157 +124,159 @@ bool GameState::update(sf::Time dt) {
 	float deltaTime = gameClock.restart().asSeconds();
 	sf::RenderWindow& window = *getContext().window;
 	std::vector<std::string>& mapData = gameMap->getMapData();
-				sf::FloatRect playerBounds = player->getBounds();
-				std::vector<Monster*> monsters = gameMap->getMonsters();
-				ProjectileManager& projectiles = gameMap->getProjectiles();
-				AudioManagement* audioManager = gameMap->getAudioManager();
-				int tileSize = gameMap->getTileSize();
+	sf::FloatRect playerBounds = player->getBounds();
+	std::vector<Monster*> monsters = gameMap->getMonsters();
+	ProjectileManager& projectiles = gameMap->getProjectiles();
+	AudioManagement* audioManager = gameMap->getAudioManager();
+	int tileSize = gameMap->getTileSize();
 
-				// Update camera position based on player position
-				int mapWidth = gameMap->getMapData()[0].size() * gameMap->getTileSize();
-				int mapHeight = gameMap->getMapData().size() * gameMap->getTileSize();
+	// Update camera position based on player position
+	int mapWidth = gameMap->getMapData()[0].size() * gameMap->getTileSize();
+	int mapHeight = gameMap->getMapData().size() * gameMap->getTileSize();
 
-				// Make sure the camera stays within the bounds of the map
-				float cameraX = std::max(constants::scene_width / 2.f, std::min(player->getBounds().left + player->getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
-				float cameraY = std::max(constants::scene_height / 2.f, std::min(player->getBounds().top + player->getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
+	// Make sure the camera stays within the bounds of the map
+	float cameraX = std::max(constants::scene_width / 2.f, std::min(player->getBounds().left + player->getBounds().width / 2, mapWidth - constants::scene_width / 2.f));
+	float cameraY = std::max(constants::scene_height / 2.f, std::min(player->getBounds().top + player->getBounds().height / 2, mapHeight - constants::scene_height / 2.f));
 
-				camera.setCenter(cameraX, cameraY);
-				window.setView(camera);
+	camera.setCenter(cameraX, cameraY);
+	window.setView(camera);
 
 
 	// Update player and game state
-	        player->interact(deltaTime, gameMap);
-	        player->update(deltaTime, gameMap);
+	player->interact(deltaTime, gameMap);
+	player->update(deltaTime, gameMap);
 
-			
-	        //gameMap->updateCoins(player->getBounds(), deltaTime);
-			std::vector<Item*> coins = gameMap->getCoins();
-			for (auto& coin : coins) {
-				coin->update(deltaTime, mapData, 32);
-				if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
-					audioManager->playCoinSound();
-					coin->collect(); // Collect the coin
-					if (dynamic_cast<Coin*>(coin)) {
-						gameMap->increaseCoinsNumber();
-					}
-					else if (dynamic_cast<PowerUp*>(coin)) {
-						player->levelUp(gameMap);
-					}
 
-				}
+	//gameMap->updateCoins(player->getBounds(), deltaTime);
+	std::vector<Item*> coins = gameMap->getCoins();
+	for (auto& coin : coins) {
+		coin->update(deltaTime, mapData, 32);
+		if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
+			audioManager->playCoinSound();
+			coin->collect(); // Collect the coin
+			if (dynamic_cast<Coin*>(coin)) {
+				gameMap->increaseCoinsNumber();
+			}
+			else if (dynamic_cast<PowerUp*>(coin)) {
+				player->levelUp(gameMap);
 			}
 
-	        gameMap->updateScore();
-	
-	      
-	        //gameMap->updateMonsters(deltaTime, player->getBounds(), camera);
-			for (auto it = monsters.begin(); it != monsters.end();) {
-				auto& monster = *it;  // Use reference for clarity and efficiency
-				if (!gameMap->isVissible(monster->getSprite(), camera)) {
-					++it;
-					continue;
+		}
+	}
+
+	gameMap->updateScore();
+
+
+	//gameMap->updateMonsters(deltaTime, player->getBounds(), camera);
+	for (auto it = monsters.begin(); it != monsters.end();) {
+		auto& monster = *it;  // Use reference for clarity and efficiency
+		if (!gameMap->isVissible(monster->getSprite(), camera)) {
+			++it;
+			continue;
+		}
+		monster->update(deltaTime, mapData, tileSize);
+
+		// Get player and monster positions
+		sf::FloatRect monsterBounds = monster->getBounds();
+		for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+
+			if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+				projectiles.destroyProjectile(i);
+				auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+				auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+
+				mapData[tileY][tileX] = '0';
+				monster->kill(true, monster);
+			}
+
+		}
+
+		// Check intersection
+		if (monsterBounds.intersects(playerBounds) && !monster->getIsKilled()) {
+			//std::cout<< "Monster collision detected" << std::endl;
+			// Check if the player is above the monster
+			float playerBottom =
+				playerBounds.top + playerBounds.height;  // Bottom of the player
+			float monsterTop = monsterBounds.top;      // Top of the monster
+
+
+			if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
+				// Monster is killed
+				auto tileX = static_cast<int>(monsterBounds.left / tileSize);
+				auto tileY = static_cast<int>(monsterBounds.top / tileSize);
+
+				mapData[tileY][tileX] = '0';
+				player->knockUp();
+				monster->kill(true, monster);  // Kill the monster
+
+			}
+			else {
+				//std::cout<< "Player is killed" << std::endl;
+				if (!monster->getIsKilled()) {
+					player->damaged(gameMap);
 				}
-				monster->update(deltaTime, mapData, tileSize);
+			}
+		}
 
-				// Get player and monster positions
-				sf::FloatRect monsterBounds = monster->getBounds();
-				for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
-
-					if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
-						projectiles.destroyProjectile(i);
-						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
-						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
-
-						mapData[tileY][tileX] = '0';
-						monster->kill(true, monster);
-					}
-
-				}
-
-				// Check intersection
-				if (monsterBounds.intersects(playerBounds) && !monster->getIsKilled()) {
-					//std::cout<< "Monster collision detected" << std::endl;
-					// Check if the player is above the monster
-					float playerBottom =
-						playerBounds.top + playerBounds.height;  // Bottom of the player
-					float monsterTop = monsterBounds.top;      // Top of the monster
+		++it;  // Increment the iterator if no monster was removed
+	}
 
 
-					if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
-						// Monster is killed
-						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
-						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
 
-						mapData[tileY][tileX] = '0';
-						player->knockUp();
-						monster->kill(true, monster);  // Kill the monster
-
-					}
-					else {
-						//std::cout<< "Player is killed" << std::endl;
-						if (!monster->getIsKilled()) {
-							player->damaged(gameMap);
+	//gameMap->updateBlocks(deltaTime,player->getBounds());
+	std::vector<Block*> blocks = gameMap->getBlocks();
+	for (auto it = blocks.begin(); it != blocks.end();) {
+		auto& block = *it;
+		block->update(deltaTime, mapData, tileSize);
+		// playerBounds.left += 2.0f;
+		if (block->isCollission(playerBounds) && !block->getIsDestroyed()) {
+			float playerTop = playerBounds.top;
+			float blockBottom = block->getBounds().top + block->getBounds().height;
+			float dy = blockBottom - playerTop;
+			if (dy < 5.0f) {
+				if (!block->getIsTouched()) {
+					if (dynamic_cast<QuestionBlock*>(block)) {
+						block->setState(new ActiveState());
+						block->onTouch2(mapData, tileSize, gameMap->getTexture());
+						auto item = block->getItemObject();
+						if (dynamic_cast<Coin*>(item)) {
+							audioManager->playCoinSound();
+							gameMap->increaseCoinsNumber();
+						}
+						else if (dynamic_cast<PowerUp*>(item)) {
+							gameMap->addCoins(item);
 						}
 					}
-				}
-
-				++it;  // Increment the iterator if no monster was removed
-			}
-			
-			
-			
-			//gameMap->updateBlocks(deltaTime,player->getBounds());
-			std::vector<Block*> blocks = gameMap->getBlocks();
-			for (auto it = blocks.begin(); it != blocks.end();) {
-				auto& block = *it;
-				block->update(deltaTime, mapData, tileSize);
-				// playerBounds.left += 2.0f;
-				if (block->isCollission(playerBounds) && !block->getIsDestroyed()) {
-          
-         
-					float playerTop = playerBounds.top;
-					float blockBottom = block->getBounds().top + block->getBounds().height;
-					float dy = blockBottom - playerTop;
-					if (dy < 5.0f) {
-						if (!block->getIsTouched()) {
-							if (dynamic_cast<QuestionBlock*>(block)) {
-								block->setState(new ActiveState());
-								block->onTouch2(mapData, tileSize, gameMap->getTexture());
-								auto item = block->getItemObject();
-								if (dynamic_cast<Coin*>(item)) {
-									audioManager->playCoinSound();
-									gameMap->increaseCoinsNumber();
-								}
-								else if (dynamic_cast<PowerUp*>(item)) {
-									gameMap->addCoins(item);
-								}
-							}
-              else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
-                block->setState(new DestroyedState());
-                block->onTouch2(mapData,tileSize,
-                  gameMap->getTexture());
-                int tileX = (block->getBounds().left + 5.0f) / tileSize;
-                int tileY = (block->getBounds().top + 5.0f)  / tileSize;
-                std::cout<< tileY << " " << tileX << std::endl;
-                std::cout << mapData[tileY][tileX] << std::endl;
-                mapData[tileY][tileX] = '0';
-                block->setDestroyed(true);
-              }
-
-
-
-
-						}
-
+					else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
+						block->setState(new DestroyedState());
+						block->onTouch2(mapData, tileSize,
+							gameMap->getTexture());
+						int tileX = (block->getBounds().left + 5.0f) / tileSize;
+						int tileY = (block->getBounds().top + 5.0f) / tileSize;
+						std::cout << tileY << " " << tileX << std::endl;
+						std::cout << mapData[tileY][tileX] << std::endl;
+						mapData[tileY][tileX] = '0';
+						block->setDestroyed(true);
 					}
 				}
-				it++;
 			}
+		}
+		//Check flag
+		if (dynamic_cast<FlagBlock*>(block)) {
+			if (playerBounds.intersects(block->getBounds())) {
+				std::cout << "Player win" << std::endl;
+			}
+			else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left <  block->getBounds().left) {
+				std::cout << "Player win" << std::endl;
+			}
+		}
+		it++;
+	}
 
 
-	        gameMap->updateProjectiles(deltaTime);
+	gameMap->updateProjectiles(deltaTime);
 
-			return false;
+	return false;
 }
 
 void GameState::draw() {

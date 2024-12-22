@@ -280,13 +280,15 @@ Block* BlockFactory::createBlock(const std::string& type, sf::Texture& texture, 
   }
   else if (type == "flag") {
 	  FlagBlock* block = new FlagBlock(texture);
-	  block->setPosition(position.x, position.y);
+	  block->setPosition(position.x, position.y-18);
 	  auto ani = new BlockAnimation(block->getSprite(), 0.3f);
-    ani->addFrame(sf::IntRect(0, 32*3, 35, 50));
+      ani->addFrame(sf::IntRect(0, 32*3, 35, 50));
 	  ani->addFrame(sf::IntRect(35, 32 * 3, 35, 50));
 	  ani->addFrame(sf::IntRect(70, 32 * 3, 35, 50));
 	  ani->addFrame(sf::IntRect(105, 32 * 3, 35, 50));
 	  ani->addFrame(sf::IntRect(140, 32 * 3, 35, 50));
+      block->setAnimated(true);
+      block->setAnimation(ani);
 	  return block;
   }
 
