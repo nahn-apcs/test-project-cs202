@@ -155,11 +155,11 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 				break;
 			case 3:
 				if (mIsMovingRight) {
-					sprite.setPosition(player.x - 100.f, player.y-150.f);
+					sprite.setPosition(player.x - 100.f, player.y-170.f);
 					normalAttack(map);
 				}
 				else {
-					sprite.setPosition(player.x + 100.f, player.y-150.f);
+					sprite.setPosition(player.x + 100.f, player.y-170.f);
 					normalAttack(map);
 				}
 				break;

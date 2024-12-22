@@ -60,7 +60,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 100, 100);
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 300*32, 100);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
@@ -92,6 +92,8 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
+	  mapTextures.push_back(enemyProjectile);
+
       gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg2);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
@@ -105,12 +107,16 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
+	  mapTextures.push_back(enemyProjectile);
+
       gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg3);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
       std::cout << gameMap->getMapData().size() << "\n";
       xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
       yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+
+	  std::cout<< "GameState 3" << "\n";
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack1));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack2));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack3));
@@ -134,7 +140,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot1));
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot2));
 
-	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 315*32, 200);
+	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 330*32, 200);
 
       break;
 

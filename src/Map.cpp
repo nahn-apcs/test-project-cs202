@@ -26,7 +26,7 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
         Monstertexture = mapTexture[1];
         projectTile = mapTexture[2];
     }
-    if (mapTexture.size() > 2) {
+    if (mapTexture.size() > 3) {
         enemyProjectTile = mapTexture[3];
     }
     tile.setTexture(texture);
