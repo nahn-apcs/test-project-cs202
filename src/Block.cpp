@@ -60,6 +60,7 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
       if (animation->isFinished()) {
         sprite.setTextureRect(sf::IntRect(0, 0, 0, 0));
         //sprite.setPosition(-1000, -1000);
+        mapData[getPosition().y / tileSize][getPosition().x / tileSize] = '0';
       }
     }
     return;

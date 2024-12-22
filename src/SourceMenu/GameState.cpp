@@ -342,13 +342,28 @@ bool GameState::update(sf::Time dt) {
                 int tileY = (block->getBounds().top + 5.0f)  / tileSize;
                 std::cout<< tileY << " " << tileX << std::endl;
                 std::cout << mapData[tileY][tileX] << std::endl;
-                mapData[tileY][tileX] = '0';
+                //mapData[tileY][tileX] = '0';
                 block->setDestroyed(true);
               }
 
 
 						}
 
+					}
+				}
+				//Check flag
+				if (dynamic_cast<FlagBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						std::cout << "Player win" << std::endl;
+					}
+					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
+						std::cout << "Player win" << std::endl;
+					}
+				}
+				//interact with water block --> die
+				if (dynamic_cast<WaterBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						player->dead(gameMap);
 					}
 				}
 				it++;
