@@ -92,6 +92,12 @@ public:
 
 };
 
+class FlagBlock : public Block {
+public:
+	FlagBlock(const sf::Texture& texture);
+	~FlagBlock();
+};
+
 class BlockFactory {
 public:
 	static Block* createBlock(const std::string& type, sf::Texture& texture, sf::Vector2i position);
