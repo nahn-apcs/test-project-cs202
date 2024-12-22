@@ -4,7 +4,7 @@
 
 class Projectile {
 	public:
-	Projectile(sf::Texture& texture, float speed, float x, float y, bool mr);
+	Projectile(sf::Texture& texture, float veloX, float veloY, float x, float y, bool mr);
 	void update(float deltatime);
 	void draw(sf::RenderWindow& window);
 	sf::FloatRect getBounds() const;
@@ -15,7 +15,8 @@ class Projectile {
 		ProjectileAnimation* animation;
 		bool destroyed;
 		bool moveRight;
-		float speed;
+		float veloX;
+		float veloY;
 		float X;
 		float Y;
 };
@@ -23,7 +24,7 @@ class Projectile {
 class ProjectileManager {
 	public:
 	ProjectileManager();
-	void addProjectile(sf::Texture& texture, float speed, float x, float y, bool mr);
+	void addProjectile(sf::Texture& texture, float veloX, float veloY, float x, float y, bool mr);
 	void update(float deltatime);
 	void draw(sf::RenderWindow& window);
 	void destroyProjectile(int index);

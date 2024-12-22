@@ -7,9 +7,10 @@
 #include <SFML/System/Time.hpp>
 #include "AudioManagement.h"
 
-GameState::GameState(StateStack& stack, Context context, int level, int character) : State(stack, context), character(character) {
+GameState::GameState(StateStack& stack, Context context, int level, int character) : boss(nullptr), State(stack, context), character(character) {
 	monsterset = context.textures->get(Textures::Enemies);
 	projectile = context.textures->get(Textures::Bullet);
+	enemyProjectile = context.textures->get(Textures::BossBullet);
 	camera = sf::View(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
 	std::cout << "GameState" << "\n";
 	drawEngine = new DrawEngine();
@@ -75,13 +76,15 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 			mapTextures.push_back(tileset);
 			mapTextures.push_back(monsterset);
 			mapTextures.push_back(projectile);
+			mapTextures.push_back(enemyProjectile);
+
 			gameMap = new Map("../resources/Level1/level.txt", 32, mapTextures);
 			backgroundTexture = context.textures->get(Textures::Bg1);
 			backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
 			std::cout << gameMap->getMapData().size() << "\n";
 			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
 			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-              
+			
 
 			break;
     case 2:
@@ -108,6 +111,30 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       std::cout << gameMap->getMapData().size() << "\n";
       xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
       yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack1));
+	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack2));
+	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack3));
+
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead1));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead2));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead3));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead4));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead5));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead6));
+	  bossDeadTextures.push_back(context.textures->get(Textures::BossDead7));
+
+	  bossExhaustedTextures.push_back(context.textures->get(Textures::BossExhausted1));
+	  bossExhaustedTextures.push_back(context.textures->get(Textures::BossExhausted2));
+
+	  bossFlyingTextures.push_back(context.textures->get(Textures::BossFly1));
+	  bossFlyingTextures.push_back(context.textures->get(Textures::BossFly2));
+	  bossFlyingTextures.push_back(context.textures->get(Textures::BossFly3));
+	  bossFlyingTextures.push_back(context.textures->get(Textures::BossFly4));
+
+	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot1));
+	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot2));
+
+	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 315*32, 200);
 
       break;
 
@@ -145,6 +172,18 @@ bool GameState::update(sf::Time dt) {
 	// Update player and game state
 	        player->interact(deltaTime, gameMap);
 	        player->update(deltaTime, gameMap);
+
+			if (boss) {
+				if (!boss->isActivated()) {
+					sf::Vector2f playerPos = player->getBounds().getPosition();
+					sf::Vector2f bossPos = boss->getPosition();
+					if (abs(playerPos.x - bossPos.x) < 200) boss->activate();
+				}
+					else {
+						boss->interact(deltaTime, gameMap, player->getBounds().getPosition());
+						boss->update(deltaTime, gameMap);
+					}
+			}
 
 			
 	        //gameMap->updateCoins(player->getBounds(), deltaTime);
@@ -189,6 +228,7 @@ bool GameState::update(sf::Time dt) {
 						monster->kill(true, monster);
 					}
 
+
 				}
 
 				// Check intersection
@@ -221,7 +261,46 @@ bool GameState::update(sf::Time dt) {
 				++it;  // Increment the iterator if no monster was removed
 			}
 			
-			
+			ProjectileManager& enemyProjectiles = gameMap->getEnemyProjectiles();
+			for (int j = 0; j < enemyProjectiles.getProjectiles().size(); j++) {
+				Projectile* projectile = enemyProjectiles.getProjectiles()[j];
+				projectile->update(deltaTime);
+				if (projectile->getBounds().intersects(playerBounds) && !projectile->isDestroyed() ) {
+					if (!player->isDead()) {
+						player->damaged(gameMap);
+					}
+					enemyProjectiles.destroyProjectile(j);
+				}
+					
+					for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+						if (projectiles.getProjectiles()[i]->getBounds().intersects(projectile->getBounds()) && !projectiles.getProjectiles()[i]->isDestroyed() && !projectile->isDestroyed() ) {
+							projectiles.destroyProjectile(i);
+							enemyProjectiles.destroyProjectile(j);
+						}
+					}
+			}
+
+			if (boss) {
+				for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
+
+					if (boss) {
+						if (boss->getBounds().intersects(projectiles.getProjectiles()[i]->getBounds())) {
+							boss->damaged(gameMap);
+							projectiles.destroyProjectile(i);
+
+						}
+					}
+
+				}
+				if (boss->getBounds().intersects(playerBounds) && !boss->isDead()) {
+					if (!player->isDead()) {
+						player->damaged(gameMap);
+					}
+				}
+			}
+
+
+
 			
 			//gameMap->updateBlocks(deltaTime,player->getBounds());
 			std::vector<Block*> blocks = gameMap->getBlocks();
@@ -269,9 +348,32 @@ bool GameState::update(sf::Time dt) {
 				it++;
 			}
 
+			for (auto it = projectiles.getProjectiles().begin(); it != projectiles.getProjectiles().end();) {
+				auto& projectile = *it;
+				if (projectile->isDestroyed()) {
+					it = projectiles.getProjectiles().erase(it);
+					//delete projectile;
+					}
+				else {
+					++it;
+					}
+				}
+
+			for (auto it = enemyProjectiles.getProjectiles().begin(); it != enemyProjectiles.getProjectiles().end();) {
+				auto& projectile = *it;
+				if (projectile->isDestroyed()) {
+					it = enemyProjectiles.getProjectiles().erase(it);
+					//delete projectile;
+					}
+				else {
+					++it;
+					}
+				}
+
+
 
 	        gameMap->updateProjectiles(deltaTime);
-
+			gameMap->updateEnemyProjectiles(deltaTime);
 			return false;
 }
 
@@ -287,6 +389,10 @@ void GameState::draw() {
 	gameMap->draw(window);
 	player->draw(window);
 	player->drawBounds(window);
+	if (boss) {
+		boss->draw(window);
+		boss->drawBounds(window);
+	}
 	for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
 	}

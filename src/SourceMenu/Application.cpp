@@ -68,6 +68,30 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 	mTextures.load(Textures::ID::DeadWukong8, "../resources/wukong16bit/dead_sprite_8.png");
 	mTextures.load(Textures::ID::DeadWukong9, "../resources/wukong16bit/dead_sprite_9.png");
 
+	mTextures.load(Textures::ID::BossAttack1, "../resources/boss minotaur/main/boss_attacking_1_fit.png");
+	mTextures.load(Textures::ID::BossAttack2, "../resources/boss minotaur/main/boss_attacking_2_fit.png");
+	mTextures.load(Textures::ID::BossAttack3, "../resources/boss minotaur/main/boss_attacking_3_fit.png");
+	mTextures.load(Textures::ID::BossDead1, "../resources/boss minotaur/main/boss_dead_1.png");
+	mTextures.load(Textures::ID::BossDead2, "../resources/boss minotaur/main/boss_dead_2.png");
+	mTextures.load(Textures::ID::BossDead3, "../resources/boss minotaur/main/boss_dead_3.png");
+	mTextures.load(Textures::ID::BossDead4, "../resources/boss minotaur/main/boss_dead_4.png");
+	mTextures.load(Textures::ID::BossDead5, "../resources/boss minotaur/main/boss_dead_5.png");
+	mTextures.load(Textures::ID::BossDead6, "../resources/boss minotaur/main/boss_dead_6.png");
+	mTextures.load(Textures::ID::BossDead7, "../resources/boss minotaur/main/boss_dead_7.png");
+	mTextures.load(Textures::ID::BossFly1, "../resources/boss minotaur/main/boss_flying_1.png");
+	mTextures.load(Textures::ID::BossFly2, "../resources/boss minotaur/main/boss_flying_2.png");
+	mTextures.load(Textures::ID::BossFly3, "../resources/boss minotaur/main/boss_flying_3.png");
+	mTextures.load(Textures::ID::BossFly4, "../resources/boss minotaur/main/boss_flying_4.png");
+
+	mTextures.load(Textures::ID::BossShoot1, "../resources/boss minotaur/main/boss_shooting_1.png");
+	mTextures.load(Textures::ID::BossShoot2, "../resources/boss minotaur/main/boss_shooting_2.png");
+
+	mTextures.load(Textures::ID::BossExhausted1, "../resources/boss minotaur/main/boss_exhausted_1.png");
+	mTextures.load(Textures::ID::BossExhausted2, "../resources/boss minotaur/main/boss_exhausted_2.png");
+
+	mTextures.load(Textures::ID::BossBullet, "../resources/boss_bullet.png");
+
+
 	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
 	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
 

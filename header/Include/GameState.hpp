@@ -18,6 +18,7 @@
 #include "AudioManagement.h"
 #include <fstream>
 #include "constant.h"
+#include "Boss.h"
 
 
 class GameState : public State {
@@ -53,7 +54,7 @@ private:
 //        return -1;
 //    }
 
-    sf::Texture tileset, playerTexture, monsterset, projectile;
+    sf::Texture tileset, playerTexture, monsterset, projectile, enemyProjectile;
     sf::Sprite backgroundSprite;
     std::vector<sf::Texture> runTextures;
     std::vector<sf::Texture> attackTextures;
@@ -65,11 +66,19 @@ private:
     std::vector<sf::Texture> sRunTextures;
     std::vector<sf::Texture> sIdleTextures;
 
+    std::vector<sf::Texture> bossFlyingTextures;
+    std::vector<sf::Texture> bossAttackTextures;
+    std::vector<sf::Texture> bossDeadTextures;
+    std::vector<sf::Texture> bossShootTextures;
+    std::vector<sf::Texture> bossExhaustedTextures;
+
 
 
     Map* gameMap;   
     Character* player;
     DrawEngine* drawEngine;
+    Boss* boss;
+
     sf::Clock gameClock;
     sf::Clock timeClock;
     float elapsedTime = 0;

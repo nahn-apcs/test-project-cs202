@@ -32,7 +32,7 @@ public:
     sf::FloatRect getBounds() const;
     bool isEvoled() const { return status == 1; }
 
-private:
+protected:
     sf::Sprite sprite;
     float velocityX, velocityY;
     bool onGround;
@@ -51,6 +51,7 @@ private:
     const float jumpStrength = -400.f;
     float moveSpeed = 100.f;
     float cooldown = 0.f;
+    float dashCooldown = 0.f;
     bool faceRight;
     int level = 3;
     float unDamagedTime = 0.f;

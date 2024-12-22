@@ -75,6 +75,31 @@ namespace Textures
 		DeadWukong7,
 		DeadWukong8,
 		DeadWukong9,
+		
+		BossFly1,
+		BossFly2,
+		BossFly3,
+		BossFly4,
+
+		BossAttack1,
+		BossAttack2,
+		BossAttack3,
+
+		BossDead1,
+		BossDead2,
+		BossDead3,
+		BossDead4,
+		BossDead5,
+		BossDead6,
+		BossDead7,
+
+		BossExhausted1,
+		BossExhausted2,
+
+		BossShoot1,
+		BossShoot2,
+
+		BossBullet,
 
 		Bullet,
 		Enemies,

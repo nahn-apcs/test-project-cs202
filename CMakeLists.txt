@@ -123,7 +123,7 @@ add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h
 "header/Include/StateStack.hpp"
 "header/Include/Utility.hpp"
 
- "src/SourceMenu/GameState.cpp")
+ "src/SourceMenu/GameState.cpp" "header/Boss.h" "src/Boss.cpp")
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)

@@ -32,17 +32,30 @@ void Character::shoot(Map* map) {
 	sf::Vector2f position = sprite.getPosition();
 	// Create a new projectile
     if (faceRight) {
-		map->projectiles.addProjectile(map->getProjectileTexture(), 400.0f, position.x + getBounds().width, position.y + getBounds().height/2, true);
+		map->projectiles.addProjectile(map->getProjectileTexture(), 400.0f, 0, position.x + getBounds().width, position.y + getBounds().height/2, true);
 	}
     else {
-        map->projectiles.addProjectile(map->getProjectileTexture(), 400.0f, position.x, position.y + getBounds().height / 2, false);
+        map->projectiles.addProjectile(map->getProjectileTexture(), 400.0f, 0, position.x, position.y + getBounds().height / 2, false);
     }
 }
 
 void Character::interact(float deltatime, Map* map) {
     // Handle movement
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+        if (dashCooldown <= 0) {
+			if (faceRight) {
+				sprite.move(100, 0);
+				moveSpeed = 800.0f;
+			}
+			else {
+				sprite.move(-100, 0);
+                moveSpeed = 800.0f;
+			}
+			dashCooldown = 1.0f;
+		}
+	}
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
         increaseSpeed();
     }
     else
@@ -65,7 +78,7 @@ void Character::interact(float deltatime, Map* map) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
 		if (cooldown <= 0 && level >= 5) {
 			shoot(map);
-			cooldown = 1.0f;
+			cooldown = 0.75f;
             attacking = true;
 		}
 	}
@@ -98,6 +111,9 @@ void Character::update(float deltaTime, Map* map) {
 		deadAnimation->applyToSprite(sprite, faceRight);
 		return;
 	}
+    if (dashCooldown > 0) {
+        dashCooldown -= deltaTime;
+        }
 
     applyGravity(deltaTime);
     applyFriction(deltaTime);

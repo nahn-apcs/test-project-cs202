@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "Projectile.h"
 #include <iostream>
-Projectile::Projectile(sf::Texture& texture, float speed, float x, float y, bool mr) :speed(speed), X(x), Y(y) {
+Projectile::Projectile(sf::Texture& texture, float veloX, float veloY, float x, float y, bool mr) :veloX(veloX), veloY(veloY), X(x), Y(y) {
 	moveRight = mr;
 	destroyed = false;
 	sprite.setTexture(texture);
@@ -22,10 +22,10 @@ void Projectile::update(float deltatime) {
 		animation->update(deltatime);
 		animation->applyToSprite(sprite, moveRight);
 		if (moveRight) {
-			sprite.move(speed * deltatime, 0.0f);
+			sprite.move(veloX * deltatime, veloY*deltatime);
 		}
 		else {
-			sprite.move(-speed * deltatime, 0.0f);
+			sprite.move(-veloX * deltatime, veloY*deltatime);
 		}
 	}
 }
@@ -51,8 +51,8 @@ void Projectile::destroy() {
 ProjectileManager::ProjectileManager() {
 }
 
-void ProjectileManager::addProjectile(sf::Texture& texture, float speed, float x, float y, bool mr) {
-	projectiles.push_back(new Projectile(texture, speed, x, y, mr));
+void ProjectileManager::addProjectile(sf::Texture& texture, float veloX, float veloY, float x, float y, bool mr) {
+	projectiles.push_back(new Projectile(texture, veloX , veloY, x, y, mr));
 }
 
 void ProjectileManager::update(float deltatime) {
@@ -68,7 +68,7 @@ void ProjectileManager::draw(sf::RenderWindow& window) {
 }
 
 void ProjectileManager::destroyProjectile(int index) {
-	projectiles.erase(projectiles.begin() + index);
+	projectiles[index]->destroy();
 }
 
 void ProjectileManager::destroyAll() {

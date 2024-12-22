@@ -26,6 +26,9 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
         Monstertexture = mapTexture[1];
         projectTile = mapTexture[2];
     }
+    if (mapTexture.size() > 2) {
+        enemyProjectTile = mapTexture[3];
+    }
     tile.setTexture(texture);
     tile.setTextureRect(sf::IntRect(0, 0, constants::scene_width, constants::scene_height)); // Select first tile
     //sf::Sprite coinTexture = tile;
@@ -196,7 +199,7 @@ void Map::draw(sf::RenderWindow& window) {
     }
 
     projectiles.draw(window);
-
+    enemyProjectiles.draw(window);
 
 	//sf::Font font;
 	//font.loadFromFile("../resources/font/Pixel_NES.otf");
@@ -457,6 +460,27 @@ void Map::updateProjectiles(float deltatime)
 	}
 
   projectiles.update(deltatime);
+}
+
+void Map::updateEnemyProjectiles(float deltatime) {
+    for (int i = 0; i < enemyProjectiles.getProjectiles().size(); ++i) {
+        int LeftX = enemyProjectiles.getProjectiles()[i]->getBounds().left / tileSize;
+        int RightX = (enemyProjectiles.getProjectiles()[i]->getBounds().left + enemyProjectiles.getProjectiles()[i]->getBounds().width) / tileSize;
+        int TopY = enemyProjectiles.getProjectiles()[i]->getBounds().top / tileSize;
+        int BottomY = (enemyProjectiles.getProjectiles()[i]->getBounds().top + enemyProjectiles.getProjectiles()[i]->getBounds().height) / tileSize;
+        int midY = (TopY + BottomY) / 2;
+        if (RightX >= mapData[0].size() - 1) {
+            enemyProjectiles.destroyProjectile(i);
+        }
+        if (LeftX <= 0) {
+            enemyProjectiles.destroyProjectile(i);
+        }
+        if (!colliable(LeftX, midY) || !colliable(RightX, midY)) {
+            enemyProjectiles.destroyProjectile(i);
+        }
+    }
+
+    enemyProjectiles.update(deltatime);
 }
 
 Map Map::operator&=(const Map& other)

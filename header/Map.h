@@ -32,18 +32,22 @@ public:
 	void updateScore();
     void updateBlocks(float deltatime, sf::FloatRect& playerBounds);
     void updateProjectiles(float deltatime);
+    void updateEnemyProjectiles(float deltatime);
     sf::Texture& getProjectileTexture ()  { return projectTile; }
     ProjectileManager projectiles;
+    ProjectileManager enemyProjectiles;
     AudioManagement* audioManager;
     Map operator&=(const Map& other);
     std::vector<Block*> getBlocks() const { return blocks; }
     void increaseCoinsNumber(){ coinsNumber++; }
     void addCoins(Item* coin) { coins.push_back(coin); }
     sf::Texture& getTexture() { return texture; }
+    sf::Texture& getEnemyProjectileTexture() { return enemyProjectTile; }
     std::vector<Item*> getCoins() const { return coins; }
     std::vector<Monster*> getMonsters() const { return monsters; }
     std::vector<Block*> getBlocks() { return blocks; }
     ProjectileManager& getProjectiles() { return projectiles; }
+    ProjectileManager& getEnemyProjectiles() { return enemyProjectiles; }
     AudioManagement* getAudioManager() { return audioManager; }
   private:
     const std::string notCollidable = "0C";
@@ -58,6 +62,7 @@ public:
     sf::Texture texture;
     sf::Texture Monstertexture;
     sf::Texture projectTile;
+    sf::Texture enemyProjectTile;
 };
 
 #endif // MAP_H
