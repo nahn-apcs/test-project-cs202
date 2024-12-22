@@ -332,21 +332,33 @@ bool GameState::update(sf::Time dt) {
 									gameMap->addCoins(item);
 								}
 							}
-              else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
-                block->setState(new DestroyedState());
-                block->onTouch2(mapData,tileSize,
-                  gameMap->getTexture());
-                int tileX = (block->getBounds().left + 5.0f) / tileSize;
-                int tileY = (block->getBounds().top + 5.0f)  / tileSize;
-                std::cout<< tileY << " " << tileX << std::endl;
-                std::cout << mapData[tileY][tileX] << std::endl;
-                mapData[tileY][tileX] = '0';
-                block->setDestroyed(true);
-              }
-
-
+							else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
+								block->setState(new DestroyedState());
+								block->onTouch2(mapData,tileSize,
+								  gameMap->getTexture());
+								int tileX = (block->getBounds().left + 5.0f) / tileSize;
+								int tileY = (block->getBounds().top + 5.0f)  / tileSize;
+								std::cout<< tileY << " " << tileX << std::endl;
+								std::cout << mapData[tileY][tileX] << std::endl;
+								mapData[tileY][tileX] = '0';
+								block->setDestroyed(true);
+							}	
 						}
-
+					}
+				
+				}
+				if (dynamic_cast<FlagBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						std::cout << "Player win" << std::endl;
+					}
+					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
+						std::cout << "Player win" << std::endl;
+					}
+				}
+				//interact with water block --> die
+				if (dynamic_cast<WaterBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						player->dead(gameMap);
 					}
 				}
 				it++;
