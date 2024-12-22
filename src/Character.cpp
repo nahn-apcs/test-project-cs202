@@ -7,23 +7,29 @@ Character::Character(
     std::vector<sf::Texture>& runTextures, 
     std::vector<sf::Texture>& attackTextures, 
     std::vector<sf::Texture>& jumpT,
-     std::vector<sf::Texture>& sidleTextures,
+    std::vector<sf::Texture>& hurt,
+    std::vector<sf::Texture>& sidleTextures,
     std::vector<sf::Texture>& srunTextures,
     std::vector<sf::Texture>& sattackTextures, 
     std::vector<sf::Texture>& sjumpT, 
+    std::vector<sf::Texture>& sHurt,
     std::vector<sf::Texture>& dead,
-    int x, int y)
-: velocityX(0), velocityY(0), onGround(false), isJumping(false), attacking(false), faceRight(true) {
+    int x, int y,
+    int type
+    )
+: velocityX(0), velocityY(0), onGround(false), isJumping(false), attacking(false), faceRight(true), type(type) {
     attacked = true;
     idleAnimations.push_back(new Animation(sidleTextures, 0.1f));
     idleAnimations.push_back(new Animation(idleTextures, 0.1f));
     runAnimations.push_back(new Animation(srunTextures, 0.1f));
     runAnimations.push_back(new Animation(runTextures, 0.1f));
     attackAnimations.push_back(new Animation(sattackTextures, 0.1f));
-    attackAnimations.push_back(new Animation(attackTextures, 0.1f));
+    attackAnimations.push_back(new Animation(attackTextures, 0.05f));
     jumpAnimations.push_back(new Animation(sjumpT, 0.1f));
     jumpAnimations.push_back(new Animation(jumpT, 0.1f));
     deadAnimation = new Animation(dead, 0.1f);
+    hurtAnimations.push_back(new Animation(sHurt, 0.1f));
+    hurtAnimations.push_back(new Animation(hurt, 0.1f));
     sprite.setPosition(x, y);
 }
 
@@ -118,6 +124,8 @@ void Character::update(float deltaTime, Map* map) {
     applyGravity(deltaTime);
     applyFriction(deltaTime);
     if (attacked) {
+        hurtAnimations[status]->update(deltaTime);
+        hurtAnimations[status]->applyToSprite(sprite, faceRight);
 		unDamagedTime -= deltaTime;
 		if (unDamagedTime <= 0) {
 			attacked = false;
@@ -126,7 +134,7 @@ void Character::update(float deltaTime, Map* map) {
     //std::cout << "velocityX: " << velocityX << std::endl;
     if (cooldown > 0) {
 		cooldown -= deltaTime;
-        if (cooldown > 0.75f) {
+        if (cooldown > 0.5f) {
             attacking = true;
         }
         else {
@@ -175,6 +183,7 @@ void Character::update(float deltaTime, Map* map) {
     {
         attackAnimations[status]->update(deltaTime);
         attackAnimations[status]->applyToSprite(sprite, faceRight);
+
     }
 
     // Move vertically
@@ -207,12 +216,32 @@ void Character::draw(sf::RenderWindow& window) {
 }
 
 sf::FloatRect Character::getBounds() const {
-    sf::FloatRect temp = sprite.getGlobalBounds();
-    temp.left += 20.f;
-    temp.width -= 41.f;
-    //std::cout << "left: " << temp.left << " top: " << temp.top << " width: " << temp.width << " height: " << temp.height << std::endl;
-    //std::cout << "left: " << sprite.getGlobalBounds().left << " top: " << sprite.getGlobalBounds().top << " width: " << sprite.getGlobalBounds().width << " height: " << sprite.getGlobalBounds().height << std::endl;
-    return temp;
+    if (type == 1){
+		sf::FloatRect temp = sprite.getGlobalBounds();
+		temp.left += 20.f;
+		temp.width -= 41.f;
+		return temp;
+	}
+    else
+    {
+        if (faceRight) {
+            sf::FloatRect temp = sprite.getGlobalBounds();
+            //temp.top -= 4.f;
+            temp.left += 26.f;
+            temp.width -= 66.f;
+            temp.height -= 4.f;
+            return temp;
+        }
+        else {
+			sf::FloatRect temp = sprite.getGlobalBounds();
+            //temp.top -= 4.f;
+			temp.left += 40.f;
+			temp.width -= 66.f;
+            temp.height -= 4.f;
+
+			return temp;
+		}
+    }
 }
 
 void Character::applyGravity(float deltaTime) {

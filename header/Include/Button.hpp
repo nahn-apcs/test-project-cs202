@@ -20,28 +20,29 @@ class SoundPlayer;
 namespace GUI
 {
 
-class Button : public Component
-{
+    class Button : public Component
+    {
     public:
         typedef std::shared_ptr<Button>		Ptr;
         typedef std::function<void()>		Callback;
 
-		enum Type
-		{
+        enum Type
+        {
             Selected,
-			Normal,
-			Pressed,
-			ButtonCount
-		};
+            Normal,
+            Pressed,
+            ButtonCount
+        };
 
 
-	public:
-								Button(State::Context context, Textures::ID textureID, double _width, double _height);
+    public:
+        Button(State::Context context, Textures::ID textureID, double _width, double _height, bool _open = true);
 
         void					setCallback(Callback callback);
         void					setText(const std::string& text);
         void					setText(const std::string& text, double height);
         void					setToggle(bool flag);
+        void                    setOpen(bool flag);
 
         virtual bool			isSelectable() const;
         virtual void			select();
@@ -53,9 +54,10 @@ class Button : public Component
         virtual void			handleEvent(const sf::Event& event);
 
 
+
     private:
         virtual void			draw(sf::RenderTarget& target, sf::RenderStates states) const;
-		void					changeTexture(Type buttonType);
+        void					changeTexture(Type buttonType);
 
 
     private:
@@ -65,7 +67,9 @@ class Button : public Component
         bool					mIsToggle;
         double                  width;
         double                  height;
-};
+
+        bool                    mOpen;
+    };
 
 }
 

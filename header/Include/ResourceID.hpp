@@ -56,6 +56,11 @@ namespace Textures
 		WukongAttack1,
 		WukongAttack2,
 
+		WukongHurt1,
+		WukongHurt2,
+		WukongHurt3,
+
+
 		SmallWukongStand1,
 		SmallWukongStand2,
 		SmallWukongStand3,
@@ -66,6 +71,10 @@ namespace Textures
 		SmallWukongRun3,
 		SmallWukongRun4,
 
+		SmallWukongHurt1,
+		SmallWukongHurt2,
+		SmallWukongHurt3,
+
 		DeadWukong1,
 		DeadWukong2,
 		DeadWukong3,
@@ -75,6 +84,41 @@ namespace Textures
 		DeadWukong7,
 		DeadWukong8,
 		DeadWukong9,
+
+		SecondWukongStand1,
+		SecondWukongStand2,
+		SecondWukongStand3,
+		SecondWukongStand4,
+		SecondWukongStand5,
+
+		SecondWukongRun1,
+		SecondWukongRun2,
+		SecondWukongRun3,
+		SecondWukongRun4,
+		SecondWukongRun5,
+		SecondWukongRun6,
+		SecondWukongRun7,
+		SecondWukongRun8,
+
+		SecondWukongHurt1,
+		SecondWukongHurt2,
+		SecondWukongHurt3,
+
+		SecondWukongAttack1,
+		SecondWukongAttack2,
+		SecondWukongAttack3,
+		SecondWukongAttack4,
+		SecondWukongAttack5,
+		SecondWukongAttack6,
+		SecondWukongAttack7,
+
+		SecondWukongDead1,
+		SecondWukongDead2,
+		SecondWukongDead3,
+		SecondWukongDead4,
+		SecondWukongDead5,
+		SecondWukongDead6,
+		SecondWukongDead7,
 		
 		BossFly1,
 		BossFly2,
@@ -100,6 +144,19 @@ namespace Textures
 		BossShoot2,
 
 		BossBullet,
+
+
+		//Pause
+			PauseBG,
+			PauseContinueButton,
+			PauseRestartButton,
+			PauseMenuButton,
+			PauseSaveButton,
+			PauseSoundButton,
+			PauseMusicButton,
+
+			//Game
+			PauseButton,
 
 		Bullet,
 		Enemies,

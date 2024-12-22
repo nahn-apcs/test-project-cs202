@@ -7,15 +7,18 @@
 #include <SFML/System/Time.hpp>
 #include "AudioManagement.h"
 
-GameState::GameState(StateStack& stack, Context context, int level, int character) : boss(nullptr), State(stack, context), character(character) {
+GameState::GameState(StateStack& stack, Context context, Level level, Character_1 charac ) : boss(nullptr), State(stack, context), mCharacter(charac), mLevel(level) {
 	monsterset = context.textures->get(Textures::Enemies);
 	projectile = context.textures->get(Textures::Bullet);
 	enemyProjectile = context.textures->get(Textures::BossBullet);
 	camera = sf::View(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
 	std::cout << "GameState" << "\n";
 	drawEngine = new DrawEngine();
+	PauseButton.setTexture(context.textures->get(Textures::PauseButton));
+	PauseButton.setTextureRect(sf::IntRect(0, 0, 80, 50));
+	PauseButton.setPosition(1230, 0);
 	
-	switch (character)
+	switch (mCharacter+1)
 	{
 	case 1:
 		std::cout << "GameState 1" << "\n";
@@ -60,15 +63,74 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 300*32, 100);
+		hurtTextures.push_back(context.textures->get(Textures::WukongHurt1));
+		hurtTextures.push_back(context.textures->get(Textures::WukongHurt2));
+		hurtTextures.push_back(context.textures->get(Textures::WukongHurt3));
+
+		sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt1));
+		sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt2));
+		sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt3));
+
+
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures,sHurtTextures , deadTextures, 100, 100, 1);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
+
+	case 2:
+		idleTextures.push_back(context.textures->get(Textures::SecondWukongStand1));
+		idleTextures.push_back(context.textures->get(Textures::SecondWukongStand2));
+		idleTextures.push_back(context.textures->get(Textures::SecondWukongStand3));
+		idleTextures.push_back(context.textures->get(Textures::SecondWukongStand4));
+		idleTextures.push_back(context.textures->get(Textures::SecondWukongStand5));
+
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun1));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun2));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun3));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun4));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun5));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun6));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun7));
+		runTextures.push_back(context.textures->get(Textures::SecondWukongRun8));
+
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun1));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun2));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun3));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun4));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun5));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun6));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun7));
+		jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun8));
+
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack1));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack2));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack3));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack4));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack5));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack6));
+		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack7));
+
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead1));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead2));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead3));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead4));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead5));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead6));
+		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead7));
+
+		hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt1));
+		hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt2));
+		hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt3));
+
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, idleTextures, runTextures, idleTextures, runTextures, hurtTextures, deadTextures, 100, 100, 2);
+
+		break;
+
 	default:
 		break;
 	}
 
-	switch (level)
+	switch (mLevel +1)
 	{
 		case 1:
 
@@ -154,7 +216,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 
 bool GameState::update(sf::Time dt) {
 
-	float deltaTime = gameClock.restart().asSeconds();
+	float deltaTime = dt.asSeconds();
 	sf::RenderWindow& window = *getContext().window;
 	std::vector<std::string>& mapData = gameMap->getMapData();
 				sf::FloatRect playerBounds = player->getBounds();
@@ -418,10 +480,58 @@ void GameState::draw() {
 		monster->drawBounds(window);
 	}
 	drawEngine->displayGameInfo(window, timeClock, gameMap, player);
+	window.draw(PauseButton);
 }
 
 bool GameState::handleEvent(const sf::Event& event) {
 	
+
+	if (event.type == sf::Event::MouseButtonPressed) {
+		if (event.mouseButton.button == sf::Mouse::Left) {
+			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				if (mLevel == Level1) {
+					if (mCharacter == wukong) {
+						requestStackPush(States::Pause1_1);
+					}
+					else {
+						requestStackPush(States::Pause1_2);
+					}
+				}
+				else if (mLevel == Level2) {
+					if (mCharacter == wukong) {
+						requestStackPush(States::Pause2_1);
+					}
+					else {
+						requestStackPush(States::Pause2_2);
+					}
+				}
+				else if (mLevel == Level3) {
+					if (mCharacter == wukong) {
+						requestStackPush(States::Pause3_1);
+					}
+					else {
+						requestStackPush(States::Pause3_2);
+					}
+				}
+				else if (mLevel == Level4) {
+					if (mCharacter == wukong) {
+						requestStackPush(States::Pause4_1);
+					}
+					else {
+						requestStackPush(States::Pause4_2);
+					}
+				}
+				else if (mLevel == Level5) {
+					if (mCharacter == wukong) {
+						requestStackPush(States::Pause5_1);
+					}
+					else {
+						requestStackPush(States::Pause5_2);
+					}
+				}
+			}
+		}
+	}
 	return false;
 }
 

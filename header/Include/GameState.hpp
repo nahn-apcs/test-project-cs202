@@ -24,7 +24,18 @@
 class GameState : public State {
 
 public:
-    GameState(StateStack& stack, Context context, int level = 1, int charac =1);
+    enum Level {
+		Level1,
+		Level2,
+		Level3,
+		Level4,
+		Level5
+	};
+    enum Character_1 {
+		wukong,
+		pig,
+	};
+    GameState(StateStack& stack, Context context, Level mLevel, Character_1 charac );
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -32,27 +43,9 @@ public:
 
 private:
 
-    int level = 1;
-
-  /*  std::vector<sf::Sprite> mBackgroundSprite;
-    std::vector<sf::Sprite> mCloundSprite;
-    GUI::Container mGUIContainer;
-
-    sf::Text wukongText;
-    sf::Text shadowText;
-    float mScale = 0.1f;
-    float mWukongAlpha = 255;
-    bool mFadingOut = true;
-    TextState mTextState = ScalingUp;*/
-    //    // Load textures
-//    sf::Texture tileset, playerTexture, monsterset, projectile;
-//    if (!tileset.loadFromFile("../resources/level1/blocks.png")
-//        || !playerTexture.loadFromFile("../resources/atk wk 2_sprite_2.png")
-//        || !monsterset.loadFromFile("../resources/Run-sheet.png")
-//        || !projectile.loadFromFile("../resources/bullet1_strip.png")
-//        ) {
-//        return -1;
-//    }
+    Level mLevel;
+    Character_1 mCharacter;
+    sf::Sprite PauseButton;
 
     sf::Texture tileset, playerTexture, monsterset, projectile, enemyProjectile;
     sf::Sprite backgroundSprite;
@@ -62,9 +55,17 @@ private:
     std::vector<sf::Texture> jumpTextures;
     std::vector<sf::Texture> idleTextures;
     std::vector<sf::Texture> deadTextures;
+    std::vector<sf::Texture> hurtTextures;
 
     std::vector<sf::Texture> sRunTextures;
     std::vector<sf::Texture> sIdleTextures;
+    std::vector<sf::Texture> sHurtTextures;
+
+    /*std::vector<sf::Texture> runTextures2;
+    std::vector<sf::Texture> attackTextures2;
+    std::vector<sf::Texture> idleTextures2;
+    std::vector<sf::Texture> deadTextures2;
+    std::vector<sf::Texture> hurtTextures2;*/
 
     std::vector<sf::Texture> bossFlyingTextures;
     std::vector<sf::Texture> bossAttackTextures;

@@ -8,8 +8,8 @@
 class Character {
 public:
     Character() = default;
-    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& dead
-        , int x, int y);
+    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+        , int x, int y, int type);
     ~Character();
     void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
@@ -45,6 +45,7 @@ protected:
     std::vector<Animation*> attackAnimations;
     std::vector<Animation*> idleAnimations;
     std::vector<Animation*> jumpAnimations;
+    std::vector<Animation*> hurtAnimations;
     Animation* deadAnimation;
 
     const float gravity = 600.f;
@@ -57,7 +58,7 @@ protected:
     float unDamagedTime = 0.f;
     bool attacked = false;
     bool Dead = false;
-
+    int type;
     void handleCollisions(Map* map);
     void applyGravity(float deltaTime);
     void applyFriction(float deltaTime);

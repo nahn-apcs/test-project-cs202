@@ -10,7 +10,11 @@
 class LevelState : public State {
 
 public:
-    LevelState(StateStack& stack, Context context);
+    enum Character_1 {
+        wukong,
+        pig,
+    };
+    LevelState(StateStack& stack, Context context, Character_1 character);
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -23,6 +27,8 @@ private:
     GUI::Container mGUIContainer;
     sf::Sprite mBackButton;
     float elapsedTime = 0.f;
+
+    Character_1 mCharacter;
 };
 
 #endif // LEVEL_STATE_HPP

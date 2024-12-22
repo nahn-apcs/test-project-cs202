@@ -8,9 +8,9 @@
 #include <iostream>
 #include <SFML/System/Time.hpp>
 
-const double speed[] = {90,90,90,75,75,75,60,60};
+const double speed[] = { 90,90,90,75,75,75,60,60 };
 
-MenuState::MenuState(StateStack& stack, Context context): State(stack, context), mBackgroundSprite(), mGUIContainer(GUI::Container::TopDown) {
+MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mBackgroundSprite(), mGUIContainer(GUI::Container::TopDown) {
     sf::Texture& texture = context.textures->get(Textures::MainMenuBG_1);
     mBackgroundSprite.push_back(sf::Sprite(texture));
 
@@ -66,37 +66,37 @@ MenuState::MenuState(StateStack& stack, Context context): State(stack, context),
     auto playButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     playButton->setPosition(565, 380);
     playButton->setText("Play");
-    playButton->setCallback([this] () {
+    playButton->setCallback([this]() {
         //requestStackPop();
-        requestStackPush(States::Level);
+        requestStackPush(States::Level_1);
         std::cout << "Play button pressed" << std::endl;
-    });
+        });
 
     auto guideButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     guideButton->setPosition(565, 440);
     guideButton->setText("Guide");
-    guideButton->setCallback([this] () {
+    guideButton->setCallback([this]() {
         //requestStackPop();
         requestStackPush(States::Guide);
         std::cout << "Guide button pressed" << std::endl;
-    });
+        });
 
 
     auto settingButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     settingButton->setPosition(565, 500);
     settingButton->setText("Setting");
-    settingButton->setCallback([this] () {
+    settingButton->setCallback([this]() {
         //requestStackPop();
         //requestStackPush(States::Game);
         std::cout << "Setting button pressed" << std::endl;
-    });
-    
+        });
+
     auto exitButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
     exitButton->setPosition(565, 560);
     exitButton->setText("Quit");
-    exitButton->setCallback([this] () {
+    exitButton->setCallback([this]() {
         requestStackPop();
-    });
+        });
 
     mGUIContainer.pack(playButton);
     mGUIContainer.pack(guideButton);
@@ -124,11 +124,11 @@ void MenuState::draw() {
     sf::RenderWindow& window = *getContext().window;
     window.setView(window.getDefaultView());
 
-    for(const sf::Sprite& sprite: mBackgroundSprite) {
+    for (const sf::Sprite& sprite : mBackgroundSprite) {
         window.draw(sprite);
     }
 
-    for(int i = mCloundSprite.size() - 1; i >= 0; i--) {
+    for (int i = mCloundSprite.size() - 1; i >= 0; i--) {
         sf::Sprite& sprite = mCloundSprite[i];
         window.draw(sprite);
     }
@@ -159,21 +159,21 @@ bool MenuState::update(sf::Time deltatime)
 
 
 
-    for(int i = 0; i < mCloundSprite.size(); i++) {
+    for (int i = 0; i < mCloundSprite.size(); i++) {
         sf::Sprite& sprite = mCloundSprite[i];
         sprite.move(-speed[i] * deltatime.asSeconds(), 0);
-        if(sprite.getPosition().x < -sprite.getLocalBounds().width) {
+        if (sprite.getPosition().x < -sprite.getLocalBounds().width) {
             sprite.setPosition(1280, sprite.getPosition().y);
         }
     }
 
 
 
-	return false;
+    return false;
 }
 
 bool MenuState::handleEvent(const sf::Event& event)
 {
-	mGUIContainer.handleEvent(event);
-	return false;
+    mGUIContainer.handleEvent(event);
+    return false;
 }
