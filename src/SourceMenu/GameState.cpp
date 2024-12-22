@@ -60,7 +60,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
 		deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 300*32, 100);
+		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, deadTextures, 100, 100);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
