@@ -92,7 +92,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
-	  mapTextures.push_back(enemyProjectile);
+      mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg2);
@@ -107,7 +107,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
-	  mapTextures.push_back(enemyProjectile);
+      mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg3);
@@ -115,8 +115,6 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
       std::cout << gameMap->getMapData().size() << "\n";
       xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
       yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-
-	  std::cout<< "GameState 3" << "\n";
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack1));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack2));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack3));
@@ -140,7 +138,7 @@ GameState::GameState(StateStack& stack, Context context, int level, int characte
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot1));
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot2));
 
-	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 330*32, 200);
+	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 315*32, 200);
 
       break;
 
@@ -342,28 +340,13 @@ bool GameState::update(sf::Time dt) {
                 int tileY = (block->getBounds().top + 5.0f)  / tileSize;
                 std::cout<< tileY << " " << tileX << std::endl;
                 std::cout << mapData[tileY][tileX] << std::endl;
-                //mapData[tileY][tileX] = '0';
+                mapData[tileY][tileX] = '0';
                 block->setDestroyed(true);
               }
 
 
 						}
 
-					}
-				}
-				//Check flag
-				if (dynamic_cast<FlagBlock*>(block)) {
-					if (playerBounds.intersects(block->getBounds())) {
-						std::cout << "Player win" << std::endl;
-					}
-					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
-						std::cout << "Player win" << std::endl;
-					}
-				}
-				//interact with water block --> die
-				if (dynamic_cast<WaterBlock*>(block)) {
-					if (playerBounds.intersects(block->getBounds())) {
-						player->dead(gameMap);
 					}
 				}
 				it++;
