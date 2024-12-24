@@ -60,6 +60,7 @@ private:
 	float shootTime = 0.f;
 	float cooldown = 0.f;
 	float moveTime = 0.f;
+	float teleportTime = 0.f;
 	float attackTime = 0.f;
 };
 

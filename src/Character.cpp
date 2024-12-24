@@ -31,6 +31,7 @@ Character::Character(
     hurtAnimations.push_back(new Animation(sHurt, 0.1f));
     hurtAnimations.push_back(new Animation(hurt, 0.1f));
     sprite.setPosition(x, y);
+    jumpStrength = -400.f;
 }
 
 void Character::shoot(Map* map) {
@@ -514,4 +515,57 @@ void Character::levelUp(Map* map){
 void Character::knockUp(){
 	sprite.move(0, -10);
 	setVelocityY(-200.0f);
+}
+
+
+SecondCharacter::SecondCharacter(
+	std::vector<sf::Texture>& idleTextures,
+	std::vector<sf::Texture>& runTextures,
+	std::vector<sf::Texture>& attackTextures,
+	std::vector<sf::Texture>& jumpT,
+	std::vector<sf::Texture>& hurt,
+	std::vector<sf::Texture>& sidleTextures,
+	std::vector<sf::Texture>& srunTextures,
+	std::vector<sf::Texture>& sattackTextures,
+	std::vector<sf::Texture>& sjumpT,
+	std::vector<sf::Texture>& sHurt,
+	std::vector<sf::Texture>& dead,
+	int x, int y,
+	int type
+	) : Character(idleTextures, runTextures, attackTextures, jumpT, hurt, sidleTextures, srunTextures, sattackTextures, sjumpT, sHurt, dead, x, y, type) {
+    jumpStrength = -500.f;
+}
+
+void SecondCharacter::interact(float deltatime, Map* map) {
+    // Handle movement
+
+     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+         moveSpeed = 160.0f;
+    }
+    else
+    {
+        moveSpeed = 80.0f;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        if (!attacked) setVelocityX(-moveSpeed);
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        if (!attacked) setVelocityX(moveSpeed);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+
+        jump();
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+        if (cooldown <= 0 && level >= 5) {
+            shoot(map);
+            cooldown = 0.75f;
+            attacking = true;
+        }
+    }
+
+
 }

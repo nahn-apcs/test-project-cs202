@@ -21,7 +21,7 @@ public:
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }
     void drawBounds(sf::RenderWindow& window);
-    void interact(float d, Map* map);
+    virtual void interact(float d, Map* map);
     void increaseSpeed();
     void levelUp(Map* map);
     void damaged(Map* map);
@@ -49,7 +49,7 @@ protected:
     Animation* deadAnimation;
 
     const float gravity = 600.f;
-    const float jumpStrength = -400.f;
+    float jumpStrength = -400.f;
     float moveSpeed = 100.f;
     float cooldown = 0.f;
     float dashCooldown = 0.f;
@@ -63,6 +63,13 @@ protected:
     void applyGravity(float deltaTime);
     void applyFriction(float deltaTime);
     int checkWallCollision(float dx, float dy, Map* map);
+};
+
+class SecondCharacter : public Character {
+public:
+    SecondCharacter(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+        , int x, int y, int type);
+    void interact(float d, Map* map);
 };
 
 #endif

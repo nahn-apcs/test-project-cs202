@@ -133,7 +133,6 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			moveTime -= d;
 		}
 		else if (moveTime <= 0.f) {
-			int random = rand()%4;
 			mPosition = sprite.getPosition();
 			float dx = mPosition.x - player.x;
 			float dy = mPosition.y - player.y;
@@ -141,33 +140,39 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			 
 				float vX = dx / 8.0f;
 				float vY = dy / 8.0f;
-			
-			switch (random)
-			{
-			case 1:
 				if (distance > 200.f) {
 					setVelocityX(-vX);
 					setVelocityY(-vY);
+					//std::cout << vX << " " << vY << std::endl;
 				}
+			moveTime = 2.0f;
+		}
+
+		if (teleportTime > 0.f) {
+			teleportTime -= d;
+		}
+		else if (teleportTime <= 0.f) {
+			int random = rand() % 3;
+			switch (random)
+			{
+			case 1:
+				sprite.setPosition(325*32, 30);
+				rainShoot(map);
 				break;
 			case 2:
-				setVelocityY(-500.0f);
-				break;
-			case 3:
 				if (mIsMovingRight) {
-					sprite.setPosition(player.x - 100.f, player.y-170.f);
+					sprite.setPosition(player.x - 100.f, player.y - 170.f);
 					normalAttack(map);
 				}
 				else {
-					sprite.setPosition(player.x + 100.f, player.y-170.f);
+					sprite.setPosition(player.x + 100.f, player.y - 170.f);
 					normalAttack(map);
 				}
 				break;
 			default:
 				break;
 			}
-			moveTime = 4.0f;
-
+			teleportTime = 10.0f;
 		}
 
 		
@@ -240,7 +245,7 @@ void Boss::update(float deltaTime, Map* map)
 
 		if (moveTime > 0.f) {
 			if (!checkWallCollision(velocityX * deltaTime, 0.f, map)) {
-				sprite.move(velocityX * deltaTime, 0);
+				move(velocityX * deltaTime, 0, map);
 				if (attacking)
 				{
 					attackAnimation->update(deltaTime, true);
@@ -253,7 +258,7 @@ void Boss::update(float deltaTime, Map* map)
 			}
 
 			if (!checkWallCollision(0.f, velocityY * deltaTime, map)) {
-				sprite.move(0, velocityY * deltaTime);
+				move(0, velocityY * deltaTime, map);
 				if (attacking)
 				{
 					attackAnimation->update(deltaTime, true);
@@ -265,22 +270,23 @@ void Boss::update(float deltaTime, Map* map)
 				}
 			}
 		}
-		else
-		{
-			velocityX = 0;
-			velocityY = 0;
-		}
+
+	
 
 		if (shooting) {
 			shootAnimation->update(deltaTime, true);
 			shootAnimation->applyToSprite(sprite, mIsMovingRight);
+			return;
 		}
 
 		if (attacking)
 		{
 			attackAnimation->update(deltaTime, true);
 			attackAnimation->applyToSprite(sprite, mIsMovingRight);
+			return;
 		}
+		flyAnimation->update(deltaTime, true);
+		flyAnimation->applyToSprite(sprite, mIsMovingRight);
 	}
 }
 
@@ -326,7 +332,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 		return -1; // Collision detected
 	}
 
-	if (tileX <= 1 || tileY <= 1 || tileY >= map->getMapData().size()-1) {
+	if (tileX <= 1 || tileY <= 0 || tileY >= map->getMapData().size()-1) {
 		//std::cout << tileX << " " << tileY << std::endl;
 		//std::cout << "Check 2 -1" << std::endl;
 
@@ -339,21 +345,21 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 
 	// Check if the new position collides with the wall (tile == '1')
 	if (tileX >= 0 && tileX < map->getMapData()[0].size() && tileY >= 0 && tileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][tileX] != '0' && map->getMapData()[tileY][tileX] != 'C') {
+		if (map->getMapData()[tileY][tileX] != '0' && map->getMapData()[tileY][tileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 1" << std::endl;
 			return 1; // Collision detected
 		}
 	}
 
 	if (rightTileX >= 0 && rightTileX < map->getMapData()[0].size() && tileY >= 0 && tileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][rightTileX] != '0' && map->getMapData()[tileY][rightTileX] != 'C') {
+		if (map->getMapData()[tileY][rightTileX] != '0' && map->getMapData()[tileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 2" << std::endl;
 			return 2; // Collision detected
 		}
 	}
 
 	if (tileX >= 0 && tileX < map->getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][tileX] != '0' && map->getMapData()[bottomTileY][tileX] != 'C') {
+		if (map->getMapData()[bottomTileY][tileX] != '0' && map->getMapData()[bottomTileY][tileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 3" << std::endl;
 
 			return 3; // Collision detected
@@ -361,7 +367,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (rightTileX >= 0 && rightTileX < map->getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][rightTileX] != '0' && map->getMapData()[bottomTileY][rightTileX] != 'C') {
+		if (map->getMapData()[bottomTileY][rightTileX] != '0' && map->getMapData()[bottomTileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 4" << std::endl;
 
 			return 4; // Collision detected
@@ -369,7 +375,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][middleTileX] != '0' && map->getMapData()[tileY][middleTileX] != 'C') {
+		if (map->getMapData()[tileY][middleTileX] != '0' && map->getMapData()[tileY][middleTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 5" << std::endl;
 
 			return 5; // Collision detected
@@ -377,7 +383,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[middleTileY][rightTileX] != '0' && map->getMapData()[middleTileY][rightTileX] != 'C') {
+		if (map->getMapData()[middleTileY][rightTileX] != '0' && map->getMapData()[middleTileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 6" << std::endl;
 
 			return 6; // Collision detected
@@ -385,7 +391,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][middleTileX] != '0' && map->getMapData()[bottomTileY][middleTileX] != 'C') {
+		if (map->getMapData()[bottomTileY][middleTileX] != '0' && map->getMapData()[bottomTileY][middleTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
 			//std::cout << "Check 7" << std::endl;
 
 			return 7; // Collision detected

@@ -122,7 +122,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
 		hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt2));
 		hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt3));
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, idleTextures, runTextures, idleTextures, runTextures, hurtTextures, deadTextures, 100, 100, 2);
+		player = new SecondCharacter(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, idleTextures, runTextures, idleTextures, runTextures, hurtTextures, deadTextures, 100, 100, 2);
 
 		break;
 
@@ -154,7 +154,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
-	  mapTextures.push_back(enemyProjectile);
+      mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg2);
@@ -169,7 +169,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
       mapTextures.push_back(tileset);
       mapTextures.push_back(monsterset);
       mapTextures.push_back(projectile);
-	  mapTextures.push_back(enemyProjectile);
+      mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
       backgroundTexture = context.textures->get(Textures::Bg3);
@@ -177,8 +177,6 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
       std::cout << gameMap->getMapData().size() << "\n";
       xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
       yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-
-	  std::cout<< "GameState 3" << "\n";
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack1));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack2));
 	  bossAttackTextures.push_back(context.textures->get(Textures::BossAttack3));
@@ -202,7 +200,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot1));
 	  bossShootTextures.push_back(context.textures->get(Textures::BossShoot2));
 
-	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 330*32, 200);
+	  boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, 325*32, 100);
 
       break;
 
@@ -240,6 +238,68 @@ bool GameState::update(sf::Time dt) {
 	// Update player and game state
 	        player->interact(deltaTime, gameMap);
 	        player->update(deltaTime, gameMap);
+
+			//gameMap->updateBlocks(deltaTime,player->getBounds());
+			std::vector<Block*> blocks = gameMap->getBlocks();
+			for (auto it = blocks.begin(); it != blocks.end();) {
+				auto& block = *it;
+				block->update(deltaTime, mapData, tileSize);
+				playerBounds.top -= 4.0f;
+				if (block->isCollission(playerBounds) && !block->getIsDestroyed()) {
+					//std::cout << "Collision detected" << std::endl;
+					float playerTop = playerBounds.top;
+					float blockBottom = block->getBounds().top + block->getBounds().height;
+					float dy = blockBottom - playerTop;
+					if (dy < 5.0f) {
+						if (!block->getIsTouched()) {
+							if (dynamic_cast<QuestionBlock*>(block)) {
+								int tileX = (block->getBounds().left + 5.0f) / tileSize;
+								int tileY = (block->getBounds().top + 5.0f) / tileSize;
+								//std::cout << "QuestionBlock:" << tileY << " " << tileX << std::endl;
+								//std::cout << mapData[tileY][tileX] << std::endl;
+								block->setState(new ActiveState());
+								block->onTouch2(mapData, tileSize, gameMap->getTexture());
+								auto item = block->getItemObject();
+								if (dynamic_cast<Coin*>(item)) {
+									audioManager->playCoinSound();
+									gameMap->increaseCoinsNumber();
+								}
+								else if (dynamic_cast<PowerUp*>(item)) {
+									gameMap->addCoins(item);
+								}
+							}
+							else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
+								block->setState(new DestroyedState());
+								block->onTouch2(mapData, tileSize,
+									gameMap->getTexture());
+								int tileX = (block->getBounds().left + 5.0f) / tileSize;
+								int tileY = (block->getBounds().top + 5.0f) / tileSize;
+	
+								mapData[tileY][tileX] = '0';
+								block->setDestroyed(true);
+							}
+						}
+					}
+
+				}
+				playerBounds.top += 4.0f;
+
+				if (dynamic_cast<FlagBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						std::cout << "Player win" << std::endl;
+					}
+					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
+						std::cout << "Player win" << std::endl;
+					}
+				}
+				//interact with water block --> die
+				if (dynamic_cast<WaterBlock*>(block)) {
+					if (playerBounds.intersects(block->getBounds())) {
+						player->dead(gameMap);
+					}
+				}
+				it++;
+			}
 
 			if (boss) {
 				if (!boss->isActivated()) {
@@ -370,66 +430,7 @@ bool GameState::update(sf::Time dt) {
 
 
 			
-			//gameMap->updateBlocks(deltaTime,player->getBounds());
-			std::vector<Block*> blocks = gameMap->getBlocks();
-			for (auto it = blocks.begin(); it != blocks.end();) {
-				auto& block = *it;
-				block->update(deltaTime, mapData, tileSize);
-				// playerBounds.left += 2.0f;
-				if (block->isCollission(playerBounds) && !block->getIsDestroyed()) {
-          
-         
-					float playerTop = playerBounds.top;
-					float blockBottom = block->getBounds().top + block->getBounds().height;
-					float dy = blockBottom - playerTop;
-					if (dy < 5.0f) {
-						if (!block->getIsTouched()) {
-							if (dynamic_cast<QuestionBlock*>(block)) {
-								block->setState(new ActiveState());
-								block->onTouch2(mapData, tileSize, gameMap->getTexture());
-								auto item = block->getItemObject();
-								if (dynamic_cast<Coin*>(item)) {
-									audioManager->playCoinSound();
-									gameMap->increaseCoinsNumber();
-								}
-								else if (dynamic_cast<PowerUp*>(item)) {
-									gameMap->addCoins(item);
-								}
-							}
-              else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
-                block->setState(new DestroyedState());
-                block->onTouch2(mapData,tileSize,
-                  gameMap->getTexture());
-                int tileX = (block->getBounds().left + 5.0f) / tileSize;
-                int tileY = (block->getBounds().top + 5.0f)  / tileSize;
-                std::cout<< tileY << " " << tileX << std::endl;
-                std::cout << mapData[tileY][tileX] << std::endl;
-                //mapData[tileY][tileX] = '0';
-                block->setDestroyed(true);
-              }
-
-
-						}
-
-					}
-				}
-				//Check flag
-				if (dynamic_cast<FlagBlock*>(block)) {
-					if (playerBounds.intersects(block->getBounds())) {
-						std::cout << "Player win" << std::endl;
-					}
-					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
-						std::cout << "Player win" << std::endl;
-					}
-				}
-				//interact with water block --> die
-				if (dynamic_cast<WaterBlock*>(block)) {
-					if (playerBounds.intersects(block->getBounds())) {
-						player->dead(gameMap);
-					}
-				}
-				it++;
-			}
+			
 
 			for (auto it = projectiles.getProjectiles().begin(); it != projectiles.getProjectiles().end();) {
 				auto& projectile = *it;
@@ -474,7 +475,7 @@ void GameState::draw() {
 	player->drawBounds(window);
 	if (boss) {
 		boss->draw(window);
-		boss->drawBounds(window);
+		//boss->drawBounds(window);
 	}
 	for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
