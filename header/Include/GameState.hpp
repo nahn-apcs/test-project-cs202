@@ -26,6 +26,7 @@ class GameState : public State {
 public:
 
     GameState(StateStack& stack, Context context);
+  
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -66,6 +67,7 @@ private:
     Map* gameMap;   
     Character* player;
     DrawEngine* drawEngine;
+	AudioManagement* audioManager;
     Boss* boss;
 
     sf::Clock gameClock;

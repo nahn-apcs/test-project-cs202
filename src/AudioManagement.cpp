@@ -19,8 +19,19 @@ void AudioManagement::loadAudioResources()
 	{
 		std::cout << "Error loading jump sound" << std::endl;
 	}
+	if (!destroyBlockSoundBuffer.loadFromFile("../resources/Audio/rock-destroy.wav"))
+	{
+		std::cout << "Error loading destroy block sound" << std::endl;
+	}
+	if (!monsterHitSoundBuffer.loadFromFile("../resources/Audio/dead.wav"))
+	{
+		std::cout << "Error loading monster hit sound" << std::endl;
+	}
+
 	coinSound.setBuffer(coinSoundBuffer);
 	jumpSound.setBuffer(jumpSoundBuffer);
+	destroyBlockSound.setBuffer(destroyBlockSoundBuffer);
+	monsterHitSound.setBuffer(monsterHitSoundBuffer);
 }
 
 void AudioManagement::playMainMusic()
@@ -39,4 +50,20 @@ void AudioManagement::playCoinSound()
 void AudioManagement::playJumpSound()
 {
 	jumpSound.play();
+}
+
+void AudioManagement::playDestroyBlockSound()
+{
+	destroyBlockSound.play();
+}
+
+void AudioManagement::stopMainMusic()
+{
+	mainMusic.stop();
+}
+
+void AudioManagement::playMonsterHitSound()
+{
+	monsterHitSound.setVolume(20);
+	monsterHitSound.play();
 }

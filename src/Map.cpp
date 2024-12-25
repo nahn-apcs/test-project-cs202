@@ -102,7 +102,6 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
 }
 
 void Map::draw(sf::RenderWindow& window) {
-	audioManager->playMainMusic();
     for (auto& monster : monsters) {
         monster->draw(window);
     }

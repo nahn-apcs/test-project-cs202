@@ -18,9 +18,6 @@ WinningState::WinningState(StateStack& stack, Context context) : State(stack, co
     mRestartButton.setTexture(context.textures->get(Textures::WinningRestartButton));
     mRestartButton.setOrigin(mRestartButton.getLocalBounds().width / 2.0f, mRestartButton.getLocalBounds().height / 2.0f);
     mRestartButton.setPosition(640, 476);
-
-
-
 }
 
 void WinningState::draw() {
