@@ -175,7 +175,7 @@ bool Block::isCollission(const sf::FloatRect& playerbounds) const
    float intersectY =
     std::abs(dy) - (playerbounds.height + blockBounds.height) / 2;
    float midX = playerbounds.left + playerbounds.width / 2;
-   return intersectX < 0 && intersectY < 0 && midX > blockBounds.left && midX < blockBounds.left + blockBounds.width;
+   return intersectX < 0 && intersectY < 2.0f && midX > blockBounds.left && midX < blockBounds.left + blockBounds.width;
 }
 
 void Block::setDestroyed(bool isDestroyed)
