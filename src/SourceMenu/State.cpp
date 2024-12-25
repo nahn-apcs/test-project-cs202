@@ -1,9 +1,10 @@
 #include <State.hpp>
 #include <StateStack.hpp>
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts): window(&window), textures(&textures), fonts(&fonts) {}
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music)
+, sounds(&sounds) {}
 
-State::State(StateStack& stack, Context context): mStack(&stack), mContext(context) {}
+State::State(StateStack& stack, Context context) : mStack(&stack), mContext(context) {}
 
 State::~State() {}
 
@@ -23,6 +24,6 @@ State::Context State::getContext() const {
 	return mContext;
 }
 
-void State::onActivate(){}
+void State::onActivate() {}
 
 void State::onDestroy() {}

@@ -6,8 +6,9 @@
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include "AudioManagement.h"
+#include <LevelManager.hpp>
 
-GameState::GameState(StateStack& stack, Context context, Level level, Character_1 charac ) : boss(nullptr), State(stack, context), mCharacter(charac), mLevel(level) {
+GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(stack, context) {
 	monsterset = context.textures->get(Textures::Enemies);
 	projectile = context.textures->get(Textures::Bullet);
 	enemyProjectile = context.textures->get(Textures::BossBullet);
@@ -18,7 +19,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
 	PauseButton.setTextureRect(sf::IntRect(0, 0, 80, 50));
 	PauseButton.setPosition(1230, 0);
 	
-	switch (mCharacter+1)
+	switch (LevelManager::getInstance().getCurCharacter() + 1)
 	{
 	case 1:
 		std::cout << "GameState 1" << "\n";
@@ -130,7 +131,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
 		break;
 	}
 
-	switch (mLevel +1)
+	switch (LevelManager::getInstance().getCurLevel() + 1)
 	{
 		case 1:
 
@@ -215,6 +216,7 @@ GameState::GameState(StateStack& stack, Context context, Level level, Character_
 bool GameState::update(sf::Time dt) {
 
 	float deltaTime = dt.asSeconds();
+	elapsedTime += deltaTime;
 	sf::RenderWindow& window = *getContext().window;
 	std::vector<std::string>& mapData = gameMap->getMapData();
 				sf::FloatRect playerBounds = player->getBounds();
@@ -272,10 +274,7 @@ bool GameState::update(sf::Time dt) {
 								block->setState(new DestroyedState());
 								block->onTouch2(mapData, tileSize,
 									gameMap->getTexture());
-								int tileX = (block->getBounds().left + 5.0f) / tileSize;
-								int tileY = (block->getBounds().top + 5.0f) / tileSize;
-	
-								mapData[tileY][tileX] = '0';
+							
 								block->setDestroyed(true);
 							}
 						}
@@ -285,11 +284,8 @@ bool GameState::update(sf::Time dt) {
 				playerBounds.top += 4.0f;
 
 				if (dynamic_cast<FlagBlock*>(block)) {
-					if (playerBounds.intersects(block->getBounds())) {
-						std::cout << "Player win" << std::endl;
-					}
-					else if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
-						std::cout << "Player win" << std::endl;
+					if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
+						win = true;
 					}
 				}
 				//interact with water block --> die
@@ -458,6 +454,9 @@ bool GameState::update(sf::Time dt) {
 
 	        gameMap->updateProjectiles(deltaTime);
 			gameMap->updateEnemyProjectiles(deltaTime);
+
+		
+
 			return false;
 }
 
@@ -472,15 +471,15 @@ void GameState::draw() {
 		        }
 	gameMap->draw(window);
 	player->draw(window);
-	player->drawBounds(window);
+	//player->drawBounds(window);
 	if (boss) {
 		boss->draw(window);
 		//boss->drawBounds(window);
 	}
-	for (auto& monster : gameMap->getMonsters()) {
+	/*for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
-	}
-	drawEngine->displayGameInfo(window, timeClock, gameMap, player);
+	}*/
+	drawEngine->displayGameInfo(window, elapsedTime, gameMap, player);
 	window.draw(PauseButton);
 }
 
@@ -490,48 +489,27 @@ bool GameState::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-				if (mLevel == Level1) {
-					if (mCharacter == wukong) {
-						requestStackPush(States::Pause1_1);
-					}
-					else {
-						requestStackPush(States::Pause1_2);
-					}
-				}
-				else if (mLevel == Level2) {
-					if (mCharacter == wukong) {
-						requestStackPush(States::Pause2_1);
-					}
-					else {
-						requestStackPush(States::Pause2_2);
-					}
-				}
-				else if (mLevel == Level3) {
-					if (mCharacter == wukong) {
-						requestStackPush(States::Pause3_1);
-					}
-					else {
-						requestStackPush(States::Pause3_2);
-					}
-				}
-				else if (mLevel == Level4) {
-					if (mCharacter == wukong) {
-						requestStackPush(States::Pause4_1);
-					}
-					else {
-						requestStackPush(States::Pause4_2);
-					}
-				}
-				else if (mLevel == Level5) {
-					if (mCharacter == wukong) {
-						requestStackPush(States::Pause5_1);
-					}
-					else {
-						requestStackPush(States::Pause5_2);
-					}
-				}
+				requestStackPush(States::Pause);
 			}
 		}
+	}
+	else if (event.type == sf::Event::KeyPressed) {
+		if (event.key.code == sf::Keyboard::Escape) {
+			requestStackPush(States::Pause);
+		}
+		else if (event.key.code == sf::Keyboard::W) {
+			requestStackPush(States::LevelComplete);
+		}
+		else if (event.key.code == sf::Keyboard::L) {
+			requestStackPush(States::GameOver);
+		}
+	}
+	if (win) {
+		requestStackPush(States::LevelComplete);
+	}
+
+	if (player->isDead()) {
+		requestStackPush(States::GameOver);
 	}
 	return false;
 }

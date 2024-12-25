@@ -10,18 +10,7 @@
 class PauseState : public State {
 
 public:
-    enum Level {
-        Level1,
-        Level2,
-        Level3,
-        Level4,
-        Level5
-    };
-    enum Character_1 {
-        wukong,
-        pig,
-    };
-    PauseState(StateStack& stack, Context context, Level level, Character_1 character);
+    PauseState(StateStack& stack, Context context);
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -41,9 +30,6 @@ private:
     sf::Sprite MenuButton;
     sf::Sprite SaveButton;
     sf::Sprite PauseBG;
-
-    Level mLevel;
-    Character_1 mCharacter;
 
 };
 

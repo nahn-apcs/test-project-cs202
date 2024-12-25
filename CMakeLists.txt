@@ -123,7 +123,7 @@ add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h
 "header/Include/StateStack.hpp"
 "header/Include/Utility.hpp"
 
- "src/SourceMenu/GameState.cpp" "header/Boss.h" "src/Boss.cpp" "src/SourceMenu/PauseState.cpp" "src/SourceMenu/LevelManager.cpp" "src/SourceMenu/WaitingState.cpp" "src/SourceMenu/TransitionState.cpp")
+ "src/SourceMenu/GameState.cpp" "header/Boss.h" "src/Boss.cpp" "src/SourceMenu/PauseState.cpp" "src/SourceMenu/LevelManager.cpp" "src/SourceMenu/WaitingState.cpp" "src/SourceMenu/TransitionState.cpp" "src/SourceMenu/BGNode.cpp" "src/SourceMenu/BGObject.cpp" "src/SourceMenu/Command.cpp" "src/SourceMenu/CommandQueue.cpp" "src/SourceMenu/GameOverState.cpp" "src/SourceMenu/LevelCompleteState.cpp" "src/SourceMenu/MusicPlayer.cpp" "src/SourceMenu/SceneNode.cpp" "src/SourceMenu/SettingState.cpp" "src/SourceMenu/SoundPlayer.cpp" "src/SourceMenu/TextNode.cpp" "src/SourceMenu/WinningState.cpp")
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)

@@ -110,7 +110,7 @@ namespace GUI
 		sf::IntRect textureRect(0, buttonType * height, width, height);
 		mSprite.setTextureRect(textureRect);
 		if (buttonType == Normal) {
-			mSprite.setColor(sf::Color(255, 255, 255, 128));
+			mSprite.setColor(sf::Color(255, 255, 255, 180));
 		}
 		else {
 			mSprite.setColor(sf::Color(255, 255, 255, 255));

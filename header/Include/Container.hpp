@@ -10,8 +10,8 @@
 namespace GUI
 {
 
-class Container : public Component
-{
+    class Container : public Component
+    {
 
     public:
         typedef std::shared_ptr<Container> Ptr;
@@ -20,15 +20,18 @@ class Container : public Component
             TopDown,
             LeftRight,
         };
-            
 
-	public:
-							Container(Type _type);
+
+    public:
+        Container(Type _type);
 
         void				pack(Component::Ptr component);
 
         virtual bool		isSelectable() const;
         virtual void		handleEvent(const sf::Event& event);
+
+        int                 getSelectedChild();
+        void                setOpen(int index, bool flag);
 
 
     private:
@@ -44,7 +47,7 @@ class Container : public Component
     private:
         std::vector<Component::Ptr>		mChildren;
         int								mSelectedChild;
-};
+    };
 
 }
 

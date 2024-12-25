@@ -6,16 +6,16 @@
 #include <State.hpp>
 #include <Container.hpp>
 #include <vector>
-#include <functional>
 
 class TransitionState : public State {
 
 public:
-    enum Phase {
-        FadeIn,
-        FadeOut,
+    enum Type {
+        Menu,
+        Game,
+        Winning,
     };
-    TransitionState(StateStack& stack, Context context, std::function<void()> onFinish);
+    TransitionState(StateStack& stack, Context context, Type type, int cnt = 1);
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -24,9 +24,9 @@ public:
 private:
     sf::RectangleShape mOverlay;      // Hình chữ nhật màu trắng
     float mAlpha;                     // Độ trong suốt (255 -> 0)
-    sf::Time mDuration;               // Thời gian chuyển đổi
     sf::Time mElapsed;                // Thời gian đã trôi qua
-    std::function<void()> mOnFinish;  // Hàm callback khi hoàn thành
+    Type mType;
+    int mCntPop;
 
 };
 

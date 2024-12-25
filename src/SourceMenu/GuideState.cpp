@@ -7,7 +7,7 @@
 #include <iostream>
 #include <SFML/System/Time.hpp>
 
-GuideState::GuideState(StateStack& stack, Context context): State(stack, context), mBackgroundSprite() {
+GuideState::GuideState(StateStack& stack, Context context) : State(stack, context), mBackgroundSprite() {
     sf::Texture& texture = context.textures->get(Textures::GuideBG);
     mBackgroundSprite = sf::Sprite(texture);
     mBackgroundSprite.setOrigin(mBackgroundSprite.getLocalBounds().width / 2.0f, mBackgroundSprite.getLocalBounds().height / 2.0f);
@@ -36,11 +36,16 @@ bool GuideState::update(sf::Time deltatime) {
 
 bool GuideState::handleEvent(const sf::Event& event) {
 
-    if(event.type == sf::Event::MouseButtonPressed) {
-        if(event.mouseButton.button == sf::Mouse::Left) {
-            if(mCloseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            if (mCloseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                 requestStackPop();
             }
+        }
+    }
+    else if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Escape) {
+            requestStackPop();
         }
     }
 

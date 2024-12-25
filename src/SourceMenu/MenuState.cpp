@@ -7,60 +7,90 @@
 #include <SFML/Graphics/View.hpp>
 #include <iostream>
 #include <SFML/System/Time.hpp>
+#include <TextNode.hpp>
+#include <BGNode.hpp>
+#include <BGObject.hpp>
 
-const double speed[] = { 90,90,90,75,75,75,60,60 };
 
-MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mBackgroundSprite(), mGUIContainer(GUI::Container::TopDown) {
-    sf::Texture& texture = context.textures->get(Textures::MainMenuBG_1);
-    mBackgroundSprite.push_back(sf::Sprite(texture));
+MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mGUIContainer(GUI::Container::TopDown) {
 
-    sf::Texture& texture_1 = context.textures->get(Textures::MainMenuBG_2);
-    mBackgroundSprite.push_back(sf::Sprite(texture_1));
+    // Tạo SceneGraph
+    for (std::size_t i = 0; i < LayerCount; ++i) {
+        auto layer = std::make_unique<SceneNode>();
+        mSceneLayers[i] = layer.get();
+        mSceneGraph.attachChild(std::move(layer));
+    }
 
-    sf::Texture& texture_2 = context.textures->get(Textures::MainMenuBG_3);
-    mBackgroundSprite.push_back(sf::Sprite(texture_2));
+    std::unique_ptr<BGNode> mBGNode;
+
+    std::vector<sf::Sprite> backgrounds = {
+        sf::Sprite(context.textures->get(Textures::MainMenuBG_1)),
+        sf::Sprite(context.textures->get(Textures::MainMenuBG_2)),
+        sf::Sprite(context.textures->get(Textures::MainMenuBG_3))
+    };
+    mBGNode = std::make_unique<BGNode>(backgrounds);
+
+    // Gắn BGNode vào lớp nền của SceneGraph
+    mSceneLayers[Background]->attachChild(std::move(mBGNode));
+
+    // Tạo BGObject cho đám mây
+    std::unique_ptr<BGObject> mCloudBGObject;
+
+    // Tạo danh sách sprite cho đám mây
+    std::vector<sf::Sprite> cloudSprites;
+    std::vector<float> cloudSpeeds = { 60, 60, 75, 75, 75, 90, 90, 90 };
 
     sf::Sprite tmp;
 
-    sf::Texture& texture_3 = context.textures->get(Textures::MainMenuClound_1);
-    tmp = sf::Sprite(texture_3);
-    tmp.setPosition(0, 37);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_4 = context.textures->get(Textures::MainMenuClound_2);
-    tmp = sf::Sprite(texture_4);
-    tmp.setPosition(475, 48);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_5 = context.textures->get(Textures::MainMenuClound_3);
-    tmp = sf::Sprite(texture_5);
-    tmp.setPosition(950, 37);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_6 = context.textures->get(Textures::MainMenuClound_4);
-    tmp = sf::Sprite(texture_6);
-    tmp.setPosition(0, 10);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_7 = context.textures->get(Textures::MainMenuClound_5);
-    tmp = sf::Sprite(texture_7);
-    tmp.setPosition(449, 3);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_8 = context.textures->get(Textures::MainMenuClound_6);
-    tmp = sf::Sprite(texture_8);
-    tmp.setPosition(897, 0);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_9 = context.textures->get(Textures::MainMenuClound_7);
-    tmp = sf::Sprite(texture_9);
-    tmp.setPosition(345, -9);
-    mCloundSprite.push_back(tmp);
-
-    sf::Texture& texture_10 = context.textures->get(Textures::MainMenuClound_8);
-    tmp = sf::Sprite(texture_10);
+    // Thêm các sprite vào vector
+    sf::Texture& texture_1 = context.textures->get(Textures::MainMenuClound_8);
+    tmp = sf::Sprite(texture_1);
     tmp.setPosition(759, -9);
-    mCloundSprite.push_back(tmp);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_2 = context.textures->get(Textures::MainMenuClound_7);
+    tmp = sf::Sprite(texture_2);
+    tmp.setPosition(345, -9);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_3 = context.textures->get(Textures::MainMenuClound_6);
+    tmp = sf::Sprite(texture_3);
+    tmp.setPosition(897, 0);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_4 = context.textures->get(Textures::MainMenuClound_5);
+    tmp = sf::Sprite(texture_4);
+    tmp.setPosition(449, 3);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_5 = context.textures->get(Textures::MainMenuClound_4);
+    tmp = sf::Sprite(texture_5);
+    tmp.setPosition(0, 10);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_6 = context.textures->get(Textures::MainMenuClound_3);
+    tmp = sf::Sprite(texture_6);
+    tmp.setPosition(950, 37);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_7 = context.textures->get(Textures::MainMenuClound_2);
+    tmp = sf::Sprite(texture_7);
+    tmp.setPosition(475, 48);
+    cloudSprites.push_back(tmp);
+
+    sf::Texture& texture_8 = context.textures->get(Textures::MainMenuClound_1);
+    tmp = sf::Sprite(texture_8);
+    tmp.setPosition(0, 37);
+    cloudSprites.push_back(tmp);
+
+    // Tạo BGObject cho đám mây
+    mCloudBGObject = std::make_unique<BGObject>(cloudSprites, cloudSpeeds);
+
+    // Gắn BGObject vào lớp SceneGraph
+    mSceneLayers[Cloud]->attachChild(std::move(mCloudBGObject));
+
+
+
 
 
     auto playButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
@@ -68,7 +98,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     playButton->setText("Play");
     playButton->setCallback([this]() {
         //requestStackPop();
-        requestStackPush(States::Level_1);
+        requestStackPush(States::Level);
         std::cout << "Play button pressed" << std::endl;
         });
 
@@ -87,7 +117,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     settingButton->setText("Setting");
     settingButton->setCallback([this]() {
         //requestStackPop();
-        //requestStackPush(States::Game);
+        requestStackPush(States::Setting);
         std::cout << "Setting button pressed" << std::endl;
         });
 
@@ -103,20 +133,22 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     mGUIContainer.pack(settingButton);
     mGUIContainer.pack(exitButton);
 
+    // Thêm Game Name (TextNode)
     sf::Font& font = context.fonts->get(Fonts::NameGame);
+    sf::Text text;
+    text.setFont(font);
+    text.setString("Journey to the West");
+    text.setCharacterSize(120);
+    text.setFillColor(sf::Color::Black);
+    text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
+    text.setPosition(640.f, 150.f);
 
-    wukongText.setFont(font);
-    wukongText.setString("Journey to the West");
-    wukongText.setCharacterSize(120);
-    wukongText.setFillColor(sf::Color(0, 0, 0, 255));
-    wukongText.setOrigin(wukongText.getLocalBounds().width / 2.0f, wukongText.getLocalBounds().height / 2.0f);
-    wukongText.setPosition(640, 150);
-    wukongText.setScale(mScale, mScale);
+    sf::Text shadowText = text;
+    shadowText.setFillColor(sf::Color(0, 0, 0, 128));
+    shadowText.setPosition(text.getPosition().x + 5, text.getPosition().y + 5);
 
-    // Khởi tạo bóng của chữ
-    shadowText = wukongText; // Copy toàn bộ thuộc tính từ chữ chính
-    shadowText.setFillColor(sf::Color(0, 0, 0, 128)); // Màu đen mờ hơn
-    shadowText.setPosition(wukongText.getPosition().x + 5, wukongText.getPosition().y + 5); // Lệch vị trí
+    auto textNode = std::make_unique<TextNode>(text, shadowText);
+    mSceneLayers[GameName]->attachChild(std::move(textNode));
 
 }
 
@@ -124,48 +156,43 @@ void MenuState::draw() {
     sf::RenderWindow& window = *getContext().window;
     window.setView(window.getDefaultView());
 
-    for (const sf::Sprite& sprite : mBackgroundSprite) {
-        window.draw(sprite);
-    }
 
-    for (int i = mCloundSprite.size() - 1; i >= 0; i--) {
-        sf::Sprite& sprite = mCloundSprite[i];
-        window.draw(sprite);
-    }
+    // Vẽ toàn bộ SceneGraph
+    window.draw(mSceneGraph);
 
     window.draw(mGUIContainer);
-
-
-
-    window.draw(shadowText);
-    window.draw(wukongText);
 }
 
 bool MenuState::update(sf::Time deltatime)
 {
 
-
-    if (mTextState == ScalingUp) {
+    // Command để scale chữ
+    Command scaleTextCommand;
+    scaleTextCommand.category = Category::Text;
+    scaleTextCommand.action = [deltatime](SceneNode& node, sf::Time) {
+        auto& textNode = static_cast<TextNode&>(node);
         float scaleSpeed = 0.5f * deltatime.asSeconds();
-        mScale += scaleSpeed;
-        if (mScale >= 1.0f) {
-            mScale = 1.0f;
-            mTextState = None;
-        }
-        wukongText.setScale(mScale, mScale);
-        shadowText.setScale(mScale, mScale);
+        float currentScale = textNode.getScale();
 
+        if (currentScale < 1.0f) {
+            float scale = currentScale + scaleSpeed;
+            scale = std::min(scale, 1.0f);
+            textNode.setScale(scale);
+        }
+        };
+
+    // Đẩy Command vào CommandQueue
+    mCommandQueue.push(scaleTextCommand);
+
+    while (!mCommandQueue.isEmpty()) {
+        Command command = mCommandQueue.pop();
+        mSceneGraph.onCommand(command, deltatime);
     }
 
 
 
-    for (int i = 0; i < mCloundSprite.size(); i++) {
-        sf::Sprite& sprite = mCloundSprite[i];
-        sprite.move(-speed[i] * deltatime.asSeconds(), 0);
-        if (sprite.getPosition().x < -sprite.getLocalBounds().width) {
-            sprite.setPosition(1280, sprite.getPosition().y);
-        }
-    }
+    // Cập nhật SceneGraph
+    mSceneGraph.update(deltatime, mCommandQueue);
 
 
 

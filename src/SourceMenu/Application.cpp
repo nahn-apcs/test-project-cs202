@@ -4,36 +4,24 @@
 #include <LevelState.hpp>
 #include <GameState.hpp>
 #include <PauseState.hpp>
-#include <iostream>
-#include <TransitionState.hpp>
 #include <WaitingState.hpp>
+#include <TransitionState.hpp>
+#include <LevelManager.hpp>
+#include <LevelCompleteState.hpp>
+#include <WinningState.hpp>
+#include <GameOverState.hpp>
+#include <SettingState.hpp>
+#include <iostream>
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
-Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style::Close), mTextures(), mFonts(), mStateStack(State::Context(mWindow, mTextures, mFonts)) {
-    
+Application::Application() : mWindow(sf::VideoMode(1280, 640), "Input", sf::Style::Close), mTextures(), mFonts(), mMusic(), mSounds(), mStateStack(State::Context(mWindow, mTextures, mFonts, mMusic, mSounds)) {
+
     mWindow.setKeyRepeatEnabled(false);
     mWindow.setVerticalSyncEnabled(true);
-
-	//load Font
-	mFonts.load(Fonts::Main, "../resources/Asset/Fonts/pixel.ttf");
-	mFonts.load(Fonts::NameGame, "../resources/Asset/Fonts/NagasakiJapan.otf");
 	mFonts.load(Fonts::PixelNes, "../resources/font/Pixel_NES.otf");
 
-	//load Texture
-	mTextures.load(Textures::ID::button, "../resources/Asset/Textures/button.png");
-	mTextures.load(Textures::ID::MainMenuBG, "../resources/Asset/Textures/Menu/menubg.png");
-	mTextures.load(Textures::ID::MainMenuBG_1, "../resources/Asset/Textures/Menu/menubg1.png");
-	mTextures.load(Textures::ID::MainMenuBG_2, "../resources/Asset/Textures/Menu/menubg2.png");
-	mTextures.load(Textures::ID::MainMenuBG_3, "../resources/Asset/Textures/Menu/menubg3.png");
-	mTextures.load(Textures::ID::MainMenuClound_1, "../resources/Asset/Textures/Menu/cloud1.png");
-	mTextures.load(Textures::ID::MainMenuClound_2, "../resources/Asset/Textures/Menu/cloud2.png");
-	mTextures.load(Textures::ID::MainMenuClound_3, "../resources/Asset/Textures/Menu/cloud3.png");
-	mTextures.load(Textures::ID::MainMenuClound_4, "../resources/Asset/Textures/Menu/cloud4.png");
-	mTextures.load(Textures::ID::MainMenuClound_5, "../resources/Asset/Textures/Menu/cloud5.png");
-	mTextures.load(Textures::ID::MainMenuClound_6, "../resources/Asset/Textures/Menu/cloud6.png");
-	mTextures.load(Textures::ID::MainMenuClound_7, "../resources/Asset/Textures/Menu/cloud7.png");
-	mTextures.load(Textures::ID::MainMenuClound_8, "../resources/Asset/Textures/Menu/cloud8.png");
+	
 
 	
 	mTextures.load(Textures::ID::WukongStand1, "../resources/wukong16bit/stand wk_sprite_1.png");
@@ -140,13 +128,52 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::BossBullet, "../resources/boss_bullet.png");
 
+  mTextures.load(Textures::ID::Bg2, "../resources/Level2/bg.png");
+  mTextures.load(Textures::ID::Blocks2, "../resources/Level2/blocks.png");
+  mTextures.load(Textures::ID::Bg3, "../resources/Level3/bg.png");
+  mTextures.load(Textures::ID::Blocks3, "../resources/Level3/blocks.png");
+	
+	mTextures.load(Textures::ID::Bullet, "../resources/bullet1_strip.png");
+	mTextures.load(Textures::ID::Enemies, "../resources/Run-sheet.png");
+	mTextures.load(Textures::ID::Bg1, "../resources/Level1/bg.png");
+	mTextures.load(Textures::ID::Blocks, "../resources/Level1/blocks.png");
+	
+
+	//load Font
+	mFonts.load(Fonts::Main, "../resources/Asset/Fonts/pixel.ttf");
+	mFonts.load(Fonts::NameGame, "../resources/Asset/Fonts/NagasakiJapan.otf");
+
+	//load Texture
+	mTextures.load(Textures::ID::button, "../resources/Asset/Textures/button.png");
+	mTextures.load(Textures::ID::MainMenuBG, "../resources/Asset/Textures/Menu/menubg.png");
+	mTextures.load(Textures::ID::MainMenuBG_1, "../resources/Asset/Textures/Menu/menubg1.png");
+	mTextures.load(Textures::ID::MainMenuBG_2, "../resources/Asset/Textures/Menu/menubg2.png");
+	mTextures.load(Textures::ID::MainMenuBG_3, "../resources/Asset/Textures/Menu/menubg3.png");
+	mTextures.load(Textures::ID::MainMenuClound_1, "../resources/Asset/Textures/Menu/cloud1.png");
+	mTextures.load(Textures::ID::MainMenuClound_2, "../resources/Asset/Textures/Menu/cloud2.png");
+	mTextures.load(Textures::ID::MainMenuClound_3, "../resources/Asset/Textures/Menu/cloud3.png");
+	mTextures.load(Textures::ID::MainMenuClound_4, "../resources/Asset/Textures/Menu/cloud4.png");
+	mTextures.load(Textures::ID::MainMenuClound_5, "../resources/Asset/Textures/Menu/cloud5.png");
+	mTextures.load(Textures::ID::MainMenuClound_6, "../resources/Asset/Textures/Menu/cloud6.png");
+	mTextures.load(Textures::ID::MainMenuClound_7, "../resources/Asset/Textures/Menu/cloud7.png");
+	mTextures.load(Textures::ID::MainMenuClound_8, "../resources/Asset/Textures/Menu/cloud8.png");
 
 	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
 	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
 
 	mTextures.load(Textures::ID::LevelBG, "../resources/Asset/Textures/Level/level_bg.png");
-	mTextures.load(Textures::ID::TestLevel, "../resources/Asset/Textures/Level/test_level.png");
-
+	mTextures.load(Textures::ID::LevelBackButton, "../resources/Asset/Textures/Level/BackButton.png");
+	mTextures.load(Textures::ID::LevelLock, "../resources/Asset/Textures/Level/Lock.png");
+	mTextures.load(Textures::ID::LevelMap_1, "../resources/Asset/Textures/Level/Map1.png");
+	mTextures.load(Textures::ID::LevelMap_2, "../resources/Asset/Textures/Level/Map2.png");
+	mTextures.load(Textures::ID::LevelMap_3, "../resources/Asset/Textures/Level/Map3.png");
+	mTextures.load(Textures::ID::LevelMap_4, "../resources/Asset/Textures/Level/Map4.png");
+	mTextures.load(Textures::ID::LevelMap_5, "../resources/Asset/Textures/Level/Map5.png");
+	mTextures.load(Textures::ID::LevelPointer1, "../resources/Asset/Textures/Level/Pointer1.png");
+	mTextures.load(Textures::ID::LevelPointer2, "../resources/Asset/Textures/Level/Pointer2.png");
+	mTextures.load(Textures::ID::LevelPointer3, "../resources/Asset/Textures/Level/Pointer3.png");
+	mTextures.load(Textures::ID::LevelPointer4, "../resources/Asset/Textures/Level/Pointer4.png");
+	mTextures.load(Textures::ID::LevelPointer5, "../resources/Asset/Textures/Level/Pointer5.png");
 
 	mTextures.load(Textures::ID::PauseBG, "../resources/Asset/Textures/Pause/PauseBG.png");
 	mTextures.load(Textures::ID::PauseContinueButton, "../resources/Asset/Textures/Pause/ContinueButton.png");
@@ -158,20 +185,26 @@ Application::Application(): mWindow(sf::VideoMode(1280, 640), "Input", sf::Style
 
 	mTextures.load(Textures::ID::PauseButton, "../resources/Asset/Textures/Game/PauseButton.png");
 
+	mTextures.load(Textures::ID::LevelCompleteBG, "../resources/Asset/Textures/CompleteLevel/BackGround.png");
+	mTextures.load(Textures::ID::LevelCompleteNextButton, "../resources/Asset/Textures/CompleteLevel/NextButton.png");
+	mTextures.load(Textures::ID::LevelCompleteBackButton, "../resources/Asset/Textures/CompleteLevel/BackButton.png");
 
-  mTextures.load(Textures::ID::Bg2, "../resources/Level2/bg.png");
-  mTextures.load(Textures::ID::Blocks2, "../resources/Level2/blocks.png");
-  mTextures.load(Textures::ID::Bg3, "../resources/Level3/bg.png");
-  mTextures.load(Textures::ID::Blocks3, "../resources/Level3/blocks.png");
+	mTextures.load(Textures::ID::WinningBG, "../resources/Asset/Textures/Winning/WinningBG.png");
+	mTextures.load(Textures::ID::WinningRestartButton, "../resources/Asset/Textures/Winning/RestartButton.png");
+	mTextures.load(Textures::ID::WinningBoard, "../resources/Asset/Textures/Winning/Board.png");
 
-	
-	mTextures.load(Textures::ID::Bullet, "../resources/bullet1_strip.png");
-	mTextures.load(Textures::ID::Enemies, "../resources/Run-sheet.png");
-	mTextures.load(Textures::ID::Bg1, "../resources/Level1/bg.png");
-	mTextures.load(Textures::ID::Blocks, "../resources/Level1/blocks.png");
-	
+	mTextures.load(Textures::ID::GameOverBoard, "../resources/Asset/Textures/GameOver/Board.png");
+	mTextures.load(Textures::ID::GameOverMenuButton, "../resources/Asset/Textures/GameOver/MenuButton.png");
+	mTextures.load(Textures::ID::GameOverRestartButton, "../resources/Asset/Textures/GameOver/RestartButton.png");
+
+	mTextures.load(Textures::ID::SettingBoard, "../resources/Asset/Textures/Setting/Board.png");
+	mTextures.load(Textures::ID::SettingSoundButton, "../resources/Asset/Textures/Setting/SoundButton.png");
+	mTextures.load(Textures::ID::SettingMusicButton, "../resources/Asset/Textures/Setting/MusicButton.png");
+	mTextures.load(Textures::ID::SettingCloseButton, "../resources/Asset/Textures/Setting/CloseButton.png");
 
 
+	//set volume
+	mMusic.setVolume(25.f);
 
     //register states
     registerStates();
@@ -233,82 +266,22 @@ void Application::registerStates()
 {
 	mStateStack.registerState<MenuState>(States::Menu);
 	mStateStack.registerState<GuideState>(States::Guide);
-	mStateStack.registerState<LevelState>(States::Level_1, LevelState::wukong);
-	mStateStack.registerState<LevelState>(States::Level_2, LevelState::pig);
-	mStateStack.registerState<GameState>(States::GameLevel1_1, GameState::Level1, GameState::wukong);
-	mStateStack.registerState<GameState>(States::GameLevel1_2, GameState::Level1, GameState::pig);
-	mStateStack.registerState<GameState>(States::GameLevel2_1, GameState::Level2, GameState::wukong);
-	mStateStack.registerState<GameState>(States::GameLevel2_2, GameState::Level2, GameState::pig);
-	mStateStack.registerState<GameState>(States::GameLevel3_1, GameState::Level3, GameState::wukong);
-	mStateStack.registerState<GameState>(States::GameLevel3_2, GameState::Level3, GameState::pig);
-	mStateStack.registerState<GameState>(States::GameLevel4_1, GameState::Level4, GameState::wukong);
-	mStateStack.registerState<GameState>(States::GameLevel4_2, GameState::Level4, GameState::pig);
-	mStateStack.registerState<GameState>(States::GameLevel5_1, GameState::Level5, GameState::wukong);
-	mStateStack.registerState<GameState>(States::GameLevel5_2, GameState::Level5, GameState::pig);
+	mStateStack.registerState<LevelState>(States::Level);
+	mStateStack.registerState<GameState>(States::Game);
 
-	mStateStack.registerState<PauseState>(States::Pause1_1, PauseState::Level1, PauseState::wukong);
-	mStateStack.registerState<PauseState>(States::Pause1_2, PauseState::Level1, PauseState::pig);
-	mStateStack.registerState<PauseState>(States::Pause2_1, PauseState::Level2, PauseState::wukong);
-	mStateStack.registerState<PauseState>(States::Pause2_2, PauseState::Level2, PauseState::pig);
-	mStateStack.registerState<PauseState>(States::Pause3_1, PauseState::Level3, PauseState::wukong);
-	mStateStack.registerState<PauseState>(States::Pause3_2, PauseState::Level3, PauseState::pig);
-	mStateStack.registerState<PauseState>(States::Pause4_1, PauseState::Level4, PauseState::wukong);
-	mStateStack.registerState<PauseState>(States::Pause4_2, PauseState::Level4, PauseState::pig);
-	mStateStack.registerState<PauseState>(States::Pause5_1, PauseState::Level5, PauseState::wukong);
-	mStateStack.registerState<PauseState>(States::Pause5_2, PauseState::Level5, PauseState::pig);
+	mStateStack.registerState<PauseState>(States::Pause);
+
+	mStateStack.registerState<LevelCompleteState>(States::LevelComplete);
+
+	mStateStack.registerState<GameOverState>(States::GameOver);
+
+	mStateStack.registerState<WinningState>(States::Winning);
 
 	mStateStack.registerState<WaitingState>(States::Waiting);
-	mStateStack.registerState<TransitionState>(States::TransitionLevel1_1, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel1_1);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel1_2, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel1_2);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel2_1, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel2_1);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel2_2, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel2_2);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel3_1, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel3_1);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel3_2, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel3_2);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel4_1, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel4_1);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel4_2, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel4_2);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel5_1, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel5_1);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionLevel5_2, [this]() {
-		this->mStateStack.popState();
-		this->mStateStack.pushState(States::GameLevel5_2);
-		});
-	mStateStack.registerState<TransitionState>(States::TransitionMenu, [this]() {
-		this->mStateStack.clearStates();
-		this->mStateStack.pushState(States::Menu);
-		});
-	// mStateStack.registerState<TitleState>(States::Title);
-	// mStateStack.registerState<GameState>(States::Game);
-	// mStateStack.registerState<MultiplayerGameState>(States::HostGame, true);
-	// mStateStack.registerState<MultiplayerGameState>(States::JoinGame, false);
-	// mStateStack.registerState<PauseState>(States::Pause);
-	// mStateStack.registerState<PauseState>(States::NetworkPause, true);
-	// mStateStack.registerState<SettingsState>(States::Settings);
-	// mStateStack.registerState<GameOverState>(States::GameOver, "Mission Failed!");
-	// mStateStack.registerState<GameOverState>(States::MissionSuccess, "Mission Successful!");
+
+	mStateStack.registerState<TransitionState>(States::TransitionMenu, TransitionState::Menu);
+	mStateStack.registerState<TransitionState>(States::TransitionGame, TransitionState::Game);
+	mStateStack.registerState<TransitionState>(States::TransitionWinning, TransitionState::Winning);
+	mStateStack.registerState<TransitionState>(States::TransitionGame_2, TransitionState::Game, 2);
+	mStateStack.registerState<SettingState>(States::Setting);
 }

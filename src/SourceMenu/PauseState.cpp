@@ -7,11 +7,12 @@
 #include <SFML/Graphics/View.hpp>
 #include <iostream>
 #include <SFML/System/Time.hpp>
+#include <LevelManager.hpp>
 
 
-PauseState::PauseState(StateStack& stack, Context context, Level level, Character_1 character) : State(stack, context), mLevel(level), mCharacter(character) {
+PauseState::PauseState(StateStack& stack, Context context) : State(stack, context) {
     mTextLevel.setFont(context.fonts->get(Fonts::Main));
-    mTextLevel.setString("Level " + toString(level + 1));
+    mTextLevel.setString("Level " + toString(LevelManager::getInstance().getCurLevel() + 1));
     mTextLevel.setCharacterSize(40);
     mTextLevel.setFillColor(sf::Color(0, 0, 0, 255));
     mTextLevel.setOrigin(mTextLevel.getLocalBounds().width / 2.0f, mTextLevel.getLocalBounds().height / 2.0f);
@@ -96,49 +97,9 @@ bool PauseState::handleEvent(const sf::Event& event)
             }
             else if (RestartButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                 requestStackPop();
-                if (mLevel == Level1) {
-                    if (mCharacter == wukong) {
-                        requestStackPush(States::TransitionLevel1_1);
-                    }
-                    else {
-                        requestStackPush(States::TransitionLevel1_2);
-                    }
-                }
-                else if (mLevel == Level2) {
-                    if (mCharacter == wukong) {
-                        requestStackPush(States::TransitionLevel2_1);
-                    }
-                    else {
-                        requestStackPush(States::TransitionLevel2_2);
-                    }
-                }
-                else if (mLevel == Level3) {
-                    if (mCharacter == wukong) {
-                        requestStackPush(States::TransitionLevel3_1);
-                    }
-                    else {
-                        requestStackPush(States::TransitionLevel3_2);
-                    }
-                }
-                else if (mLevel == Level4) {
-                    if (mCharacter == wukong) {
-                        requestStackPush(States::TransitionLevel4_1);
-                    }
-                    else {
-                        requestStackPush(States::TransitionLevel4_2);
-                    }
-                }
-                else if (mLevel == Level5) {
-                    if (mCharacter == wukong) {
-                        requestStackPush(States::TransitionLevel5_1);
-                    }
-                    else {
-                        requestStackPush(States::TransitionLevel5_2);
-                    }
-                }
+                requestStackPush(States::TransitionGame_2);
             }
             else if (MenuButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                //requestStateClear();
                 requestStackPush(States::TransitionMenu);
             }
             else if (SaveButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
@@ -148,28 +109,34 @@ bool PauseState::handleEvent(const sf::Event& event)
                 cnt_sound++;
                 if (cnt_sound % 2 == 0) {
                     mTextSound.setString("Sound: ON");
-                    //mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
-                    //mTextSound.setPosition(640, 243);
+                    mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
+                    mTextSound.setPosition(640, 243);
                 }
                 else {
                     mTextSound.setString("Sound: OFF");
-                    //mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
-                    //mTextSound.setPosition(640, 243);
+                    mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
+                    mTextSound.setPosition(640, 243);
                 }
             }
             else if (MusicButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                 cnt_music++;
                 if (cnt_music % 2 == 0) {
                     mTextMusic.setString("Music: ON");
-                    //mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
-                    //mTextMusic.setPosition(640, 315);
+                    mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
+                    mTextMusic.setPosition(640, 315);
                 }
                 else {
                     mTextMusic.setString("Music: OFF");
-                    //mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
-                    //mTextMusic.setPosition(640, 315);
+                    mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
+                    mTextMusic.setPosition(640, 315);
                 }
             }
+        }
+    }
+    else if (event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::Escape) {
+            requestStackPop();
+            requestStackPush(States::Waiting);
         }
     }
     return false;

@@ -138,14 +138,12 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			float dy = mPosition.y - player.y;
 			float distance = sqrt(dx * dx + dy * dy);
 			 
-				float vX = dx / 8.0f;
-				float vY = dy / 8.0f;
-				if (distance > 200.f) {
-					setVelocityX(-vX);
-					setVelocityY(-vY);
-					//std::cout << vX << " " << vY << std::endl;
-				}
-			moveTime = 2.0f;
+			float vX = dx / 8.0f;
+			float vY = dy / 8.0f;
+			setVelocityX(-vX);
+			setVelocityY(-vY);
+
+			moveTime = 1.0f;
 		}
 
 		if (teleportTime > 0.f) {

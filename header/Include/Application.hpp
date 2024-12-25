@@ -5,11 +5,13 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
 #include <StateStack.hpp>
+#include <MusicPlayer.hpp>
+#include <SoundPlayer.hpp>
 
 class Application {
 
 public:
-                                Application();
+    Application();
     void                        run();
 
 private:
@@ -26,6 +28,8 @@ private:
     TextureHolder               mTextures;
     FontHolder                  mFonts;
     StateStack                  mStateStack;
+    MusicPlayer				    mMusic;
+    SoundPlayer				    mSounds;
 
 };
 

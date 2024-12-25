@@ -1,14 +1,14 @@
 #include <LevelManager.hpp>
 
 
-
 LevelManager::LevelManager() {
     for (int i = 0; i < 5; i++) {
         mLevels.push_back(0);
     }
     mLevels[0] = 1;
-    mLevels[1] = 1;
-    mLevels[2] = 1;
+
+    curLevel = Level1;
+    curCharacter = wukong;
 }
 
 
@@ -31,4 +31,23 @@ void LevelManager::resetLevels() {
     for (int i = 0; i < 5; i++) {
         mLevels[i] = 0;
     }
+    mLevels[0] = 1;
 }
+
+void LevelManager::setCurLevel(Level level) {
+    curLevel = level;
+}
+
+LevelManager::Level LevelManager::getCurLevel() const {
+    return curLevel;
+}
+
+void LevelManager::setCurCharacter(Character character) {
+    curCharacter = character;
+}
+
+LevelManager::Character LevelManager::getCurCharacter() const {
+    return curCharacter;
+}
+
+

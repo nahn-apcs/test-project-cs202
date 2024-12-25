@@ -6,6 +6,10 @@
 #include <State.hpp>
 #include <Container.hpp>
 #include <vector>
+#include <SceneNode.hpp>
+#include <Command.hpp>
+#include <array>
+#include <CommandQueue.hpp>
 
 class MenuState : public State {
 
@@ -18,21 +22,19 @@ public:
 
 private:
 
-    enum TextState {
-        ScalingUp,
-        None,
+    enum Layer {
+        Background,
+        Cloud,
+        GameName,
+        LayerCount,
     };
 
-    std::vector<sf::Sprite> mBackgroundSprite;
-    std::vector<sf::Sprite> mCloundSprite;
+    SceneNode							mSceneGraph;
+    std::array<SceneNode*, 3>	mSceneLayers;
+    CommandQueue						mCommandQueue;
+
     GUI::Container mGUIContainer;
 
-    sf::Text wukongText;
-    sf::Text shadowText;
-    float mScale = 0.1f;
-    float mWukongAlpha = 255;
-    bool mFadingOut = true;
-    TextState mTextState = ScalingUp;
 
 };
 

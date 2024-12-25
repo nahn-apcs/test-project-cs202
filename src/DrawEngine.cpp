@@ -1,6 +1,6 @@
 #include "DrawEngine.h"
 
-void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock, Map* map, Character* charac) {
+void DrawEngine::displayGameInfo(sf::RenderWindow& window, float elapsedTime, Map* map, Character* charac) {
 	// Display the game info
 	sf::Text coinText;
 	coinText.setFont(font);
@@ -11,9 +11,8 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, sf::Clock& timeClock,
 	coinText.setPosition(10, 10);
 	
 
-	// Display the time
-	sf::Time elapsedTime = timeClock.getElapsedTime();
-	int seconds = static_cast<int>(elapsedTime.asSeconds());
+	
+	int seconds = static_cast<int>(elapsedTime);
 	sf::Text timeText;
 	timeText.setFont(font);
 	timeText.setString("Time: " + std::to_string(seconds) + "s");

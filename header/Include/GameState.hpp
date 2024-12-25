@@ -24,18 +24,8 @@
 class GameState : public State {
 
 public:
-    enum Level {
-		Level1,
-		Level2,
-		Level3,
-		Level4,
-		Level5
-	};
-    enum Character_1 {
-		wukong,
-		pig,
-	};
-    GameState(StateStack& stack, Context context, Level mLevel, Character_1 charac );
+
+    GameState(StateStack& stack, Context context);
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -43,8 +33,6 @@ public:
 
 private:
 
-    Level mLevel;
-    Character_1 mCharacter;
     sf::Sprite PauseButton;
 
     sf::Texture tileset, playerTexture, monsterset, projectile, enemyProjectile;
@@ -87,7 +75,8 @@ private:
     int xRepeatCount, yRepeatCount;
     sf::Texture backgroundTexture;
     sf::View camera;
-
+    bool win = false;
+    bool lose = false;
 };
 
 

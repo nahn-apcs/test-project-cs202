@@ -6,15 +6,15 @@
 #include <State.hpp>
 #include <Container.hpp>
 #include <vector>
+#include <SceneNode.hpp>
+#include <Command.hpp>
+#include <CommandQueue.hpp>
+#include <array>
 
 class LevelState : public State {
 
 public:
-    enum Character_1 {
-        wukong,
-        pig,
-    };
-    LevelState(StateStack& stack, Context context, Character_1 character);
+    LevelState(StateStack& stack, Context context);
 
     virtual void draw();
     virtual bool update(sf::Time dt);
@@ -22,13 +22,22 @@ public:
 
 private:
 
-    std::vector<sf::Sprite> mBackgroundSprite;
-    sf::Text LevelText;
-    GUI::Container mGUIContainer;
-    sf::Sprite mBackButton;
-    float elapsedTime = 0.f;
+    enum Layer {
+        Background,
+        Text,
+        LayerCount,
+    };
+    SceneNode                               mSceneGraph;
+    std::array<SceneNode*, LayerCount>      mSceneLayers;
+    CommandQueue                            mCommandQueue;
 
-    Character_1 mCharacter;
+    GUI::Container mGUIContainer;
+
+
+    sf::Sprite mBackButton;
+
+    std::vector<sf::Sprite> mLock;
+    std::vector<sf::Sprite> mPointer;
 };
 
 #endif // LEVEL_STATE_HPP
