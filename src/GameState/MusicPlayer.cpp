@@ -15,8 +15,15 @@ void MusicPlayer::play(Music::ID theme) {
 	if (!mMusic.openFromFile(filename))
 		throw std::runtime_error("Music " + filename + " could not be loaded.");
 
-	mMusic.setVolume(mVolume);
+
+	
 	mMusic.setLoop(true);
+	if (mOnMusic) {
+		mMusic.setVolume(mVolume);
+	}
+	else {
+		mMusic.setVolume(0);
+	}
 	mMusic.play();
 }
 
@@ -26,7 +33,12 @@ void MusicPlayer::stop() {
 
 void MusicPlayer::setVolume(float volume) {
 	mVolume = volume;
-	mMusic.setVolume(mVolume);
+	if (mOnMusic) {
+		mMusic.setVolume(mVolume);
+	}
+	else {
+		mMusic.setVolume(0);
+	}
 }
 
 void MusicPlayer::setPaused(bool paused) {
@@ -34,4 +46,19 @@ void MusicPlayer::setPaused(bool paused) {
 		mMusic.pause();
 	else
 		mMusic.play();
+}
+
+void MusicPlayer::switchOnOff() {
+	if (mOnMusic) {
+		mOnMusic = false;
+		mMusic.setVolume(0);
+	}
+	else {
+		mOnMusic = true;
+		mMusic.setVolume(mVolume);
+	}
+}
+
+bool MusicPlayer::isOnMusic() const {
+	return mOnMusic;
 }

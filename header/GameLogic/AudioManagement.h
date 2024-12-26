@@ -17,6 +17,8 @@ private:
 	sf::Sound jumpSound;
 	sf::Sound destroyBlockSound;
 	sf::Sound monsterHitSound;
+
+	bool mOnSound = 1;
 public:
 	AudioManagement();
 	AudioManagement(const AudioManagement&) = default;
@@ -32,4 +34,6 @@ public:
 
 	void stopMainMusic();
 
+	void switchOnOff();
+	bool isOnSound() const;
 };

@@ -25,14 +25,20 @@ PauseState::PauseState(StateStack& stack, Context context) : State(stack, contex
     MusicButton.setPosition(530, 295);
 
     mTextSound.setFont(context.fonts->get(Fonts::Main));
-    mTextSound.setString("Sound: ON");
+    if (context.audio->isOnSound())
+        mTextSound.setString("Sound: ON");
+    else
+        mTextSound.setString("Sound: OFF");
     mTextSound.setCharacterSize(20);
     mTextSound.setFillColor(sf::Color(0, 0, 0, 255));
     mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
     mTextSound.setPosition(640, 243);
 
     mTextMusic.setFont(context.fonts->get(Fonts::Main));
-    mTextMusic.setString("Music: ON");
+	if (context.music->isOnMusic())
+		mTextMusic.setString("Music: ON");
+	else
+		mTextMusic.setString("Music: OFF");
     mTextMusic.setCharacterSize(20);
     mTextMusic.setFillColor(sf::Color(0, 0, 0, 255));
     mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
@@ -54,7 +60,7 @@ PauseState::PauseState(StateStack& stack, Context context) : State(stack, contex
     PauseBG.setTexture(context.textures->get(Textures::PauseBG));
     PauseBG.setPosition(340, 103);
 
-	context.music->setPaused(1);
+    context.music->setPaused(1);
 }
 
 void PauseState::draw() {
@@ -106,9 +112,12 @@ bool PauseState::handleEvent(const sf::Event& event)
                 std::cout << "Save button pressed" << std::endl;
                 writeToFile();
             }
-            else if (SoundButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                cnt_sound++;
-                if (cnt_sound % 2 == 0) {
+			else if (SoundButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				this->getContext().audio->switchOnOff();
+
+				bool cnt_sound = this->getContext().audio->isOnSound();
+
+                if (cnt_sound % 2 == 1) {
                     mTextSound.setString("Sound: ON");
                     mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
                     mTextSound.setPosition(640, 243);
@@ -120,8 +129,12 @@ bool PauseState::handleEvent(const sf::Event& event)
                 }
             }
             else if (MusicButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-                cnt_music++;
-                if (cnt_music % 2 == 0) {
+                this->getContext().music->switchOnOff();
+
+				bool cnt_music = this->getContext().music->isOnMusic();
+
+
+                if (cnt_music % 2 == 1) {
                     mTextMusic.setString("Music: ON");
                     mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
                     mTextMusic.setPosition(640, 315);

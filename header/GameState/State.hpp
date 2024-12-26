@@ -25,15 +25,17 @@ public:
 	typedef std::unique_ptr<State> Ptr;
 
 	struct Context {
-		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds);
+		Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, AudioManagement& audio);
 
 		sf::RenderWindow* window;
 		TextureHolder* textures;
 		FontHolder* fonts;
 		MusicPlayer* music;
-		SoundPlayer* sounds;
+
+		AudioManagement* audio;
 		int currentScore = 0;
 		int currentTime = 0;
+
 	};
 
 public:

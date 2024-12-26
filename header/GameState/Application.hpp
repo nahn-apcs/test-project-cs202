@@ -29,7 +29,7 @@ private:
     FontHolder                  mFonts;
     StateStack                  mStateStack;
     MusicPlayer				    mMusic;
-    SoundPlayer				    mSounds;
+	AudioManagement             mAudio;
 
 };
 

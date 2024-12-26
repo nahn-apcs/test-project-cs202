@@ -1,8 +1,7 @@
 #include <State.hpp>
 #include <StateStack.hpp>
 
-State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, SoundPlayer& sounds) : window(&window), textures(&textures), fonts(&fonts), music(&music)
-, sounds(&sounds) {}
+State::Context::Context(sf::RenderWindow& window, TextureHolder& textures, FontHolder& fonts, MusicPlayer& music, AudioManagement& audio) : window(&window), textures(&textures), fonts(&fonts), music(&music), audio(&audio){}
 
 State::State(StateStack& stack, Context context) : mStack(&stack), mContext(context) {}
 
