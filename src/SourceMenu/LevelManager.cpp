@@ -42,11 +42,11 @@ LevelManager::Level LevelManager::getCurLevel() const {
     return curLevel;
 }
 
-void LevelManager::setCurCharacter(Character character) {
+void LevelManager::setCurCharacter(Character_1 character) {
     curCharacter = character;
 }
 
-LevelManager::Character LevelManager::getCurCharacter() const {
+LevelManager::Character_1 LevelManager::getCurCharacter() const {
     return curCharacter;
 }
 

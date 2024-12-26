@@ -8,7 +8,7 @@
 #include <iostream>
 #include <SFML/System/Time.hpp>
 #include <LevelManager.hpp>
-
+#include <fstream>
 
 PauseState::PauseState(StateStack& stack, Context context) : State(stack, context) {
     mTextLevel.setFont(context.fonts->get(Fonts::Main));
@@ -110,6 +110,7 @@ bool PauseState::handleEvent(const sf::Event& event)
             }
             else if (SaveButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                 std::cout << "Save button pressed" << std::endl;
+                writeToFile();
             }
 			else if (SoundButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
 				this->getContext().audio->switchOnOff();
@@ -153,4 +154,101 @@ bool PauseState::handleEvent(const sf::Event& event)
         }
     }
     return false;
+}
+
+void PauseState::writeToFile() {
+	std::ofstream file;
+	file.open("../resources/save.txt");
+	if (file.is_open()) {
+		LevelManager& lm = LevelManager::getInstance();
+        file << lm.getSaveLevel() << std::endl;
+        file << lm.getSaveCharacter() << std::endl;
+        file << lm.getSaveScore() << std::endl;
+        file << lm.getSaveTime() << std::endl;
+
+        file << lm.getSaveMap().size() << std::endl;
+        for (int i = 0; i < lm.getSaveMap().size(); i++) {
+			file << lm.getSaveMap()[i] << std::endl;
+		}
+
+        file << lm.getSaveMonsterPos().size() << std::endl;
+
+        for (int i = 0; i < lm.getSaveMonsterPos().size(); i++) {
+            file << lm.getSaveMonsterPos()[i].first << " " << lm.getSaveMonsterPos()[i].second << std::endl;
+		}
+        for (int i = 0; i < lm.getSaveMonsterType().size(); i++) {
+			file << lm.getSaveMonsterType()[i] << std::endl;
+        }
+
+        file << lm.getSavePlayerProjectilePos().size() << std::endl;
+        for (int i = 0; i < lm.getSavePlayerProjectilePos().size(); i++) {
+			file << lm.getSavePlayerProjectilePos()[i].first << " " << lm.getSavePlayerProjectilePos()[i].second << std::endl;
+		}
+        for (int i = 0; i < lm.getSaveMonsterProjectilePos().size(); i++) {
+            file << lm.getSaveMonsterProjectilePos()[i].first << " " << lm.getSaveMonsterProjectilePos()[i].second << std::endl;
+            }
+        for (int i = 0; i < lm.getSavePlayerProjectileDir().size(); i++) {
+            file << lm.getSavePlayerProjectileDir()[i] << std::endl;
+		}
+        for (int i = 0; i < lm.getSaveMonsterProjectileDir().size(); i++) {
+			file << lm.getSaveMonsterProjectileDir()[i] << std::endl;
+            }
+        for (int i = 0; i < lm.getSavePlayerProjectileVel().size(); i++) {
+            file << lm.getSavePlayerProjectileVel()[i].first << " " << lm.getSavePlayerProjectileVel()[i].second << std::endl;
+            }
+        for (int i = 0; i < lm.getSaveMonsterProjectileVel().size(); i++) {
+            file << lm.getSaveMonsterProjectileVel()[i].first << " " << lm.getSaveMonsterProjectileVel()[i].second << std::endl;
+			}
+        file << lm.getSaveItemPos().size() << std::endl;
+        for (int i = 0; i < lm.getSaveItemPos().size(); i++) {
+			file << lm.getSaveItemPos()[i].first << " " << lm.getSaveItemPos()[i].second << std::endl;
+			}
+        for (int i = 0; i < lm.getSaveItemType().size(); i++) {
+			file << lm.getSaveItemType()[i] << std::endl;
+            }
+        file << lm.getSavePlayerPosX() << " " << lm.getSavePlayerPosY() << std::endl;
+        file << lm.getPlayerHP() << std::endl;
+        file << lm.getPlayerStatus() << std::endl;
+        file << lm.getPlayerVelX() << " " << lm.getPlayerVelY() << std::endl;
+        file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
+        file << lm.getBossHP() << std::endl;
+        file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;
+
+
+        //int score = 0;
+        //int time = 0;
+        //std::vector<std::string> saveMap;
+        //std::vector<std::pair< float, float>> saveMonsterPos;
+        //std::vector<char> saveMonsterType;
+
+        ////projectile
+        //std::vector<std::pair<float, float>> savePlayerProjectilePos;
+        //std::vector<std::pair<float, float>> saveMonsterProjectilePos;
+        //std::vector<bool> savePlayerProjectileDir;
+        //std::vector<bool> saveMonsterProjectileDir;
+        //std::vector<std::pair<float, float>> savePlayerProjectileVel;
+        //std::vector<std::pair<float, float>> saveMonsterProjectileVel;
+
+        ////item
+        //std::vector<std::pair<float, float>> saveItemPos;
+        //std::vector<int> saveItemType;
+        ////coin = 1
+        ////powerup = 2
+
+        //float savePlayerPosX;
+        //float savePlayerPosY;
+        //int playerHP;
+        //int playerStatus;
+        //float playerVelX;
+        //float playerVelY;
+
+        ////boss
+        //float saveBossPosX;
+        //float saveBossPosY;
+        //int bossHP;
+        //float bossVelX;
+        //float bossVelY;
+	}
+
+	file.close();
 }

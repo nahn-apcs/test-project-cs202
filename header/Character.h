@@ -11,17 +11,17 @@ public:
     Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
         , int x, int y, int type);
     ~Character();
-    void update(float deltaTime, Map* map);
+    virtual void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
     void pushBack(Map*);
     void dead(Map*);
     void jump();
     void shoot(Map* map);
-    void draw(sf::RenderWindow& window);
+    virtual void draw(sf::RenderWindow& window);
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }
-    void drawBounds(sf::RenderWindow& window);
-    virtual void interact(float d, Map* map);
+    virtual void drawBounds(sf::RenderWindow& window);
+    void interact(float d, Map* map);
     void increaseSpeed();
     void levelUp(Map* map);
     void damaged(Map* map);
@@ -31,6 +31,15 @@ public:
     int getLevel() const { return level; }
     sf::FloatRect getBounds() const;
     bool isEvoled() const { return status == 1; }
+    sf::Vector2f getPosition() const { return sprite.getPosition(); }
+    void setPosition(float x, float y) { sprite.setPosition(x, y); }
+    float getVelocityX() const { return velocityX; }
+    float getVelocityY() const { return velocityY; }
+    int getHP() const { return level; }
+    int getStatus() const { return status; }
+    sf::Vector2f getVelocity() const { return sf::Vector2f(velocityX, velocityY); }
+
+
 
 protected:
     sf::Sprite sprite;
@@ -62,7 +71,7 @@ protected:
     void handleCollisions(Map* map);
     void applyGravity(float deltaTime);
     void applyFriction(float deltaTime);
-    int checkWallCollision(float dx, float dy, Map* map);
+    virtual int checkWallCollision(float dx, float dy, Map* map);
 };
 
 class SecondCharacter : public Character {
@@ -72,4 +81,65 @@ public:
     void interact(float d, Map* map);
 };
 
+
+class FirstCharacter : public Character {
+public:
+	FirstCharacter(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+		, int x, int y, int type) : Character(idleTextures, runTextures, attackTextures, jumpT, hurt, sidleTextures, srunTextures, sattackTextures, sjumpT, sHurt, dead, x, y, type) {}
+};
+
+
+class Boss : public Character {
+public:
+    Boss() = default;
+    Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, int x, int y);
+    ~Boss();
+    void update(float deltaTime, Map* map);
+    void move(float dx, float dy, Map* map);
+    void pushBack(Map*);
+    void dead(Map*);
+    void shoot(Map* map);
+    void draw(sf::RenderWindow& window);
+    void drawBounds(sf::RenderWindow& window);
+    void interact(float d, Map* map, sf::Vector2f playerPos);
+    void damaged(Map* map);
+    sf::FloatRect getBounds() const;
+    bool isAttacking() const { return attacking; }
+    bool isDead() const { return Dead; }
+    void activate() { activated = true; }
+    void circularShoot(Map* map);
+    void angularShoot(Map* map, sf::Vector2f playerPos);
+    void normalAttack(Map* map);
+    void rainShoot(Map* map);
+    void shootFromFeet(Map* map);
+    void groundShoot(Map* map);
+    sf::Vector2f getPosition() const { return mPosition; }
+    bool isActivated() const { return activated; }
+    int getHP() const { return health; }
+    sf::Vector2f getVelocity() const { return sf::Vector2f(velocityX, velocityY); }
+private:
+    Animation* flyAnimation;
+    Animation* attackAnimation;
+    Animation* dieAnimation;
+    Animation* exhaustAnimation;
+    Animation* shootAnimation;
+
+    sf::Vector2f mPosition;
+    bool mIsMovingRight;
+    bool activated = false;
+    bool shooting;
+    bool isMoving = false;
+    int hit = 0;
+    bool exhaust = false;
+    float exhaustTime = 0.f;
+    int health = 50;
+    int checkWallCollision(float dx, float dy, Map* map);
+    float shootTime = 0.f;
+    float moveTime = 0.f;
+    float teleportTime = 0.f;
+    float attackTime = 0.f;
+};
+
 #endif
+
+

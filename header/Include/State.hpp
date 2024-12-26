@@ -31,7 +31,11 @@ public:
 		TextureHolder* textures;
 		FontHolder* fonts;
 		MusicPlayer* music;
+
 		AudioManagement* audio;
+		int currentScore = 0;
+		int currentTime = 0;
+
 	};
 
 public:

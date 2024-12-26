@@ -40,7 +40,7 @@
 //};
 
 
-#include "Boss.h"
+#include "Character.h"
 
 
 Boss::Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, int x, int y)
@@ -453,12 +453,7 @@ void Boss::damaged(Map* map)
 			return;
 		}
 		health -= 1;
-		if (!mIsMovingRight) {
-			sprite.move(-30.f, 0.f);
-		}
-		else {
-			sprite.move(30.f, 0.f);
-		}
+
 		hit++;
 		if (hit >= 10) {
 			exhaust = true;

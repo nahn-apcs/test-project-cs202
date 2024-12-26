@@ -7,6 +7,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, float elapsedTime, Ma
 	coinText.setString("Coins: " + std::to_string(map->coinCount));
 	coinText.setFillColor(sf::Color::Yellow);
 	coinText.setCharacterSize(24);
+	coinText.setFillColor(sf::Color::Yellow);
 	coinText.setPosition(10, 10);
 	
 

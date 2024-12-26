@@ -32,6 +32,7 @@ public:
   sf::Sprite& getSprite() { return sprite; }
   bool getIsKilled() { return isKilled; }
   bool isAnimationFinished();
+  sf::Vector2f getPosition(){ return sprite.getPosition(); }
 };
 
 class Goomba : public Monster {
@@ -48,10 +49,10 @@ public:
   sf::FloatRect getBounds();
 };
 
-class Plant : public Monster {
+class bee : public Monster {
 public:
-	Plant(sf::Texture& texture);
-	~Plant();
+	bee(sf::Texture& texture);
+	~bee();
 };
 
 class MonsterFactory {
