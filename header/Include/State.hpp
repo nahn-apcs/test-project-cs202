@@ -30,6 +30,8 @@ public:
 		FontHolder* fonts;
 		MusicPlayer* music;
 		SoundPlayer* sounds;
+		int currentScore = 0;
+		int currentTime = 0;
 	};
 
 public:

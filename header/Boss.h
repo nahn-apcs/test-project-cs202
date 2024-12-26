@@ -1,68 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-#include "Character.h"
-#include "Map.h"
 
 
-class Boss {
-public:
-	Boss() = default;
-	Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, int x, int y);
-	~Boss();
-	void update(float deltaTime, Map* map);
-	void move(float dx, float dy, Map* map);
-	void pushBack(Map*);
-	void dead(Map*);
-	void shoot(Map* map);
-	void draw(sf::RenderWindow& window);
-	void setVelocityX(float vx) { velocityX = vx; }
-	void setVelocityY(float vy) { velocityY = vy; }
-	void drawBounds(sf::RenderWindow& window);
-	void interact(float d, Map* map, sf::Vector2f playerPos);
-	void damaged(Map* map);
-	sf::FloatRect getBounds() const;
-	bool isAttacking() const { return attacking; }
-	bool isDead() const { return Dead; }
-	void activate() { activated = true; }
-	void circularShoot(Map* map);
-	void setDestination(sf::Vector2f dest) { destination = dest; }
-	void angularShoot(Map* map, sf::Vector2f playerPos);
-	void normalAttack(Map* map);
-	void rainShoot(Map* map);
-	void shootFromFeet(Map* map);
-	void groundShoot(Map* map);
-	sf::Vector2f getPosition() const { return mPosition; }
-	bool isActivated() const { return activated; }
-private:
-	sf::Sprite sprite;
-	Animation* flyAnimation;
-	Animation* attackAnimation;
-	Animation* dieAnimation;
-	Animation* exhaustAnimation;
-	Animation* shootAnimation;
 
-	sf::Vector2f destination;
-	sf::Vector2f mPosition;
-	float velocityX;
-	float velocityY;
-	bool mIsMovingRight;
-	bool activated = false;
-	bool attacking;
-	bool shooting;
-	bool Dead = false;
-	bool isMoving = false;
-	int hit = 0;
-	bool exhaust = false;
-	float exhaustTime = 0.f;
-	int health = 50;
-	int checkWallCollision(float dx, float dy, Map* map);
-	float shootTime = 0.f;
-	float cooldown = 0.f;
-	float moveTime = 0.f;
-	float teleportTime = 0.f;
-	float attackTime = 0.f;
-};
+
 
 
 

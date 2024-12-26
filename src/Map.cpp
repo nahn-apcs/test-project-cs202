@@ -122,6 +122,10 @@ void Map::draw(sf::RenderWindow& window) {
                 // Solid block
 				tile.setTextureRect(sf::IntRect(0, 0, tileSize, tileSize));  // Assuming the first tile is a solid block
             }
+            else if (tileType == '9') {
+                tile.setTextureRect(sf::IntRect(32 * 5, 0, tileSize, tileSize));
+
+            }
             //else if (tileType == '5')
             //{
             //    tile.setTextureRect(sf::IntRect(32, 0, tileSize, tileSize));  // Assuming the first tile is a solid bloc

@@ -109,11 +109,11 @@ Bee::~Bee()
 {
 }
 
-Plant::Plant(sf::Texture& texture) : Monster(texture)
+bee::bee(sf::Texture& texture) : Monster(texture)
 {
 }
 
-Plant::~Plant()
+bee::~bee()
 {
 }
 
@@ -132,6 +132,7 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     animation->addFrame(sf::IntRect(192, 0, 48, 32));
     animation->addFrame(sf::IntRect(240, 0, 48, 32));
     goomba->setAnimation(animation);
+    return goomba;
     
   }
   else if (type == "Bee")
@@ -145,21 +146,21 @@ Monster* MonsterFactory::createMonster(const std::string& type,
     animation->addFrame(sf::IntRect(128, 96, 64, 64));
     animation->addFrame(sf::IntRect(192, 96, 64, 64));
     bee->setAnimation(animation);
-    
+    return bee;
 
   }
   else if (type == "bee") {
-    Monster* bee = new Bee(texture);
-    bee->setPosition(position.x, position.y);
-    bee->setMovementStrategy(
+    Monster* be = new bee(texture);
+    be->setPosition(position.x, position.y);
+    be->setMovementStrategy(
       new UpDownmovement({ 50.0f, 50.0f }, 200.0f, position.x));
-    auto animation = new MonsterAnimation(bee->getSprite(), 0.5f);
+    auto animation = new MonsterAnimation(be->getSprite(), 0.5f);
     animation->addFrame(sf::IntRect(0, 96, 64, 64));
     animation->addFrame(sf::IntRect(64, 96, 64, 64));
     animation->addFrame(sf::IntRect(128, 96, 64, 64));
     animation->addFrame(sf::IntRect(192, 96, 64, 64));
-    bee->setAnimation(animation);
-    
+    be->setAnimation(animation);
+    return be;
   }
   else
     return nullptr;

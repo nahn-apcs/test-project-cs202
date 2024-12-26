@@ -10,6 +10,9 @@ class Projectile {
 	sf::FloatRect getBounds() const;
 	bool isDestroyed() const;
     void destroy();
+	sf::Vector2f getPosition() const { return sprite.getPosition();}
+	bool getDirection() const { return moveRight; }
+	sf::Vector2f getVelocity() const { return sf::Vector2f(veloX, veloY); }
 	private:
 		sf::Sprite sprite;
 		ProjectileAnimation* animation;

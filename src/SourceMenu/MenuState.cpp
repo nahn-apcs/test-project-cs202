@@ -10,6 +10,7 @@
 #include <TextNode.hpp>
 #include <BGNode.hpp>
 #include <BGObject.hpp>
+#include <LevelManager.hpp>
 
 
 MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mGUIContainer(GUI::Container::TopDown) {
@@ -94,7 +95,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
 
 
     auto playButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
-    playButton->setPosition(565, 380);
+    playButton->setPosition(565, 340);
     playButton->setText("Play");
     playButton->setCallback([this]() {
         //requestStackPop();
@@ -102,8 +103,19 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
         std::cout << "Play button pressed" << std::endl;
         });
 
+    auto ContinueButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
+    ContinueButton->setPosition(565, 400);
+    ContinueButton->setText("Continue");
+    ContinueButton->setCallback([this]() {
+		//requestStackPop();
+		requestStackPush(States::Level);
+        requestStackPush(States::TransitionGame);
+        LevelManager::getInstance().setCurLevel(LevelManager::None);
+		std::cout << "Continue button pressed" << std::endl;
+		});
+
     auto guideButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
-    guideButton->setPosition(565, 440);
+    guideButton->setPosition(565, 460);
     guideButton->setText("Guide");
     guideButton->setCallback([this]() {
         //requestStackPop();
@@ -113,7 +125,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
 
 
     auto settingButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
-    settingButton->setPosition(565, 500);
+    settingButton->setPosition(565, 520);
     settingButton->setText("Setting");
     settingButton->setCallback([this]() {
         //requestStackPop();
@@ -122,13 +134,14 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
         });
 
     auto exitButton = std::make_shared<GUI::Button>(context, Textures::button, 150, 45);
-    exitButton->setPosition(565, 560);
+    exitButton->setPosition(565, 580);
     exitButton->setText("Quit");
     exitButton->setCallback([this]() {
         requestStackPop();
         });
 
     mGUIContainer.pack(playButton);
+    mGUIContainer.pack(ContinueButton);
     mGUIContainer.pack(guideButton);
     mGUIContainer.pack(settingButton);
     mGUIContainer.pack(exitButton);

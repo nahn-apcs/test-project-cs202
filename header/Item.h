@@ -34,6 +34,7 @@ public:
   void collect();
   sf::Sprite& getSprite();
   bool isCollision(const sf::FloatRect& rect);
+  sf::Vector2f getPosition() const { return sprite.getPosition(); }
 
 };
 

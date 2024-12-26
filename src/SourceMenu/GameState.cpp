@@ -73,7 +73,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 		sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt3));
 
 
-		player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures,sHurtTextures , deadTextures, 100, 100, 1);
+		player = new FirstCharacter(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures,sHurtTextures , deadTextures, 100, 100, 1);
 		std::cout << "GameState 1.1" << "\n";
 
 		break;
@@ -269,6 +269,7 @@ bool GameState::update(sf::Time dt) {
 								else if (dynamic_cast<PowerUp*>(item)) {
 									gameMap->addCoins(item);
 								}
+								mapData[tileY][tileX] = '9';
 							}
 							else if (dynamic_cast<BrickBlock*>(block) && player->isEvoled()) {
 								block->setState(new DestroyedState());
@@ -489,15 +490,21 @@ bool GameState::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				saveGame();
+
 				requestStackPush(States::Pause);
 			}
 		}
 	}
 	else if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Escape) {
+			saveGame();
+			
 			requestStackPush(States::Pause);
 		}
 		else if (event.key.code == sf::Keyboard::W) {
+			LevelManager::getInstance().setScore(gameMap->score);
+			LevelManager::getInstance().setTime(elapsedTime);
 			requestStackPush(States::LevelComplete);
 		}
 		else if (event.key.code == sf::Keyboard::L) {
@@ -505,6 +512,9 @@ bool GameState::handleEvent(const sf::Event& event) {
 		}
 	}
 	if (win) {
+		LevelManager::getInstance().setScore(gameMap->score);
+		LevelManager::getInstance().setTime(elapsedTime);
+		win = false;
 		requestStackPush(States::LevelComplete);
 	}
 
@@ -512,6 +522,43 @@ bool GameState::handleEvent(const sf::Event& event) {
 		requestStackPush(States::GameOver);
 	}
 	return false;
+}
+
+
+void GameState::saveGame() {
+	LevelManager& lm = LevelManager::getInstance();
+	lm.setScore(gameMap->score);
+	lm.setTime(elapsedTime);
+	lm.setSaveLevel(static_cast<int>(lm.getCurLevel()));
+	lm.setSaveCharacter(static_cast<int>(lm.getCurCharacter()));
+	std::vector<Item*> coins = gameMap->getCoins();
+	for (auto& coin : coins) {
+		if (!coin->isCollected()) {
+			lm.addItems(coin);
+		}
+	}
+	std::vector<Monster*> monsters = gameMap->getMonsters();
+	for (auto& monster : monsters) {
+		if (!monster->getIsKilled()) {
+			lm.addMonster(monster);
+		}
+	}
+
+	if (boss) lm.saveFromBoss(boss);
+	lm.saveFromCharacter(player);
+	lm.saveFromMap(gameMap, elapsedTime);
+
+}
+
+
+
+GameState::~GameState() {
+	delete player;
+	delete gameMap;
+	delete drawEngine;
+	if (boss) {
+		delete boss;
+	}
 }
 
 

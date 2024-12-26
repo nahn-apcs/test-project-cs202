@@ -20,6 +20,7 @@ LevelCompleteState::LevelCompleteState(StateStack& stack, Context context) : Sta
 
     mNextButton.setTexture(context.textures->get(Textures::LevelCompleteNextButton));
     mNextButton.setPosition(628, 429);
+    
 }
 
 void LevelCompleteState::draw() {
@@ -29,6 +30,38 @@ void LevelCompleteState::draw() {
     window.draw(mBackgroundSprite);
     window.draw(mBackButton);
     window.draw(mNextButton);
+    int mScore = LevelManager::getInstance().getScore();
+    int mTime = LevelManager::getInstance().getTime();
+    sf::Font& font = getContext().fonts->get(Fonts::PixelNes);
+    sf::Text scoreText;
+    scoreText.setFont(font);
+    scoreText.setString("Score: ");
+    scoreText.setCharacterSize(20);
+    scoreText.setFillColor(sf::Color::Black);
+    //scoreText.setOrigin(scoreText.getLocalBounds().width / 2, scoreText.getLocalBounds().height / 2);
+
+    scoreText.setPosition(1280/2 - 40, 250);
+    window.draw(scoreText);
+
+    sf::Text scoreValue;
+    scoreValue.setFont(font);
+    scoreValue.setString(std::to_string(mScore));
+    scoreValue.setCharacterSize(20);
+    scoreValue.setFillColor(sf::Color::Black);
+    scoreValue.setOrigin(scoreValue.getLocalBounds().width / 2, scoreValue.getLocalBounds().height / 2);
+
+    scoreValue.setPosition(1280 / 2, 280);
+    window.draw(scoreValue);
+
+    sf::Text timeText;
+
+    timeText.setFont(font);
+    timeText.setString("Time: " + std::to_string(mTime) + "s");
+    timeText.setCharacterSize(20);
+    timeText.setFillColor(sf::Color::Black);
+
+    timeText.setPosition(1280 / 2 - 60, 320);
+    window.draw(timeText);
 }
 
 bool LevelCompleteState::update(sf::Time deltatime) {
