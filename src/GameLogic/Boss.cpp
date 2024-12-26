@@ -56,6 +56,24 @@ Boss::Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& atta
 	shootAnimation = new Animation(shootTextures, 0.3f);
 }
 
+Boss::Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, float posX, float posY, int hp, float veloX, float veloY, int bossActive)
+{
+	velocityX = veloX;
+	velocityY = veloY;
+	health = hp;
+	activated = bossActive;
+	sprite.setTexture(flyTextures[0]);
+	sprite.setPosition(posX, posY);
+	sprite.setScale(2.f, 2.f);
+	mPosition = sprite.getPosition();
+	flyAnimation = new Animation(flyTextures, 0.5f);
+	attackAnimation = new Animation(attackTextures, 0.3f);
+	dieAnimation = new Animation(dieTextures, 0.5f);
+	exhaustAnimation = new Animation(exhaustTextures, 0.5f);
+	shootAnimation = new Animation(shootTextures, 0.3f);
+}
+
+
 Boss::~Boss()
 {
 	if (flyAnimation)
@@ -343,21 +361,21 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 
 	// Check if the new position collides with the wall (tile == '1')
 	if (tileX >= 0 && tileX < map->getMapData()[0].size() && tileY >= 0 && tileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][tileX] != '0' && map->getMapData()[tileY][tileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[tileY][tileX] != '0' && map->getMapData()[tileY][tileX] != 'C' && map->getMapData()[tileY][tileX] != '2' && map->getMapData()[tileY][tileX] != '9' && map->getMapData()[tileY][tileX] != '8') {
 			//std::cout << "Check 1" << std::endl;
 			return 1; // Collision detected
 		}
 	}
 
 	if (rightTileX >= 0 && rightTileX < map->getMapData()[0].size() && tileY >= 0 && tileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][rightTileX] != '0' && map->getMapData()[tileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[tileY][rightTileX] != '0' && map->getMapData()[tileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2' && map->getMapData()[tileY][rightTileX] != '9' && map->getMapData()[tileY][rightTileX] != '8') {
 			//std::cout << "Check 2" << std::endl;
 			return 2; // Collision detected
 		}
 	}
 
 	if (tileX >= 0 && tileX < map->getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][tileX] != '0' && map->getMapData()[bottomTileY][tileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[bottomTileY][tileX] != '0' && map->getMapData()[bottomTileY][tileX] != 'C' && map->getMapData()[bottomTileY][tileX] != '2' && map->getMapData()[bottomTileY][tileX] != '9' && map->getMapData()[bottomTileY][tileX] != '8') {
 			//std::cout << "Check 3" << std::endl;
 
 			return 3; // Collision detected
@@ -365,7 +383,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (rightTileX >= 0 && rightTileX < map->getMapData()[0].size() && bottomTileY >= 0 && bottomTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][rightTileX] != '0' && map->getMapData()[bottomTileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[bottomTileY][rightTileX] != '0' && map->getMapData()[bottomTileY][rightTileX] != 'C' && map->getMapData()[bottomTileY][rightTileX] != '2' && map->getMapData()[bottomTileY][rightTileX] != '9' && map->getMapData()[bottomTileY][rightTileX] != '8') {
 			//std::cout << "Check 4" << std::endl;
 
 			return 4; // Collision detected
@@ -373,7 +391,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[tileY][middleTileX] != '0' && map->getMapData()[tileY][middleTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[tileY][middleTileX] != '0' && map->getMapData()[tileY][middleTileX] != 'C' && map->getMapData()[tileY][middleTileX] != '2' && map->getMapData()[tileY][middleTileX] != '9' && map->getMapData()[tileY][middleTileX] != '8') {
 			//std::cout << "Check 5" << std::endl;
 
 			return 5; // Collision detected
@@ -381,7 +399,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[middleTileY][rightTileX] != '0' && map->getMapData()[middleTileY][rightTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[middleTileY][rightTileX] != '0' && map->getMapData()[middleTileY][rightTileX] != 'C' && map->getMapData()[bottomTileY][middleTileX] != '9' && map->getMapData()[bottomTileY][middleTileX] != '2' && map->getMapData()[bottomTileY][middleTileX] != '8') {
 			//std::cout << "Check 6" << std::endl;
 
 			return 6; // Collision detected
@@ -389,7 +407,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[bottomTileY][middleTileX] != '0' && map->getMapData()[bottomTileY][middleTileX] != 'C' && map->getMapData()[tileY][rightTileX] != '2') {
+		if (map->getMapData()[bottomTileY][middleTileX] != '0' && map->getMapData()[bottomTileY][middleTileX] != 'C' && map->getMapData()[bottomTileY][middleTileX] != '2' && map->getMapData()[bottomTileY][middleTileX] != '9' && map->getMapData()[bottomTileY][middleTileX] != '8') {
 			//std::cout << "Check 7" << std::endl;
 
 			return 7; // Collision detected
@@ -397,7 +415,7 @@ int Boss::checkWallCollision(float dx, float dy, Map* map) {
 	}
 
 	if (middleTileX >= 0 && middleTileX < map->getMapData()[0].size() && middleTileY >= 0 && middleTileY < map->getMapData().size()) {
-		if (map->getMapData()[middleTileY][tileX] != '0' && map->getMapData()[middleTileY][tileX] != 'C') {
+		if (map->getMapData()[middleTileY][tileX] != '0' && map->getMapData()[middleTileY][tileX] != 'C' && map->getMapData()[middleTileY][tileX] != '9' && map->getMapData()[middleTileY][tileX] != '2' && map->getMapData()[middleTileY][tileX] != '8') {
 			//std::cout << "Check 8" << std::endl;
 
 			return 8; // Collision detected

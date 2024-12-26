@@ -15,6 +15,22 @@ public:
     Map() = default;
     Map(const Map& other) = default;
     Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& text);
+    Map(std::vector<std::string>& map, int tileSize, std::vector<sf::Texture>& mapTexture,
+        int sscore,
+        std::vector<char>& saveMonsterType,
+        std::vector<std::pair< float, float>>& saveMonsterPos,
+        std::vector<std::pair<float, float>>& savePlayerProjectilePos,
+        std::vector<std::pair<float, float>>& saveMonsterProjectilePos,
+        std::vector<int>& savePlayerProjectileDir,
+        std::vector<int>& saveMonsterProjectileDir,
+        std::vector<std::pair<float, float>>& savePlayerProjectileVel,
+        std::vector<std::pair<float, float>>& saveMonsterProjectileVel,
+
+        std::vector<std::pair<float, float>>& saveItemPos,
+        std::vector<int>& saveItemType);
+       
+
+
     ~Map();
     void draw(sf::RenderWindow& window);
     std::vector<std::string>& getMapData() ;
@@ -27,7 +43,7 @@ public:
 
     bool colliable(int x, int y) const;
     bool colliableChar(const char& c) const;
-    int coinCount;
+    int getCoinsNumber() const { return coinsNumber; }
     int score;
     int level = 0;
 	void updateScore();
@@ -60,6 +76,7 @@ public:
     std::vector<Block*> blocks;
 	int coinsNumber;
 	int monsterNumber;
+    float constantScore = 0;
     sf::Texture texture;
     sf::Texture Monstertexture;
     sf::Texture projectTile;

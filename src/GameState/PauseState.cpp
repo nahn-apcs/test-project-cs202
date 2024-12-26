@@ -162,7 +162,6 @@ void PauseState::writeToFile() {
 	if (file.is_open()) {
 		LevelManager& lm = LevelManager::getInstance();
         file << lm.getSaveLevel() << std::endl;
-        file << lm.getSaveCharacter() << std::endl;
         file << lm.getSaveScore() << std::endl;
         file << lm.getSaveTime() << std::endl;
 
@@ -206,14 +205,22 @@ void PauseState::writeToFile() {
         for (int i = 0; i < lm.getSaveItemType().size(); i++) {
 			file << lm.getSaveItemType()[i] << std::endl;
             }
+
+        file << lm.getPlayerType() << std::endl;
         file << lm.getSavePlayerPosX() << " " << lm.getSavePlayerPosY() << std::endl;
         file << lm.getPlayerHP() << std::endl;
         file << lm.getPlayerStatus() << std::endl;
         file << lm.getPlayerVelX() << " " << lm.getPlayerVelY() << std::endl;
-        file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
-        file << lm.getBossHP() << std::endl;
-        file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;
-
+        if (lm.hasBoss()) {
+            file << 1 << std::endl;
+            file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
+            file << lm.getBossHP() << std::endl;
+            file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;
+            file << lm.getActiveBoss() << std::endl;
+        }
+        else {
+			file << 0;
+		}
 
         //int score = 0;
         //int time = 0;

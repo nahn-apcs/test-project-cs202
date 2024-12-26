@@ -34,6 +34,28 @@ Character::Character(
     jumpStrength = -400.f;
 }
 
+
+Character::Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+    , float x, float y, int type, int hp, float veloX, float veloY, int status) : velocityX(velocityX), velocityY(velocityY), onGround(false), isJumping(false), attacking(false), faceRight(true), type(type) {
+    attacked = true;
+    level = hp;
+    this->status = status;
+    idleAnimations.push_back(new Animation(sidleTextures, 0.1f));
+    idleAnimations.push_back(new Animation(idleTextures, 0.1f));
+    runAnimations.push_back(new Animation(srunTextures, 0.1f));
+    runAnimations.push_back(new Animation(runTextures, 0.1f));
+    attackAnimations.push_back(new Animation(sattackTextures, 0.1f));
+    attackAnimations.push_back(new Animation(attackTextures, 0.05f));
+    jumpAnimations.push_back(new Animation(sjumpT, 0.1f));
+    jumpAnimations.push_back(new Animation(jumpT, 0.1f));
+    deadAnimation = new Animation(dead, 0.1f);
+    hurtAnimations.push_back(new Animation(sHurt, 0.1f));
+    hurtAnimations.push_back(new Animation(hurt, 0.1f));
+    sprite.setPosition(x, y);
+    jumpStrength = -500.f;
+}
+
+
 void Character::shoot(Map* map) {
 	// Get the position of the character
 	sf::Vector2f position = sprite.getPosition();
@@ -83,10 +105,19 @@ void Character::interact(float deltatime, Map* map) {
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
-		if (cooldown <= 0 && level >= 5) {
-			shoot(map);
-			cooldown = 0.75f;
-            attacking = true;
+        if (type == 1) {
+            if (cooldown <= 0 && level >= 5) {
+                shoot(map);
+                cooldown = 0.75f;
+                attacking = true;
+            }
+        }
+        else if (type == 2) {
+			if (cooldown <= 0 && level >= 7) {
+				shoot(map);
+				cooldown = 1.0f;
+				attacking = true;
+			}
 		}
 	}
 
@@ -217,32 +248,10 @@ void Character::draw(sf::RenderWindow& window) {
 }
 
 sf::FloatRect Character::getBounds() const {
-    if (type == 1){
 		sf::FloatRect temp = sprite.getGlobalBounds();
 		temp.left += 20.f;
 		temp.width -= 41.f;
 		return temp;
-	}
-    else
-    {
-        if (faceRight) {
-            sf::FloatRect temp = sprite.getGlobalBounds();
-            //temp.top -= 4.f;
-            temp.left += 26.f;
-            temp.width -= 66.f;
-            temp.height -= 4.f;
-            return temp;
-        }
-        else {
-			sf::FloatRect temp = sprite.getGlobalBounds();
-            //temp.top -= 4.f;
-			temp.left += 40.f;
-			temp.width -= 66.f;
-            temp.height -= 4.f;
-
-			return temp;
-		}
-    }
 }
 
 void Character::applyGravity(float deltaTime) {
@@ -533,18 +542,45 @@ SecondCharacter::SecondCharacter(
 	int x, int y,
 	int type
 	) : Character(idleTextures, runTextures, attackTextures, jumpT, hurt, sidleTextures, srunTextures, sattackTextures, sjumpT, sHurt, dead, x, y, type) {
-    jumpStrength = -500.f;
+    jumpStrength = -400.f;
+    level = 5;
 }
+
+
+SecondCharacter::SecondCharacter(
+    std::vector<sf::Texture>& idleTextures,
+    std::vector<sf::Texture>& runTextures,
+    std::vector<sf::Texture>& attackTextures,
+    std::vector<sf::Texture>& jumpT,
+    std::vector<sf::Texture>& hurt,
+    std::vector<sf::Texture>& sidleTextures,
+    std::vector<sf::Texture>& srunTextures,
+    std::vector<sf::Texture>& sattackTextures,
+    std::vector<sf::Texture>& sjumpT,
+    std::vector<sf::Texture>& sHurt,
+    std::vector<sf::Texture>& dead,
+    int x, int y,
+    int type,
+    int hp, float veloX, float veloY, int status
+) : Character(idleTextures, runTextures, attackTextures, jumpT, hurt, sidleTextures, srunTextures, sattackTextures, sjumpT, sHurt, dead, x, y, type) {
+    jumpStrength = -400.f;
+    level = hp;
+    this->status = status;
+    velocityX = veloX;
+    velocityY = veloY;
+}
+
+
 
 void SecondCharacter::interact(float deltatime, Map* map) {
     // Handle movement
 
      if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-         moveSpeed = 160.0f;
+         moveSpeed = 120.0f;
     }
     else
     {
-        moveSpeed = 80.0f;
+        moveSpeed = 60.0f;
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {

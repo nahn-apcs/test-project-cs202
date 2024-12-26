@@ -27,6 +27,8 @@ void Animation::update(float deltaTime, bool loop) {
 
 void Animation::applyToSprite(sf::Sprite& sprite, bool faceRight) {
     // Apply the current frame texture
+    //std::cout << "Current frame: " << currentFrame << "\n";
+    //std::cout << "Frames size: " << frames.size() << "\n";
     sprite.setTexture(frames[currentFrame]);
 
     // Flip sprite horizontally if not facing right

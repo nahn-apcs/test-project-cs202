@@ -67,40 +67,38 @@ Application::Application() : mWindow(sf::VideoMode(1280, 640), "Input", sf::Styl
 	mTextures.load(Textures::ID::SmallWukongHurt2, "../resources/wukong16bit/hit_sprite_2.png");
 	mTextures.load(Textures::ID::SmallWukongHurt3, "../resources/wukong16bit/hit_sprite_3.png");
 
-	mTextures.load(Textures::ID::SecondWukongRun1, "../resources/sprite_sheet/wukong/run_sprite_1.png");
-	mTextures.load(Textures::ID::SecondWukongRun2, "../resources/sprite_sheet/wukong/run_sprite_2.png");
-	mTextures.load(Textures::ID::SecondWukongRun3, "../resources/sprite_sheet/wukong/run_sprite_3.png");
-	mTextures.load(Textures::ID::SecondWukongRun4, "../resources/sprite_sheet/wukong/run_sprite_4.png");
-	mTextures.load(Textures::ID::SecondWukongRun5, "../resources/sprite_sheet/wukong/run_sprite_5.png");
-	mTextures.load(Textures::ID::SecondWukongRun6, "../resources/sprite_sheet/wukong/run_sprite_6.png");
-	mTextures.load(Textures::ID::SecondWukongRun7, "../resources/sprite_sheet/wukong/run_sprite_7.png");
-	mTextures.load(Textures::ID::SecondWukongRun8, "../resources/sprite_sheet/wukong/run_sprite_8.png");
+	mTextures.load(Textures::ID::SecondWukongRun1, "../resources/sprite_sheet/pig/pig_spritesheet6.png");
+	mTextures.load(Textures::ID::SecondWukongRun2, "../resources/sprite_sheet/pig/pig_spritesheet7.png");
+	mTextures.load(Textures::ID::SecondWukongRun3, "../resources/sprite_sheet/pig/pig_spritesheet8.png");
+	mTextures.load(Textures::ID::SecondWukongRun4, "../resources/sprite_sheet/pig/pig_spritesheet9.png");
+	mTextures.load(Textures::ID::SecondWukongRun5, "../resources/sprite_sheet/pig/pig_spritesheet10.png");
+	mTextures.load(Textures::ID::SecondWukongRun6, "../resources/sprite_sheet/pig/pig_spritesheet11.png");
+	mTextures.load(Textures::ID::SecondWukongRun7, "../resources/sprite_sheet/pig/pig_spritesheet12.png");
+	mTextures.load(Textures::ID::SecondWukongRun8, "../resources/sprite_sheet/pig/pig_spritesheet13.png");
 
-	mTextures.load(Textures::ID::SecondWukongStand1, "../resources/sprite_sheet/wukong/idle_sprite_1.png");
-	mTextures.load(Textures::ID::SecondWukongStand2, "../resources/sprite_sheet/wukong/idle_sprite_2.png");
-	mTextures.load(Textures::ID::SecondWukongStand3, "../resources/sprite_sheet/wukong/idle_sprite_3.png");
-	mTextures.load(Textures::ID::SecondWukongStand4, "../resources/sprite_sheet/wukong/idle_sprite_4.png");
-	mTextures.load(Textures::ID::SecondWukongStand5, "../resources/sprite_sheet/wukong/idle_sprite_5.png");
+	mTextures.load(Textures::ID::SecondWukongStand1, "../resources/sprite_sheet/pig/pig_spritesheet1.png");
+	mTextures.load(Textures::ID::SecondWukongStand2, "../resources/sprite_sheet/pig/pig_spritesheet2.png");
+	mTextures.load(Textures::ID::SecondWukongStand3, "../resources/sprite_sheet/pig/pig_spritesheet3.png");
+	mTextures.load(Textures::ID::SecondWukongStand4, "../resources/sprite_sheet/pig/pig_spritesheet4.png");
+	mTextures.load(Textures::ID::SecondWukongStand5, "../resources/sprite_sheet/pig/pig_spritesheet5.png");
 
-	mTextures.load(Textures::ID::SecondWukongAttack1, "../resources/sprite_sheet/wukong/attack_sprite_1.png");
-	mTextures.load(Textures::ID::SecondWukongAttack2, "../resources/sprite_sheet/wukong/attack_sprite_2.png");
-	mTextures.load(Textures::ID::SecondWukongAttack3, "../resources/sprite_sheet/wukong/attack_sprite_3.png");
-	mTextures.load(Textures::ID::SecondWukongAttack4, "../resources/sprite_sheet/wukong/attack_sprite_4.png");
-	mTextures.load(Textures::ID::SecondWukongAttack5, "../resources/sprite_sheet/wukong/attack_sprite_5.png");
-	mTextures.load(Textures::ID::SecondWukongAttack6, "../resources/sprite_sheet/wukong/attack_sprite_6.png");
-	mTextures.load(Textures::ID::SecondWukongAttack7, "../resources/sprite_sheet/wukong/attack_sprite_7.png");
+	mTextures.load(Textures::ID::SecondWukongAttack1, "../resources/sprite_sheet/pig/pig_spritesheet14.png");
+	mTextures.load(Textures::ID::SecondWukongAttack2, "../resources/sprite_sheet/pig/pig_spritesheet15.png");
+	mTextures.load(Textures::ID::SecondWukongAttack3, "../resources/sprite_sheet/pig/pig_spritesheet16.png");
+	mTextures.load(Textures::ID::SecondWukongAttack4, "../resources/sprite_sheet/pig/pig_spritesheet17.png");
+	mTextures.load(Textures::ID::SecondWukongAttack5, "../resources/sprite_sheet/pig/pig_spritesheet18.png");
 
-	mTextures.load(Textures::ID::SecondWukongDead1, "../resources/sprite_sheet/wukong/dead_sprite_1.png");
-	mTextures.load(Textures::ID::SecondWukongDead2, "../resources/sprite_sheet/wukong/dead_sprite_2.png");
-	mTextures.load(Textures::ID::SecondWukongDead3, "../resources/sprite_sheet/wukong/dead_sprite_3.png");
-	mTextures.load(Textures::ID::SecondWukongDead4, "../resources/sprite_sheet/wukong/dead_sprite_4.png");
-	mTextures.load(Textures::ID::SecondWukongDead5, "../resources/sprite_sheet/wukong/dead_sprite_5.png");
-	mTextures.load(Textures::ID::SecondWukongDead6, "../resources/sprite_sheet/wukong/dead_sprite_6.png");
-	mTextures.load(Textures::ID::SecondWukongDead7, "../resources/sprite_sheet/wukong/dead_sprite_7.png");
+	mTextures.load(Textures::ID::SecondWukongDead1, "../resources/sprite_sheet/pig/pig_spritesheet22.png");
+	mTextures.load(Textures::ID::SecondWukongDead2, "../resources/sprite_sheet/pig/pig_spritesheet23.png");
+	mTextures.load(Textures::ID::SecondWukongDead3, "../resources/sprite_sheet/pig/pig_spritesheet24.png");
+	mTextures.load(Textures::ID::SecondWukongDead4, "../resources/sprite_sheet/pig/pig_spritesheet25.png");
+	mTextures.load(Textures::ID::SecondWukongDead5, "../resources/sprite_sheet/pig/pig_spritesheet26.png");
+	mTextures.load(Textures::ID::SecondWukongDead6, "../resources/sprite_sheet/pig/pig_spritesheet27.png");
+	mTextures.load(Textures::ID::SecondWukongDead7, "../resources/sprite_sheet/pig/pig_spritesheet28.png");
 
-	mTextures.load(Textures::ID::SecondWukongHurt1, "../resources/sprite_sheet/wukong/hit_sprite_1.png");
-	mTextures.load(Textures::ID::SecondWukongHurt2, "../resources/sprite_sheet/wukong/hit_sprite_2.png");
-	mTextures.load(Textures::ID::SecondWukongHurt3, "../resources/sprite_sheet/wukong/hit_sprite_3.png");
+	mTextures.load(Textures::ID::SecondWukongHurt1, "../resources/sprite_sheet/pig/pig_spritesheet19.png");
+	mTextures.load(Textures::ID::SecondWukongHurt2, "../resources/sprite_sheet/pig/pig_spritesheet20.png");
+	mTextures.load(Textures::ID::SecondWukongHurt3, "../resources/sprite_sheet/pig/pig_spritesheet21.png");
 
 
 

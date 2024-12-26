@@ -11,7 +11,6 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
     std::cout << "Map constructor called" << std::endl;
     coinsNumber = 0;
     monsterNumber = 0;
-    coinCount = 0;
     score = 0;
     std::ifstream file(filePath);
     std::string line;
@@ -39,7 +38,6 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
                 // Create a coin at the corresponding position
                 Item* temp = ItemFactory::createItem("Coin", texture, { j * tileSize, i * tileSize });
                 coins.push_back(temp);
-				coinsNumber++;
             }
 
             else if (mapData[i][j] == '5') {
@@ -100,6 +98,179 @@ Map::Map(const std::string& filePath, int tileSize, std::vector<sf::Texture>& ma
     }
    
 }
+
+
+Map::Map(std::vector<std::string>& map, int tileSize, std::vector<sf::Texture>& mapTexture,
+    int sscore,
+    std::vector<char>& saveMonsterType,
+    std::vector<std::pair< float, float>>& saveMonsterPos,
+    std::vector<std::pair<float, float>>& savePlayerProjectilePos,
+    std::vector<std::pair<float, float>>& saveMonsterProjectilePos,
+    std::vector<int>& savePlayerProjectileDir,
+    std::vector<int>& saveMonsterProjectileDir,
+    std::vector<std::pair<float, float>>& savePlayerProjectileVel,
+    std::vector<std::pair<float, float>>& saveMonsterProjectileVel,
+
+    std::vector<std::pair<float, float>>& saveItemPos,
+    std::vector<int>& saveItemType)
+    : tileSize(tileSize)
+{
+    audioManager = new AudioManagement();
+    std::cout << "Map constructor called" << std::endl;
+    coinsNumber = 0;
+    monsterNumber = 0;
+    score = 0;
+
+    for (int i = 0; i < map.size(); ++i) {
+        mapData.push_back(map[i]);
+    }
+
+    //sf::Texture projectTile;
+    if (mapTexture.size() > 2) {
+        texture = mapTexture[0];
+        Monstertexture = mapTexture[1];
+        projectTile = mapTexture[2];
+    }
+    if (mapTexture.size() > 3) {
+        enemyProjectTile = mapTexture[3];
+    }
+    tile.setTexture(texture);
+    tile.setTextureRect(sf::IntRect(0, 0, constants::scene_width, constants::scene_height)); // Select first tile
+    //sf::Sprite coinTexture = tile;
+    //coinTexture.setTextureRect(sf::IntRect(9*32, 32, tileSize, tileSize)); 
+    for (int i = 0; i < mapData.size(); ++i) {
+        for (int j = 0; j < mapData[i].size(); ++j) {
+            if (mapData[i][j] == 'C') {
+                // Create a coin at the corresponding position
+                Item* temp = ItemFactory::createItem("Coin", texture, { j * tileSize, i * tileSize });
+                coins.push_back(temp);
+                coinsNumber++;
+            }
+
+            else if (mapData[i][j] == '5') {
+                Block* block = BlockFactory::createBlock("brick", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+
+
+            }
+            else if (mapData[i][j] == '7') {
+                Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+
+                block->setItem("coin");
+
+            }
+            else if (mapData[i][j] == '8') {
+                Block* block = BlockFactory::createBlock("question", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+
+                block->setItem("peach");
+            }
+
+            else if (mapData[i][j] == 'W') {
+
+                Block* block = BlockFactory::createBlock(
+                    "water", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+            }
+
+
+            else if (mapData[i][j] == 'M') {
+                Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, { j * tileSize, i * tileSize });
+                monsters.push_back(monster);
+                mapData[i][j] = '0';
+                monsterNumber++;
+
+            }
+            else if (mapData[i][j] == 'B') {
+                Monster* monster = MonsterFactory::createMonster("Bee", Monstertexture, { j * tileSize, i * tileSize });
+                monsters.push_back(monster);
+                mapData[i][j] = '0';
+                monsterNumber++;
+
+            }
+            else if (mapData[i][j] == 'b') {
+                Monster* monster = MonsterFactory::createMonster(
+                    "bee", Monstertexture, { j * tileSize, i * tileSize });
+
+                monsters.push_back(monster);
+                mapData[i][j] = '0';
+                monsterNumber++;
+            }
+            else if (mapData[i][j] == 'F') {
+                Block* block = BlockFactory::createBlock("flag", texture, { j * tileSize, i * tileSize });
+                blocks.push_back(block);
+            }
+        }
+    }
+
+    //int saveLevel;
+    //int score = 0;
+    //int time = 0;
+    //std::vector<std::string> saveMap;
+    //std::vector<std::pair< float, float>> saveMonsterPos;
+    //std::vector<char> saveMonsterType;
+
+    ////projectile
+    //std::vector<std::pair<float, float>> savePlayerProjectilePos;
+    //std::vector<std::pair<float, float>> saveMonsterProjectilePos;
+    //std::vector<bool> savePlayerProjectileDir;
+    //std::vector<bool> saveMonsterProjectileDir;
+    //std::vector<std::pair<float, float>> savePlayerProjectileVel;
+    //std::vector<std::pair<float, float>> saveMonsterProjectileVel;
+
+    ////item
+    //std::vector<std::pair<float, float>> saveItemPos;
+    //std::vector<int> saveItemType;
+    constantScore = sscore;
+    std::cout << "Mster size: " << saveMonsterType.size() << std::endl;
+    for (auto m : saveMonsterType) {
+        std::cout << m << std::endl;
+    }
+   
+    for (int i = 0; i < saveMonsterType.size(); i++) {
+        if (saveMonsterType[i] == 'M') {
+            Monster* monster = MonsterFactory::createMonster("Goomba", Monstertexture, {static_cast<int>(saveMonsterPos[i].first), static_cast<int>(saveMonsterPos[i].second) });
+            monsters.push_back(monster);
+            monsterNumber++;
+
+        }
+        else if (saveMonsterType[i] == 'B') {
+            Monster* monster = MonsterFactory::createMonster("Bee", Monstertexture, { static_cast<int>(saveMonsterPos[i].first), static_cast<int>(saveMonsterPos[i].second) });
+            monsters.push_back(monster);
+            monsterNumber++;
+
+        }
+        else if (saveMonsterType[i] == 'b') {
+            Monster* monster = MonsterFactory::createMonster("bee", Monstertexture, { static_cast<int>(saveMonsterPos[i].first), static_cast<int>(saveMonsterPos[i].second )});
+            monsters.push_back(monster);
+            monsterNumber++;
+        }
+    }
+    for (int i = 0; i < saveItemType.size(); i++) {
+        if (saveItemType[i] == 1) {
+            Item* temp = ItemFactory::createItem("Coin", texture, { static_cast<int>(saveItemPos[i].first), static_cast<int>(saveItemPos[i].second) });
+            coins.push_back(temp);
+            coinsNumber++;
+        }
+        else if (saveItemType[i] == 2) {
+            Item* temp = ItemFactory::createItem("PowerUp", texture, { static_cast<int>(saveItemPos[i].first), static_cast<int>(saveItemPos[i].second) });
+            coins.push_back(temp);
+            coinsNumber++;
+        }
+    }
+    for (int i = 0; i < savePlayerProjectileVel.size(); i++) {
+        projectiles.addProjectile(projectTile, savePlayerProjectileVel[i].first, savePlayerProjectileVel[i].second, savePlayerProjectilePos[i].first, savePlayerProjectilePos[i].second, savePlayerProjectileDir[i]);
+    }
+    for (int i = 0; i < saveMonsterProjectileVel.size(); i++) {
+        enemyProjectiles.addProjectile(enemyProjectTile, saveMonsterProjectileVel[i].first, saveMonsterProjectileVel[i].second, saveMonsterProjectilePos[i].first, saveMonsterProjectilePos[i].second, saveMonsterProjectileDir[i]);
+    }
+}
+
+
+
+
+
 
 void Map::draw(sf::RenderWindow& window) {
     for (auto& monster : monsters) {
@@ -238,7 +409,7 @@ void Map::updateCoins(const sf::FloatRect& playerBounds, float deltatime) {
             audioManager->playCoinSound();
             coin->collect(); // Collect the coin
           if (dynamic_cast<Coin*>(coin)) {
-            coinCount++;
+            coinsNumber++;
           }
           else if (dynamic_cast<PowerUp*>(coin)) {
             //implement power up
@@ -410,7 +581,7 @@ void Map::updateScore()
      }
    }
 
-	score = coi * 100 + mons * 200;
+	score = constantScore + coi * 100 + mons * 200;
 }
 
 void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
@@ -433,7 +604,7 @@ void Map::updateBlocks(float deltatime, sf::FloatRect& playerBounds)
             auto item = block->getItemObject();
             if (dynamic_cast<Coin*>(item)) {
                 audioManager->playCoinSound();
-              coinCount++;
+              coinsNumber++;
             }
             else if (dynamic_cast<PowerUp*>(item)) {
               coins.push_back(item);
@@ -509,7 +680,6 @@ Map Map::operator&=(const Map& other)
 	coins = other.coins;
 	monsters = other.monsters;
 	blocks = other.blocks;
-	coinCount = other.coinCount;
 	score = other.score;
     coinsNumber = other.coinsNumber;
     monsterNumber = other.monsterNumber;

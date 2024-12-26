@@ -108,9 +108,10 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     ContinueButton->setText("Continue");
     ContinueButton->setCallback([this]() {
 		//requestStackPop();
+        LevelManager::getInstance().setCurLevel(LevelManager::None);
+
 		requestStackPush(States::Level);
         requestStackPush(States::TransitionGame);
-        LevelManager::getInstance().setCurLevel(LevelManager::None);
 		std::cout << "Continue button pressed" << std::endl;
 		});
 

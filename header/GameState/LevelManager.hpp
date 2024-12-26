@@ -52,10 +52,10 @@ public:
     std::vector<std::pair<float, float>> getSavePlayerProjectilePos() const {return savePlayerProjectilePos;}
     void setSaveMonsterProjectilePos(std::vector<std::pair<float, float>> saveMonsterProjectilePos) {this->saveMonsterProjectilePos = saveMonsterProjectilePos;}
     std::vector<std::pair<float, float>> getSaveMonsterProjectilePos() const {return saveMonsterProjectilePos;}
-    void setSavePlayerProjectileDir(std::vector<bool> savePlayerProjectileDir) {this->savePlayerProjectileDir = savePlayerProjectileDir;}
-    std::vector<bool> getSavePlayerProjectileDir() const {return savePlayerProjectileDir;}
-    void setSaveMonsterProjectileDir(std::vector<bool> saveMonsterProjectileDir) {this->saveMonsterProjectileDir = saveMonsterProjectileDir;}
-    std::vector<bool> getSaveMonsterProjectileDir() const {return saveMonsterProjectileDir;}
+    void setSavePlayerProjectileDir(std::vector<int> savePlayerProjectileDir) {this->savePlayerProjectileDir = savePlayerProjectileDir;}
+    std::vector<int> getSavePlayerProjectileDir() const {return savePlayerProjectileDir;}
+    void setSaveMonsterProjectileDir(std::vector<int> saveMonsterProjectileDir) {this->saveMonsterProjectileDir = saveMonsterProjectileDir;}
+    std::vector<int> getSaveMonsterProjectileDir() const {return saveMonsterProjectileDir;}
     void setSavePlayerProjectileVel(std::vector<std::pair<float, float>> savePlayerProjectileVel) {this->savePlayerProjectileVel = savePlayerProjectileVel;}
     std::vector<std::pair<float, float>> getSavePlayerProjectileVel() const {return savePlayerProjectileVel;}
     void setSaveMonsterProjectileVel(std::vector<std::pair<float, float>> saveMonsterProjectileVel) {this->saveMonsterProjectileVel = saveMonsterProjectileVel;}
@@ -110,12 +110,18 @@ public:
 
     void addPlayerProjectile(Projectile* p){
         savePlayerProjectilePos.push_back(std::make_pair(p->getPosition().x, p->getPosition().y));
-        savePlayerProjectileDir.push_back(p->getDirection());
+        if (p->getDirection())
+			savePlayerProjectileDir.push_back(1);
+		else
+			savePlayerProjectileDir.push_back(0);
         savePlayerProjectileVel.push_back(std::make_pair(p->getVelocity().x, p->getVelocity().y));
      }
     void addMonsterProjectile(Projectile* p){
 		saveMonsterProjectilePos.push_back(std::make_pair(p->getPosition().x, p->getPosition().y));
-		saveMonsterProjectileDir.push_back(p->getDirection());
+		if (p->getDirection())
+			saveMonsterProjectileDir.push_back(1);
+		else
+			saveMonsterProjectileDir.push_back(0);
 		saveMonsterProjectileVel.push_back(std::make_pair(p->getVelocity().x, p->getVelocity().y));
 	}
 
@@ -132,18 +138,32 @@ public:
         playerStatus = character->getStatus();
         playerVelX = character->getVelocity().x;
         playerVelY = character->getVelocity().y;
+        playerType = character->getType();
     }
-    
+
+    bool hasBoss(){
+		return hasboss;
+	}
+
     void saveFromBoss(Boss* boss){
+        hasboss = true;
 		saveBossPosX = boss->getPosition().x;
 		saveBossPosY = boss->getPosition().y;
 		bossHP = boss->getHP();
 		bossVelX = boss->getVelocity().x;
 		bossVelY = boss->getVelocity().y;
+        if (boss->isActivated())
+			activeBoss = 1;
+		else
+			activeBoss = 0;
 	}
 
+    int getActiveBoss(){ return activeBoss; }
     void setSaveCharacter(int saveCharacter) {this->saveCharacter = saveCharacter;}
     int getSaveCharacter() const {return saveCharacter;}
+    void setPlayerType(int playerType) {this->playerType = playerType;}
+    int getPlayerType() const {return playerType;}
+
 private:
     LevelManager();
     ~LevelManager() = default;
@@ -167,8 +187,8 @@ private:
     //projectile
     std::vector<std::pair<float, float>> savePlayerProjectilePos;
     std::vector<std::pair<float, float>> saveMonsterProjectilePos;
-    std::vector<bool> savePlayerProjectileDir;
-    std::vector<bool> saveMonsterProjectileDir;
+    std::vector<int> savePlayerProjectileDir;
+    std::vector<int> saveMonsterProjectileDir;
     std::vector<std::pair<float, float>> savePlayerProjectileVel;
     std::vector<std::pair<float, float>> saveMonsterProjectileVel;
 
@@ -178,6 +198,7 @@ private:
     //coin = 1
     //powerup = 2
 
+    int playerType;
     float savePlayerPosX;
     float savePlayerPosY;
     int playerHP;
@@ -186,12 +207,13 @@ private:
     float playerVelY;
 
     //boss
+    int activeBoss;
     float saveBossPosX;
     float saveBossPosY;
     int bossHP;
     float bossVelX;
     float bossVelY;
-
+    bool hasboss = false;
 
     
 };

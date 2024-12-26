@@ -7,6 +7,7 @@
 #include <SFML/System/Time.hpp>
 #include "AudioManagement.h"
 #include <LevelManager.hpp>
+#include <fstream>
 
 GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(stack, context) {
 	monsterset = context.textures->get(Textures::Enemies);
@@ -20,6 +21,446 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 
 	context.music->setVolume(30);
 	context.music->play(Music::GameTheme);
+
+	if (LevelManager::getInstance().getCurLevel() == LevelManager::None) {
+		std::cout << "Load game\n";
+		LevelManager& lm = LevelManager::getInstance();
+		std::ifstream file;
+		file.open("../resources/save.txt");
+		if (!file) { std::cout << "File not found" << std::endl; 
+		exit(1); 
+		}
+		int level, score, time;
+		int mapSize;
+		std::vector<std::string> map;
+		int monsterSize;
+		std::vector<std::pair<float, float>> monsterPos;
+		std::vector<char> monsterType;
+		int playerProjectileSize;
+		std::vector<std::pair<float, float>> playerProjectilePos;
+		std::vector<int> playerProjectileDir;
+		std::vector<std::pair<float, float>> playerProjectileVel;
+		int monsterProjectileSize;
+		std::vector<std::pair<float, float>> monsterProjectilePos;
+		std::vector<int> monsterProjectileDir;
+		std::vector<std::pair<float, float>> monsterProjectileVel;
+		int itemSize;
+		std::vector<std::pair<float, float>> itemPos;
+		std::vector<int> itemType;
+		int playerType;
+		float playerX, playerY;
+		int playerHP;
+		int playerStatus;
+		float playerVelX, playerVelY;
+		bool hasBoss;
+		float bossX, bossY;
+		int bossHP;
+		float bossVelX, bossVelY;
+		int bossActive;
+		if (file) {
+			file >> level >> score >> time;
+		
+			file >> mapSize;
+			for (int i = 0; i < mapSize; i++) {
+				std::string line;
+				file >> line;
+				map.push_back(line);
+			}
+			file >> monsterSize;
+			
+			for (int i = 0; i < monsterSize; i++) {
+				float x, y;
+				file >> x >> y;
+				monsterPos.push_back(std::make_pair(x, y));
+			}
+			for (int i = 0; i < monsterSize; i++) {
+				char type;
+				file >> type;
+				monsterType.push_back(type);
+				std::cout << type << "\n";
+			}
+			
+			file >> playerProjectileSize;
+			
+			for (int i = 0; i < playerProjectileSize; i++) {
+				float x, y;
+				file >> x >> y;
+				playerProjectilePos.push_back(std::make_pair(x, y));
+			}
+			for (int i = 0; i < playerProjectileSize; i++) {
+				float x, y;
+				file >> x >> y;
+				monsterProjectilePos.push_back(std::make_pair(x, y));
+			}
+
+			for (int i = 0; i < playerProjectileSize; i++) {
+				int dir;
+				file >> dir;
+				playerProjectileDir.push_back(dir);
+			}
+
+			for (int i = 0; i < playerProjectileSize; i++) {
+				int dir;
+				file >> dir;
+				monsterProjectileDir.push_back(dir);
+			}
+
+			for (int i = 0; i < playerProjectileSize; i++) {
+				float x, y;
+				file >> x >> y;
+				playerProjectileVel.push_back(std::make_pair(x, y));
+			}
+
+			for (int i = 0; i < playerProjectileSize; i++) {
+				float x, y;
+				file >> x >> y;
+				monsterProjectileVel.push_back(std::make_pair(x, y));
+			}
+
+
+			/*file << lm.getSavePlayerProjectilePos().size() << std::endl;
+			for (int i = 0; i < lm.getSavePlayerProjectilePos().size(); i++) {
+				file << lm.getSavePlayerProjectilePos()[i].first << " " << lm.getSavePlayerProjectilePos()[i].second << std::endl;
+			}
+			for (int i = 0; i < lm.getSaveMonsterProjectilePos().size(); i++) {
+				file << lm.getSaveMonsterProjectilePos()[i].first << " " << lm.getSaveMonsterProjectilePos()[i].second << std::endl;
+			}
+			for (int i = 0; i < lm.getSavePlayerProjectileDir().size(); i++) {
+				file << lm.getSavePlayerProjectileDir()[i] << std::endl;
+			}
+			for (int i = 0; i < lm.getSaveMonsterProjectileDir().size(); i++) {
+				file << lm.getSaveMonsterProjectileDir()[i] << std::endl;
+			}
+			for (int i = 0; i < lm.getSavePlayerProjectileVel().size(); i++) {
+				file << lm.getSavePlayerProjectileVel()[i].first << " " << lm.getSavePlayerProjectileVel()[i].second << std::endl;
+			}
+			for (int i = 0; i < lm.getSaveMonsterProjectileVel().size(); i++) {
+				file << lm.getSaveMonsterProjectileVel()[i].first << " " << lm.getSaveMonsterProjectileVel()[i].second << std::endl;
+			}*/
+
+
+			
+			file >> itemSize;
+			
+			for (int i = 0; i < itemSize; i++) {
+				float x, y;
+				file >> x >> y;
+				itemPos.push_back(std::make_pair(x, y));
+			}
+			for (int i = 0; i < itemSize; i++) {
+				int type;
+				file >> type;
+				itemType.push_back(type);
+				std::cout << type << "\n";
+			}
+			
+			/*file << lm.getPlayerType() << std::endl;
+			file << lm.getSavePlayerPosX() << " " << lm.getSavePlayerPosY() << std::endl;
+			file << lm.getPlayerHP() << std::endl;
+			file << lm.getPlayerStatus() << std::endl;
+			file << lm.getPlayerVelX() << " " << lm.getPlayerVelY() << std::endl;
+			file << "End." << std::endl;
+			if (lm.hasBoss()) {
+				file << 1 << std::endl;
+				file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
+				file << lm.getBossHP() << std::endl;
+				file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;
+			}
+			else {
+				file << 0;
+			}*/
+
+			file >> playerType;
+			file >> playerX >> playerY;
+			file >> playerHP;
+			file >> playerStatus;
+			file >> playerVelX >> playerVelY;
+			file >> hasBoss;
+			if (hasBoss) {
+				file >> bossX >> bossY;
+				file >> bossHP;
+				file >> bossVelX >> bossVelY;
+				file >> bossActive;
+			}
+			std::cout << playerType << " " << playerX << " " << playerY << " " << playerHP << " " << playerStatus << " " << playerVelX << " " << playerVelY << "\n";
+			for (auto i : monsterPos) {
+				std::cout << i.first << " " << i.second << "\n";
+			}
+			elapsedTime = time;
+
+			switch (playerType)
+			{
+			case 1:
+				idleTextures.push_back(context.textures->get(Textures::WukongStand1));
+				idleTextures.push_back(context.textures->get(Textures::WukongStand2));
+				idleTextures.push_back(context.textures->get(Textures::WukongStand3));
+				idleTextures.push_back(context.textures->get(Textures::WukongStand4));
+
+				runTextures.push_back(context.textures->get(Textures::WukongRun1));
+				runTextures.push_back(context.textures->get(Textures::WukongRun2));
+				runTextures.push_back(context.textures->get(Textures::WukongRun3));
+				runTextures.push_back(context.textures->get(Textures::WukongRun4));
+
+				jumpTextures.push_back(context.textures->get(Textures::WukongJump1));
+				jumpTextures.push_back(context.textures->get(Textures::WukongJump2));
+				jumpTextures.push_back(context.textures->get(Textures::WukongJump3));
+				jumpTextures.push_back(context.textures->get(Textures::WukongJump4));
+				std::cout << "GameState 22" << "\n";
+
+				attackTextures.push_back(context.textures->get(Textures::WukongAttack1));
+				attackTextures.push_back(context.textures->get(Textures::WukongAttack2));
+
+				sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand1));
+				sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand2));
+				sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand3));
+				sIdleTextures.push_back(context.textures->get(Textures::SmallWukongStand4));
+				std::cout << "GameState 33" << "\n";
+
+				sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun1));
+				sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun2));
+				sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun3));
+				sRunTextures.push_back(context.textures->get(Textures::SmallWukongRun4));
+
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong1));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong2));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong3));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong4));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong5));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong6));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong7));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong8));
+				deadTextures.push_back(context.textures->get(Textures::DeadWukong9));
+
+				hurtTextures.push_back(context.textures->get(Textures::WukongHurt1));
+				hurtTextures.push_back(context.textures->get(Textures::WukongHurt2));
+				hurtTextures.push_back(context.textures->get(Textures::WukongHurt3));
+
+				sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt1));
+				sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt2));
+				sHurtTextures.push_back(context.textures->get(Textures::SmallWukongHurt3));
+				player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, sHurtTextures, deadTextures, playerX, playerY, playerType, playerHP, playerVelX, playerVelY, playerStatus);
+				break;
+			case 2:
+				idleTextures.push_back(context.textures->get(Textures::SecondWukongStand1));
+				idleTextures.push_back(context.textures->get(Textures::SecondWukongStand2));
+				idleTextures.push_back(context.textures->get(Textures::SecondWukongStand3));
+				idleTextures.push_back(context.textures->get(Textures::SecondWukongStand4));
+				idleTextures.push_back(context.textures->get(Textures::SecondWukongStand5));
+
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun1));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun2));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun3));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun4));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun5));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun6));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun7));
+				runTextures.push_back(context.textures->get(Textures::SecondWukongRun8));
+
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun1));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun2));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun3));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun4));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun5));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun6));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun7));
+				jumpTextures.push_back(context.textures->get(Textures::SecondWukongRun8));
+
+				attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack1));
+				attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack2));
+				attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack3));
+				attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack4));
+				attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack5));
+
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead1));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead2));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead3));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead4));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead5));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead6));
+				deadTextures.push_back(context.textures->get(Textures::SecondWukongDead7));
+
+				hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt1));
+				hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt2));
+				hurtTextures.push_back(context.textures->get(Textures::SecondWukongHurt3));
+
+				player = new SecondCharacter(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, idleTextures, runTextures, idleTextures, runTextures, hurtTextures, deadTextures, playerX, playerY, 2, playerHP, playerVelX, playerVelY, playerStatus);
+
+				break;
+
+			default:
+				break;
+			}
+			switch (level+1)
+			{
+			case 1:
+
+				tileset = context.textures->get(Textures::Blocks);
+				mapTextures.push_back(tileset);
+				mapTextures.push_back(monsterset);
+				mapTextures.push_back(projectile);
+				mapTextures.push_back(enemyProjectile);
+				/*audioManager = new AudioManagement();
+				audioManager->playMainMusic();*/
+				gameMap = new Map(map, 32,  mapTextures, score, monsterType, monsterPos, playerProjectilePos, monsterProjectilePos, playerProjectileDir, monsterProjectileDir, playerProjectileVel, monsterProjectileVel, itemPos, itemType);
+				gameMap->level = 1;
+				backgroundTexture = context.textures->get(Textures::Bg1);
+				backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
+				std::cout << gameMap->getMapData().size() << "\n";
+				xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+				yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+				LevelManager::getInstance().setCurLevel(LevelManager::Level1);
+				break;
+			case 2:
+				tileset = context.textures->get(Textures::Blocks2);
+				mapTextures.push_back(tileset);
+				mapTextures.push_back(monsterset);
+				mapTextures.push_back(projectile);
+				mapTextures.push_back(enemyProjectile);
+
+				gameMap = new Map(map,32, mapTextures, 
+					score, 
+					monsterType, 
+					monsterPos, 
+					playerProjectilePos, 
+					monsterProjectilePos, 
+					playerProjectileDir, 
+					monsterProjectileDir, 
+					playerProjectileVel, 
+					monsterProjectileVel, 
+					itemPos, 
+					itemType);
+
+				/*Map(std::vector<std::string>& map, int tileSize, std::vector<sf::Texture>& mapTexture,
+					int sscore,
+					std::vector<char>& saveMonsterType,
+					std::vector<std::pair< float, float>>& saveMonsterPos,
+					std::vector<std::pair<float, float>>& savePlayerProjectilePos,
+					std::vector<std::pair<float, float>>& saveMonsterProjectilePos,
+					std::vector<bool>& savePlayerProjectileDir,
+					std::vector<bool>& saveMonsterProjectileDir,
+					std::vector<std::pair<float, float>>& savePlayerProjectileVel,
+					std::vector<std::pair<float, float>>& saveMonsterProjectileVel,
+
+					std::vector<std::pair<float, float>>& saveItemPos,
+					std::vector<int>& saveItemType);*/
+				gameMap->level = 2;
+				backgroundTexture = context.textures->get(Textures::Bg2);
+				backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
+				std::cout << gameMap->getMapData().size() << "\n";
+				xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+				yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+				LevelManager::getInstance().setCurLevel(LevelManager::Level2);
+
+				break;
+			case 3:
+				tileset = context.textures->get(Textures::Blocks3);
+				mapTextures.push_back(tileset);
+				mapTextures.push_back(monsterset);
+				mapTextures.push_back(projectile);
+				mapTextures.push_back(enemyProjectile);
+
+				gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+				gameMap->level = 3;
+				backgroundTexture = context.textures->get(Textures::Bg3);
+				backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
+				std::cout << gameMap->getMapData().size() << "\n";
+				xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
+				yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
+				bossAttackTextures.push_back(context.textures->get(Textures::BossAttack1));
+				bossAttackTextures.push_back(context.textures->get(Textures::BossAttack2));
+				bossAttackTextures.push_back(context.textures->get(Textures::BossAttack3));
+
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead1));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead2));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead3));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead4));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead5));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead6));
+				bossDeadTextures.push_back(context.textures->get(Textures::BossDead7));
+
+				bossExhaustedTextures.push_back(context.textures->get(Textures::BossExhausted1));
+				bossExhaustedTextures.push_back(context.textures->get(Textures::BossExhausted2));
+
+				bossFlyingTextures.push_back(context.textures->get(Textures::BossFly1));
+				bossFlyingTextures.push_back(context.textures->get(Textures::BossFly2));
+				bossFlyingTextures.push_back(context.textures->get(Textures::BossFly3));
+				bossFlyingTextures.push_back(context.textures->get(Textures::BossFly4));
+
+				bossShootTextures.push_back(context.textures->get(Textures::BossShoot1));
+				bossShootTextures.push_back(context.textures->get(Textures::BossShoot2));
+
+				boss = new Boss(bossFlyingTextures, bossAttackTextures, bossDeadTextures, bossExhaustedTextures, bossShootTextures, bossX, bossY, bossHP, bossVelX, bossVelY, bossActive);
+				LevelManager::getInstance().setCurLevel(LevelManager::Level3);
+
+				break;
+
+
+			default:
+				break;
+			}
+			
+		}
+
+
+		/*file << lm.getSaveLevel() << std::endl;
+		file << lm.getSaveScore() << std::endl;
+		file << lm.getSaveTime() << std::endl;
+
+		file << lm.getSaveMap().size() << std::endl;
+		for (int i = 0; i < lm.getSaveMap().size(); i++) {
+			file << lm.getSaveMap()[i] << std::endl;
+		}
+
+		file << lm.getSaveMonsterPos().size() << std::endl;
+
+		for (int i = 0; i < lm.getSaveMonsterPos().size(); i++) {
+			file << lm.getSaveMonsterPos()[i].first << " " << lm.getSaveMonsterPos()[i].second << std::endl;
+		}
+		for (int i = 0; i < lm.getSaveMonsterType().size(); i++) {
+			file << lm.getSaveMonsterType()[i] << std::endl;
+		}
+
+		file << lm.getSavePlayerProjectilePos().size() << std::endl;
+		for (int i = 0; i < lm.getSavePlayerProjectilePos().size(); i++) {
+			file << lm.getSavePlayerProjectilePos()[i].first << " " << lm.getSavePlayerProjectilePos()[i].second << std::endl;
+		}
+		for (int i = 0; i < lm.getSaveMonsterProjectilePos().size(); i++) {
+			file << lm.getSaveMonsterProjectilePos()[i].first << " " << lm.getSaveMonsterProjectilePos()[i].second << std::endl;
+		}
+		for (int i = 0; i < lm.getSavePlayerProjectileDir().size(); i++) {
+			file << lm.getSavePlayerProjectileDir()[i] << std::endl;
+		}
+		for (int i = 0; i < lm.getSaveMonsterProjectileDir().size(); i++) {
+			file << lm.getSaveMonsterProjectileDir()[i] << std::endl;
+		}
+		for (int i = 0; i < lm.getSavePlayerProjectileVel().size(); i++) {
+			file << lm.getSavePlayerProjectileVel()[i].first << " " << lm.getSavePlayerProjectileVel()[i].second << std::endl;
+		}
+		for (int i = 0; i < lm.getSaveMonsterProjectileVel().size(); i++) {
+			file << lm.getSaveMonsterProjectileVel()[i].first << " " << lm.getSaveMonsterProjectileVel()[i].second << std::endl;
+		}
+		file << lm.getSaveItemPos().size() << std::endl;
+		for (int i = 0; i < lm.getSaveItemPos().size(); i++) {
+			file << lm.getSaveItemPos()[i].first << " " << lm.getSaveItemPos()[i].second << std::endl;
+		}
+		for (int i = 0; i < lm.getSaveItemType().size(); i++) {
+			file << lm.getSaveItemType()[i] << std::endl;
+		}
+
+		file << lm.getPlayerType() << std::endl;
+		file << lm.getSavePlayerPosX() << " " << lm.getSavePlayerPosY() << std::endl;
+		file << lm.getPlayerHP() << std::endl;
+		file << lm.getPlayerStatus() << std::endl;
+		file << lm.getPlayerVelX() << " " << lm.getPlayerVelY() << std::endl;
+		file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
+		file << lm.getBossHP() << std::endl;
+		file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;*/
+		for (int i = 0; i <= level; i++) {
+			LevelManager::getInstance().setLevels(i, 1);
+		}
+		return;
+	}
+
 	
 	switch (LevelManager::getInstance().getCurCharacter() + 1)
 	{
@@ -110,8 +551,6 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack3));
 		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack4));
 		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack5));
-		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack6));
-		attackTextures.push_back(context.textures->get(Textures::SecondWukongAttack7));
 
 		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead1));
 		deadTextures.push_back(context.textures->get(Textures::SecondWukongDead2));
@@ -504,7 +943,11 @@ void GameState::draw() {
 	/*for (auto& monster : gameMap->getMonsters()) {
 		monster->drawBounds(window);
 	}*/
-	drawEngine->displayGameInfo(window, elapsedTime, gameMap, player);
+	if (boss && boss->isActivated() && !boss->isDead()) {
+		drawEngine->displayBossHealth(window, elapsedTime, gameMap, player, boss);
+	}
+	else drawEngine->displayGameInfo(window, elapsedTime, gameMap, player);
+	
 	window.draw(PauseButton);
 }
 
@@ -563,7 +1006,178 @@ void GameState::saveGame() {
 
 }
 
+void GameState::loadGame() {
+	
+	LevelManager& lm = LevelManager::getInstance();
+	std::ifstream file;
+	file.open("../resources/save.txt");
+	if (file) {
+		int level, score, time;
+		file >> level >> score >> time;
+		std::vector<std::string> map;
+		int mapSize;
+		file >> mapSize;
+		for (int i = 0; i < mapSize; i++) {
+			std::string line;
+			file >> line;
+			map.push_back(line);
+		}
+		int monsterSize;
+		file >> monsterSize;
+		std::vector<std::pair<float, float>> monsterPos;
+		std::vector<int> monsterType;
+		for (int i = 0; i < monsterSize; i++) {
+			float x, y;
+			file >> x >> y;
+			monsterPos.push_back(std::make_pair(x, y));
+		}
+		for (int i = 0; i < monsterSize; i++) {
+			int type;
+			file >> type;
+			monsterType.push_back(type);
+		}
+		int playerProjectileSize;
+		file >> playerProjectileSize;
+		std::vector<std::pair<float, float>> playerProjectilePos;
+		std::vector<int> playerProjectileDir;
+		std::vector<std::pair<float, float>> playerProjectileVel;
+		for (int i = 0; i < playerProjectileSize; i++) {
+			float x, y;
+			file >> x >> y;
+			playerProjectilePos.push_back(std::make_pair(x, y));
+		}
+		for (int i = 0; i < playerProjectileSize; i++) {
+			int dir;
+			file >> dir;
+			playerProjectileDir.push_back(dir);
+		}
+		for (int i = 0; i < playerProjectileSize; i++) {
+			float x, y;
+			file >> x >> y;
+			playerProjectileVel.push_back(std::make_pair(x, y));
+		}
+		int monsterProjectileSize;
+		file >> monsterProjectileSize;
+		std::vector<std::pair<float, float>> monsterProjectilePos;
+		std::vector<int> monsterProjectileDir;
+		std::vector<std::pair<float, float>> monsterProjectileVel;
+		for (int i = 0; i < monsterProjectileSize; i++) {
+			float x, y;
+			file >> x >> y;
+			monsterProjectilePos.push_back(std::make_pair(x, y));
+		}
+		for (int i = 0; i < monsterProjectileSize; i++) {
+			int dir;
+			file >> dir;
+			monsterProjectileDir.push_back(dir);
+		}
+		for (int i = 0; i < monsterProjectileSize; i++) {
+			float x, y;
+			file >> x >> y;
+			monsterProjectileVel.push_back(std::make_pair(x, y));
+		}
+		int itemSize;
+		file >> itemSize;
+		std::vector<std::pair<float, float>> itemPos;
+		std::vector<int> itemType;
+		for (int i = 0; i < itemSize; i++) {
+			float x, y;
+			file >> x >> y;
+			itemPos.push_back(std::make_pair(x, y));
+		}
+		for (int i = 0; i < itemSize; i++) {
+			int type;
+			file >> type;
+			itemType.push_back(type);
+		}
+		int playerType;
+		file >> playerType;
+		float playerX, playerY;
+		file >> playerX >> playerY;
+		int playerHP;
+		file >> playerHP;
+		int playerStatus;
+		file >> playerStatus;
+		float playerVelX, playerVelY;
+		file >> playerVelX >> playerVelY;
+		int hasBoss;
+		file >> hasBoss;
+		if (hasBoss) {
+			float bossX, bossY;
+			file >> bossX >> bossY;
+			int bossHP;
+			file >> bossHP;
+			float bossVelX, bossVelY;
+			file >> bossVelX >> bossVelY;
+		}
 
+		switch (playerType)
+		{
+		case 1:
+
+			player = new Character(idleTextures, runTextures, attackTextures, jumpTextures, hurtTextures, sIdleTextures, sRunTextures, sIdleTextures, sRunTextures, sHurtTextures, deadTextures, playerX, playerY, playerType, playerHP,playerVelX, playerVelY, playerStatus);
+			break;
+		default:
+			break;
+		}
+	}
+
+
+	/*file << lm.getSaveLevel() << std::endl;
+	file << lm.getSaveScore() << std::endl;
+	file << lm.getSaveTime() << std::endl;
+
+	file << lm.getSaveMap().size() << std::endl;
+	for (int i = 0; i < lm.getSaveMap().size(); i++) {
+		file << lm.getSaveMap()[i] << std::endl;
+	}
+
+	file << lm.getSaveMonsterPos().size() << std::endl;
+
+	for (int i = 0; i < lm.getSaveMonsterPos().size(); i++) {
+		file << lm.getSaveMonsterPos()[i].first << " " << lm.getSaveMonsterPos()[i].second << std::endl;
+	}
+	for (int i = 0; i < lm.getSaveMonsterType().size(); i++) {
+		file << lm.getSaveMonsterType()[i] << std::endl;
+	}
+
+	file << lm.getSavePlayerProjectilePos().size() << std::endl;
+	for (int i = 0; i < lm.getSavePlayerProjectilePos().size(); i++) {
+		file << lm.getSavePlayerProjectilePos()[i].first << " " << lm.getSavePlayerProjectilePos()[i].second << std::endl;
+	}
+	for (int i = 0; i < lm.getSaveMonsterProjectilePos().size(); i++) {
+		file << lm.getSaveMonsterProjectilePos()[i].first << " " << lm.getSaveMonsterProjectilePos()[i].second << std::endl;
+	}
+	for (int i = 0; i < lm.getSavePlayerProjectileDir().size(); i++) {
+		file << lm.getSavePlayerProjectileDir()[i] << std::endl;
+	}
+	for (int i = 0; i < lm.getSaveMonsterProjectileDir().size(); i++) {
+		file << lm.getSaveMonsterProjectileDir()[i] << std::endl;
+	}
+	for (int i = 0; i < lm.getSavePlayerProjectileVel().size(); i++) {
+		file << lm.getSavePlayerProjectileVel()[i].first << " " << lm.getSavePlayerProjectileVel()[i].second << std::endl;
+	}
+	for (int i = 0; i < lm.getSaveMonsterProjectileVel().size(); i++) {
+		file << lm.getSaveMonsterProjectileVel()[i].first << " " << lm.getSaveMonsterProjectileVel()[i].second << std::endl;
+	}
+	file << lm.getSaveItemPos().size() << std::endl;
+	for (int i = 0; i < lm.getSaveItemPos().size(); i++) {
+		file << lm.getSaveItemPos()[i].first << " " << lm.getSaveItemPos()[i].second << std::endl;
+	}
+	for (int i = 0; i < lm.getSaveItemType().size(); i++) {
+		file << lm.getSaveItemType()[i] << std::endl;
+	}
+
+	file << lm.getPlayerType() << std::endl;
+	file << lm.getSavePlayerPosX() << " " << lm.getSavePlayerPosY() << std::endl;
+	file << lm.getPlayerHP() << std::endl;
+	file << lm.getPlayerStatus() << std::endl;
+	file << lm.getPlayerVelX() << " " << lm.getPlayerVelY() << std::endl;
+	file << lm.getSaveBossPosX() << " " << lm.getSaveBossPosY() << std::endl;
+	file << lm.getBossHP() << std::endl;
+	file << lm.getBossVelX() << " " << lm.getBossVelY() << std::endl;*/
+
+}
 
 GameState::~GameState() {
 	delete player;

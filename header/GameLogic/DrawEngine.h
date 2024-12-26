@@ -13,5 +13,6 @@ public:
 		font.loadFromFile("../resources/font/Pixel_NES.otf");
 	}
 	void displayGameInfo(sf::RenderWindow& window, float elapsed, Map* map, Character* charac);
+	void displayBossHealth(sf::RenderWindow& window, float elapsed, Map* map, Character* charac, Boss* b);
 	//void update(sf::RenderWindow& window, sf::Clock& timeClock, Map* map, Character* charac);
 };

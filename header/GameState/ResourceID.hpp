@@ -86,8 +86,7 @@ namespace Textures
 		SecondWukongAttack3,
 		SecondWukongAttack4,
 		SecondWukongAttack5,
-		SecondWukongAttack6,
-		SecondWukongAttack7,
+		
 
 		SecondWukongDead1,
 		SecondWukongDead2,

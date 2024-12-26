@@ -4,7 +4,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, float elapsedTime, Ma
 	// Display the game info
 	sf::Text coinText;
 	coinText.setFont(font);
-	coinText.setString("Coins: " + std::to_string(map->coinCount));
+	coinText.setString("Coins: " + std::to_string(map->getCoinsNumber()));
 	coinText.setFillColor(sf::Color::Yellow);
 	coinText.setCharacterSize(24);
 	coinText.setFillColor(sf::Color::Yellow);
@@ -68,5 +68,46 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, float elapsedTime, Ma
 	window.draw(timeText);
 	window.draw(levelText);
 	window.draw(scoreText);
+	window.draw(lvText);
+}
+
+void DrawEngine::displayBossHealth(sf::RenderWindow& window, float elapsedTime, Map* map, Character* charac, Boss* b) {
+	// Display the boss health
+	sf::Text bossHealthText;
+	bossHealthText.setFont(font);
+	bossHealthText.setString("Boss HP: " + std::to_string(b->getHealth()));
+	bossHealthText.setCharacterSize(24);
+	bossHealthText.setFillColor(sf::Color::Red);
+	bossHealthText.setOrigin(bossHealthText.getLocalBounds().width / 2, bossHealthText.getLocalBounds().height / 2);
+	bossHealthText.setPosition(1280/2, 60);
+
+	sf::Text bossNameText;
+	bossNameText.setFont(font);
+	bossNameText.setString("King Minotaur");
+	bossNameText.setCharacterSize(40);
+	bossNameText.setFillColor(sf::Color::Red);
+	bossNameText.setOrigin(bossNameText.getLocalBounds().width / 2, bossNameText.getLocalBounds().height / 2);
+	bossNameText.setPosition(1280 / 2, 20);
+
+	int seconds = static_cast<int>(elapsedTime);
+	sf::Text timeText;
+	timeText.setFont(font);
+	timeText.setString("Time: " + std::to_string(seconds) + "s");
+	timeText.setCharacterSize(18);
+	timeText.setFillColor(sf::Color::Yellow);
+	timeText.setPosition(10, 50);
+
+	sf::Text lvText;
+	lvText.setFont(font);
+	lvText.setString("HP: " + std::to_string(charac->getLevel()));
+	lvText.setCharacterSize(18);
+	lvText.setFillColor(sf::Color::Yellow);
+	lvText.setPosition(50, 10);
+
+	// Draw the text to the window
+	window.setView(window.getDefaultView());
+	window.draw(bossHealthText);
+	window.draw(bossNameText);
+	window.draw(timeText);
 	window.draw(lvText);
 }

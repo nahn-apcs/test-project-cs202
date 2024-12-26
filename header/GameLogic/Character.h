@@ -10,6 +10,8 @@ public:
     Character() = default;
     Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
         , int x, int y, int type);
+    Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+        , float x, float y, int type, int hp, float veloX, float veloY, int status);
     ~Character();
     virtual void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
@@ -40,7 +42,7 @@ public:
     sf::Vector2f getVelocity() const { return sf::Vector2f(velocityX, velocityY); }
 
     virtual int checkWallCollision(float dx, float dy, Map* map);
-
+    int getType() const { return type; }
 
 protected:
     sf::Sprite sprite;
@@ -78,6 +80,8 @@ class SecondCharacter : public Character {
 public:
     SecondCharacter(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
         , int x, int y, int type);
+    SecondCharacter(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
+        , int x, int y, int type, int hp, float veloX, float veloY, int status);
     void interact(float d, Map* map);
 };
 
@@ -93,7 +97,10 @@ class Boss : public Character {
 public:
     Boss() = default;
     Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, int x, int y);
+    Boss(std::vector<sf::Texture>& flyTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& dieTextures, std::vector<sf::Texture>& exhaustTextures, std::vector<sf::Texture>& shootTextures, float posX, float posY, int hp, float veloX, float veloY, int activated);
+
     ~Boss();
+    int getHealth() const { return health; }
     void update(float deltaTime, Map* map);
     void move(float dx, float dy, Map* map);
     void pushBack(Map*);
@@ -118,6 +125,7 @@ public:
     int getHP() const { return health; }
     sf::Vector2f getVelocity() const { return sf::Vector2f(velocityX, velocityY); }
     int checkWallCollision(float dx, float dy, Map* map);
+   
 private:
     Animation* flyAnimation;
     Animation* attackAnimation;

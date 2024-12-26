@@ -61,8 +61,9 @@ void LevelCompleteState::draw() {
     timeText.setString("Time: " + std::to_string(mTime) + "s");
     timeText.setCharacterSize(20);
     timeText.setFillColor(sf::Color::Black);
+    timeText.setOrigin(timeText.getLocalBounds().width / 2, timeText.getLocalBounds().height / 2);
 
-    timeText.setPosition(1280 / 2 - 60, 320);
+    timeText.setPosition(1280 / 2, 320);
     window.draw(timeText);
 }
 
