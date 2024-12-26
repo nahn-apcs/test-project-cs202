@@ -268,7 +268,7 @@ bool GameState::update(sf::Time dt) {
 								block->onTouch2(mapData, tileSize, gameMap->getTexture());
 								auto item = block->getItemObject();
 								if (dynamic_cast<Coin*>(item)) {
-									audioManager->playCoinSound();
+									this->getContext().audio->playCoinSound();
 									gameMap->increaseCoinsNumber();
 								}
 								else if (dynamic_cast<PowerUp*>(item)) {
@@ -280,7 +280,7 @@ bool GameState::update(sf::Time dt) {
 								block->onTouch2(mapData, tileSize,
 									gameMap->getTexture());
 								block->setDestroyed(true);
-								gameMap->audioManager->playDestroyBlockSound();
+								this->getContext().audio->playDestroyBlockSound();
 							}
 						}
 					}
@@ -320,7 +320,7 @@ bool GameState::update(sf::Time dt) {
 			for (auto& coin : coins) {
 				coin->update(deltaTime, mapData, 32);
 				if (coin->getBounds().intersects(playerBounds) && !coin->isCollected()) {
-					audioManager->playCoinSound();
+					this->getContext().audio->playCoinSound();
 					coin->collect(); // Collect the coin
 					if (dynamic_cast<Coin*>(coin)) {
 						gameMap->increaseCoinsNumber();
@@ -349,7 +349,7 @@ bool GameState::update(sf::Time dt) {
 				for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
 
 					if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
-						gameMap->audioManager->playMonsterHitSound();
+						this->getContext().audio->playMonsterHitSound();
 						projectiles.destroyProjectile(i);
 						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
@@ -371,7 +371,7 @@ bool GameState::update(sf::Time dt) {
 
 
 					if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
-						gameMap->audioManager->playMonsterHitSound();
+						this->getContext().audio->playMonsterHitSound();
 						// Monster is killed
 						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);

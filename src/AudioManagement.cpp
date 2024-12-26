@@ -39,13 +39,17 @@ void AudioManagement::playMainMusic()
 	//set volume
 	mainMusic.setVolume(20);
 	mainMusic.setLoop(true);
-	mainMusic.play();
+	if (mOnSound) {
+		mainMusic.play();
+	}
 }
 
 void AudioManagement::playCoinSound()
 {
 	coinSound.setVolume(80);
-	coinSound.play();
+	if (mOnSound) {
+		coinSound.play();
+	}
 }
 
 void AudioManagement::playJumpSound()
@@ -56,7 +60,9 @@ void AudioManagement::playJumpSound()
 void AudioManagement::playDestroyBlockSound()
 {
 	destroyBlockSound.setVolume(40);
-	destroyBlockSound.play();
+	if (mOnSound) {
+		destroyBlockSound.play();
+	}
 }
 
 void AudioManagement::stopMainMusic()
@@ -67,5 +73,22 @@ void AudioManagement::stopMainMusic()
 void AudioManagement::playMonsterHitSound()
 {
 	monsterHitSound.setVolume(20);
-	monsterHitSound.play();
+	if (mOnSound) {
+		monsterHitSound.play();
+	}
+}
+
+void AudioManagement::switchOnOff()
+{
+	if (mOnSound) {
+		mOnSound = false;
+	}
+	else {
+		mOnSound = true;
+	}
+}
+
+bool AudioManagement::isOnSound() const
+{
+	return mOnSound;
 }

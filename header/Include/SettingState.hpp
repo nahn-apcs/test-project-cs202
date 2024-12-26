@@ -23,9 +23,7 @@ private:
 
     sf::Text mTextName;
     sf::Text mTextSound;
-    int cnt_sound = 0;
     sf::Text mTextMusic;
-    int cnt_music = 0;
     sf::Sprite SoundButton;
     sf::Sprite MusicButton;
 

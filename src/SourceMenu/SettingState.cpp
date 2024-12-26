@@ -25,14 +25,20 @@ SettingState::SettingState(StateStack& stack, Context context) : State(stack, co
     MusicButton.setPosition(530, 355);
 
     mTextSound.setFont(context.fonts->get(Fonts::Main));
-    mTextSound.setString("Sound: ON");
+    if (context.audio->isOnSound())
+        mTextSound.setString("Sound: ON");
+    else
+        mTextSound.setString("Sound: OFF");
     mTextSound.setCharacterSize(20);
     mTextSound.setFillColor(sf::Color(0, 0, 0, 255));
     mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
     mTextSound.setPosition(640, 305);
 
     mTextMusic.setFont(context.fonts->get(Fonts::Main));
-    mTextMusic.setString("Music: ON");
+	if (context.music->isOnMusic())
+		mTextMusic.setString("Music: ON");
+	else
+		mTextMusic.setString("Music: OFF");
     mTextMusic.setCharacterSize(20);
     mTextMusic.setFillColor(sf::Color(0, 0, 0, 255));
     mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
@@ -82,6 +88,9 @@ bool SettingState::handleEvent(const sf::Event& event)
     if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Left) {
             if (SoundButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                this->getContext().audio->switchOnOff();
+
+                bool cnt_sound = this->getContext().audio->isOnSound();
                 if (cnt_sound % 2 == 0) {
                     mTextSound.setString("Sound: OFF");
                     mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
@@ -92,9 +101,11 @@ bool SettingState::handleEvent(const sf::Event& event)
                     mTextSound.setOrigin(mTextSound.getLocalBounds().width / 2.0f, mTextSound.getLocalBounds().height / 2.0f);
                     mTextSound.setPosition(640, 305);
                 }
-                cnt_sound++;
             }
             else if (MusicButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                this->getContext().music->switchOnOff();
+
+                bool cnt_music = this->getContext().music->isOnMusic();
                 if (cnt_music % 2 == 0) {
                     mTextMusic.setString("Music: OFF");
                     mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
@@ -105,7 +116,6 @@ bool SettingState::handleEvent(const sf::Event& event)
                     mTextMusic.setOrigin(mTextMusic.getLocalBounds().width / 2.0f, mTextMusic.getLocalBounds().height / 2.0f);
                     mTextMusic.setPosition(640, 375);
                 }
-                cnt_music++;
             }
             else if (CloseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
                 requestStackPop();

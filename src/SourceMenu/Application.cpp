@@ -15,7 +15,7 @@
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
-Application::Application() : mWindow(sf::VideoMode(1280, 640), "Input", sf::Style::Close), mTextures(), mFonts(), mMusic(), mSounds(), mStateStack(State::Context(mWindow, mTextures, mFonts, mMusic, mSounds)) {
+Application::Application() : mWindow(sf::VideoMode(1280, 640), "Input", sf::Style::Close), mTextures(), mFonts(), mMusic(), mAudio(), mStateStack(State::Context(mWindow, mTextures, mFonts, mMusic, mAudio)) {
 
     mWindow.setKeyRepeatEnabled(false);
     mWindow.setVerticalSyncEnabled(true);

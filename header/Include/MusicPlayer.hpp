@@ -21,12 +21,15 @@ public:
 
 	void						setPaused(bool paused);
 	void						setVolume(float volume);
-
+	void						switchOnOff();
+	bool						isOnMusic() const;
+	
 
 private:
 	sf::Music							mMusic;
 	std::map<Music::ID, std::string>	mFilenames;
 	float								mVolume;
+	bool								mOnMusic = 1;
 };
 
 #endif // MUSIC_PLAYER_HPP
