@@ -44,6 +44,7 @@ void AudioManagement::playMainMusic()
 
 void AudioManagement::playCoinSound()
 {
+	coinSound.setVolume(80);
 	coinSound.play();
 }
 
@@ -54,6 +55,7 @@ void AudioManagement::playJumpSound()
 
 void AudioManagement::playDestroyBlockSound()
 {
+	destroyBlockSound.setVolume(40);
 	destroyBlockSound.play();
 }
 

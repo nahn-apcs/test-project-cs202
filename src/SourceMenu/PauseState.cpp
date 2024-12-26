@@ -54,7 +54,7 @@ PauseState::PauseState(StateStack& stack, Context context) : State(stack, contex
     PauseBG.setTexture(context.textures->get(Textures::PauseBG));
     PauseBG.setPosition(340, 103);
 
-
+	context.music->setPaused(1);
 }
 
 void PauseState::draw() {

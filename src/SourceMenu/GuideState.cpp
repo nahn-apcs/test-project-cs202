@@ -19,6 +19,7 @@ GuideState::GuideState(StateStack& stack, Context context) : State(stack, contex
 
     mBackgroundShape.setSize(sf::Vector2f(1280, 640));
     mBackgroundShape.setFillColor(sf::Color(0, 0, 0, 200));
+
 }
 
 void GuideState::draw() {

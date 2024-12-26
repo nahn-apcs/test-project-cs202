@@ -21,6 +21,8 @@ GameOverState::GameOverState(StateStack& stack, Context context) : State(stack, 
     mMenuButton.setTexture(context.textures->get(Textures::GameOverMenuButton));
     mMenuButton.setPosition(570, 478);
 
+    context.music->setVolume(80);
+	context.music->play(Music::GameOverTheme);
 }
 
 void GameOverState::draw() {

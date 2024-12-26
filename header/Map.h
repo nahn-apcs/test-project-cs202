@@ -29,6 +29,7 @@ public:
     bool colliableChar(const char& c) const;
     int coinCount;
     int score;
+    int level = 0;
 	void updateScore();
     void updateBlocks(float deltatime, sf::FloatRect& playerBounds);
     void updateProjectiles(float deltatime);
