@@ -149,7 +149,6 @@ LevelState::LevelState(StateStack& stack, Context context) : State(stack, contex
     pointer_4.setPosition(1107, 503);
     mPointer.push_back(pointer_4);
 
-
 }
 
 void LevelState::draw() {

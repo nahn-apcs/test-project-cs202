@@ -230,6 +230,9 @@ namespace Music
 	{
 		MenuTheme,
 		GameTheme,
+		WinningTheme,
+		LevelCompleteTheme,
+		GameOverTheme,
 	};
 }
 

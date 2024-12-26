@@ -2,7 +2,6 @@
 #include <Button.hpp>
 #include <Utility.hpp>
 #include <ResourceHolder.hpp>
-
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
 #include <iostream>
@@ -16,9 +15,6 @@ WaitingState::WaitingState(StateStack& stack, Context context) : State(stack, co
     mText.setFillColor(sf::Color(255, 255, 255, 255));
     mText.setOrigin(mText.getLocalBounds().width / 2.0f, mText.getLocalBounds().height / 2.0f);
     mText.setPosition(640, 300);
-
-
-
 }
 
 void WaitingState::draw() {
@@ -39,6 +35,7 @@ bool WaitingState::update(sf::Time deltatime)
 {
     mTime -= deltatime.asSeconds();
     if (mTime <= 0) {
+        this->getContext().music->setPaused(0);
         requestStackPop();
     }
     else {

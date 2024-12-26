@@ -9,6 +9,8 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "AudioManagement.h"
+
 #include <memory>
 
 namespace sf {
@@ -40,6 +42,7 @@ public:
 	virtual void		            draw() = 0;
 	virtual bool		            update(sf::Time dt) = 0;
 	virtual bool		            handleEvent(const sf::Event& event) = 0;
+
 
 	virtual void		            onActivate();
 	virtual void		            onDestroy();

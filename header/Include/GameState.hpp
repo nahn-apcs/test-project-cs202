@@ -67,6 +67,7 @@ private:
     Map* gameMap;   
     Character* player;
     DrawEngine* drawEngine;
+	AudioManagement* audioManager;
     Boss* boss;
 
     sf::Clock gameClock;
@@ -78,6 +79,7 @@ private:
     sf::View camera;
     bool win = false;
     bool lose = false;
+    float deadTime = 1.5f;
 };
 
 

@@ -46,6 +46,7 @@ SettingState::SettingState(StateStack& stack, Context context) : State(stack, co
     CloseButton.setPosition(750, 405);
 
 
+
 }
 
 void SettingState::draw() {

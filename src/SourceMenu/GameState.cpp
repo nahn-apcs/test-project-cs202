@@ -13,11 +13,13 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 	projectile = context.textures->get(Textures::Bullet);
 	enemyProjectile = context.textures->get(Textures::BossBullet);
 	camera = sf::View(sf::FloatRect(0.f, 0.f, constants::scene_width, constants::scene_height));
-	std::cout << "GameState" << "\n";
 	drawEngine = new DrawEngine();
 	PauseButton.setTexture(context.textures->get(Textures::PauseButton));
 	PauseButton.setTextureRect(sf::IntRect(0, 0, 80, 50));
 	PauseButton.setPosition(1230, 0);
+
+	context.music->setVolume(30);
+	context.music->play(Music::GameTheme);
 	
 	switch (LevelManager::getInstance().getCurCharacter() + 1)
 	{
@@ -140,15 +142,15 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 			mapTextures.push_back(monsterset);
 			mapTextures.push_back(projectile);
 			mapTextures.push_back(enemyProjectile);
-
+			/*audioManager = new AudioManagement();
+			audioManager->playMainMusic();*/
 			gameMap = new Map("../resources/Level1/level.txt", 32, mapTextures);
+			gameMap->level = 1;
 			backgroundTexture = context.textures->get(Textures::Bg1);
 			backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
 			std::cout << gameMap->getMapData().size() << "\n";
 			xRepeatCount = gameMap->getMapData()[0].size() * 32 / backgroundTexture.getSize().x + 1;  // Add 1 to ensure coverage
 			yRepeatCount = gameMap->getMapData().size() * 32 / backgroundTexture.getSize().y + 1;
-			
-
 			break;
     case 2:
       tileset = context.textures->get(Textures::Blocks2);
@@ -158,6 +160,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
       mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
+	  gameMap->level = 2;
       backgroundTexture = context.textures->get(Textures::Bg2);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
       std::cout << gameMap->getMapData().size() << "\n";
@@ -173,6 +176,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
       mapTextures.push_back(enemyProjectile);
 
       gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+	  gameMap->level = 3;
       backgroundTexture = context.textures->get(Textures::Bg3);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
       std::cout << gameMap->getMapData().size() << "\n";
@@ -214,6 +218,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 }
 
 bool GameState::update(sf::Time dt) {
+
 
 	float deltaTime = dt.asSeconds();
 	elapsedTime += deltaTime;
@@ -275,8 +280,8 @@ bool GameState::update(sf::Time dt) {
 								block->setState(new DestroyedState());
 								block->onTouch2(mapData, tileSize,
 									gameMap->getTexture());
-							
 								block->setDestroyed(true);
+								gameMap->audioManager->playDestroyBlockSound();
 							}
 						}
 					}
@@ -345,6 +350,7 @@ bool GameState::update(sf::Time dt) {
 				for (int i = 0; i < projectiles.getProjectiles().size(); ++i) {
 
 					if (projectiles.getProjectiles()[i]->getBounds().intersects(monsterBounds)) {
+						gameMap->audioManager->playMonsterHitSound();
 						projectiles.destroyProjectile(i);
 						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
@@ -366,6 +372,7 @@ bool GameState::update(sf::Time dt) {
 
 
 					if (playerBottom <= monsterTop + 5.0f) {  // Allow a small tolerance
+						gameMap->audioManager->playMonsterHitSound();
 						// Monster is killed
 						auto tileX = static_cast<int>(monsterBounds.left / tileSize);
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
@@ -451,12 +458,26 @@ bool GameState::update(sf::Time dt) {
 					}
 				}
 
-
+		
+			
 
 	        gameMap->updateProjectiles(deltaTime);
 			gameMap->updateEnemyProjectiles(deltaTime);
 
 		
+
+			if (win) {
+				win = 0;
+				requestStackPush(States::LevelComplete);
+			}
+
+			else if (player->isDead()) {
+				if (deadTime <= 0) requestStackPush(States::GameOver);
+				else deadTime -= deltaTime;
+			}
+
+			
+			
 
 			return false;
 }
@@ -485,8 +506,6 @@ void GameState::draw() {
 }
 
 bool GameState::handleEvent(const sf::Event& event) {
-	
-
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
@@ -511,16 +530,7 @@ bool GameState::handleEvent(const sf::Event& event) {
 			requestStackPush(States::GameOver);
 		}
 	}
-	if (win) {
-		LevelManager::getInstance().setScore(gameMap->score);
-		LevelManager::getInstance().setTime(elapsedTime);
-		win = false;
-		requestStackPush(States::LevelComplete);
-	}
 
-	if (player->isDead()) {
-		requestStackPush(States::GameOver);
-	}
 	return false;
 }
 

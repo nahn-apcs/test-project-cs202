@@ -20,7 +20,9 @@ LevelCompleteState::LevelCompleteState(StateStack& stack, Context context) : Sta
 
     mNextButton.setTexture(context.textures->get(Textures::LevelCompleteNextButton));
     mNextButton.setPosition(628, 429);
-    
+
+	context.music->setVolume(70);
+	context.music->play(Music::LevelCompleteTheme);
 }
 
 void LevelCompleteState::draw() {
@@ -96,6 +98,8 @@ bool LevelCompleteState::handleEvent(const sf::Event& event) {
         if (event.key.code == sf::Keyboard::Left) {
             requestStackPop();
             requestStackPop();
+            this->getContext().music->play(Music::MenuTheme);
+			this->getContext().music->setVolume(50);
         }
         else if (event.key.code == sf::Keyboard::Right) {
             requestStackPop();

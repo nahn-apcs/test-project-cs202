@@ -163,6 +163,10 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     auto textNode = std::make_unique<TextNode>(text, shadowText);
     mSceneLayers[GameName]->attachChild(std::move(textNode));
 
+
+	context.music->play(Music::MenuTheme);
+	context.music->setVolume(50);
+
 }
 
 void MenuState::draw() {
