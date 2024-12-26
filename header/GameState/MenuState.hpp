@@ -34,6 +34,8 @@ private:
     CommandQueue						mCommandQueue;
 
     GUI::Container mGUIContainer;
+    GUI::Container mGUIContainer_1;
+    sf::Sprite Pointer;
 
 
 };

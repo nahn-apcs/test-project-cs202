@@ -106,8 +106,8 @@ add_executable(game ${SRCS}
 "src/GameLogic/Map.cpp"
 "header/GameLogic/Character.h"
 "src/GameLogic/Character.cpp"
-"header/GameLogic/Physics.h"
-"src/GameLogic/Physics.cpp"
+
+
 "header/GameLogic/Coin.h"
 "src/GameLogic/Coin.cpp"
 "header/GameLogic/Animation.h"

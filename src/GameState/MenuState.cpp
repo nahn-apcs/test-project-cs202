@@ -13,7 +13,7 @@
 #include <LevelManager.hpp>
 
 
-MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mGUIContainer(GUI::Container::TopDown) {
+MenuState::MenuState(StateStack& stack, Context context) : State(stack, context), mGUIContainer(GUI::Container::TopDown), mGUIContainer_1(GUI::Container::LeftRight) {
 
     // Tạo SceneGraph
     for (std::size_t i = 0; i < LayerCount; ++i) {
@@ -146,6 +146,28 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     mGUIContainer.pack(settingButton);
     mGUIContainer.pack(exitButton);
 
+
+    auto CharButton_1 = std::make_shared<GUI::Button>(context, Textures::MainMenuPig, 270, 240);
+    CharButton_1->setPosition(46, 295);
+    CharButton_1->setCallback([this]() {
+		//requestStackPop();
+		LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::pig);
+		std::cout << "Character 1 button pressed" << std::endl;
+		});
+
+    auto CharButton_2 = std::make_shared<GUI::Button>(context, Textures::MainMenuWukong, 250, 332);
+    CharButton_2->setPosition(1030, 265);
+    CharButton_2->setCallback([this]() {
+        //requestStackPop();
+        LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::wukong);
+        std::cout << "Character 2 button pressed" << std::endl;
+		});
+
+    mGUIContainer_1.pack(CharButton_1);
+    mGUIContainer_1.pack(CharButton_2);
+
+
+
     // Thêm Game Name (TextNode)
     sf::Font& font = context.fonts->get(Fonts::NameGame);
     sf::Text text;
@@ -154,7 +176,7 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
     text.setCharacterSize(120);
     text.setFillColor(sf::Color::Black);
     text.setOrigin(text.getLocalBounds().width / 2.f, text.getLocalBounds().height / 2.f);
-    text.setPosition(640.f, 150.f);
+    text.setPosition(640.f, 120.f);
 
     sf::Text shadowText = text;
     shadowText.setFillColor(sf::Color(0, 0, 0, 128));
@@ -162,6 +184,17 @@ MenuState::MenuState(StateStack& stack, Context context) : State(stack, context)
 
     auto textNode = std::make_unique<TextNode>(text, shadowText);
     mSceneLayers[GameName]->attachChild(std::move(textNode));
+
+    Pointer.setTexture(context.textures->get(Textures::MainMenuPointer));
+    if (mGUIContainer_1.getSelectedChild() == 0) {
+        LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::pig);
+        Pointer.setPosition(122, 220);
+    }
+    else {
+        LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::wukong);
+        Pointer.setPosition(1105, 220);
+    }
+
 
 
 	context.music->play(Music::MenuTheme);
@@ -178,6 +211,8 @@ void MenuState::draw() {
     window.draw(mSceneGraph);
 
     window.draw(mGUIContainer);
+    window.draw(mGUIContainer_1);
+    window.draw(Pointer);
 }
 
 bool MenuState::update(sf::Time deltatime)
@@ -211,6 +246,16 @@ bool MenuState::update(sf::Time deltatime)
     // Cập nhật SceneGraph
     mSceneGraph.update(deltatime, mCommandQueue);
 
+    int tmp = mGUIContainer_1.getSelectedChild();
+    if (tmp == 0) {
+		LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::pig);
+        Pointer.setPosition(122, 220);
+	}
+    else if (tmp == 1) {
+        LevelManager::getInstance().setCurCharacter(LevelManager::Character_1::wukong);
+        Pointer.setPosition(1105, 220);
+    }
+
 
 
     return false;
@@ -219,5 +264,6 @@ bool MenuState::update(sf::Time deltatime)
 bool MenuState::handleEvent(const sf::Event& event)
 {
     mGUIContainer.handleEvent(event);
+    mGUIContainer_1.handleEvent(event);
     return false;
 }

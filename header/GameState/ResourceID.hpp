@@ -146,6 +146,9 @@ namespace Textures
 			MainMenuClound_7,
 			MainMenuClound_8,
 			MainMenuClound_9,
+			MainMenuPig,
+			MainMenuWukong,
+			MainMenuPointer,
 
 			//Guide
 			GuideBG,

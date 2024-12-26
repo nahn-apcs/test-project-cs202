@@ -157,6 +157,10 @@ Application::Application() : mWindow(sf::VideoMode(1280, 640), "Input", sf::Styl
 	mTextures.load(Textures::ID::MainMenuClound_6, "../resources/Asset/Textures/Menu/cloud6.png");
 	mTextures.load(Textures::ID::MainMenuClound_7, "../resources/Asset/Textures/Menu/cloud7.png");
 	mTextures.load(Textures::ID::MainMenuClound_8, "../resources/Asset/Textures/Menu/cloud8.png");
+	mTextures.load(Textures::ID::MainMenuPig, "../resources/Asset/Textures/Menu/Pig.png");
+	mTextures.load(Textures::ID::MainMenuWukong, "../resources/Asset/Textures/Menu/Wukong.png");
+	mTextures.load(Textures::ID::MainMenuPointer, "../resources/Asset/Textures/Menu/Pointer.png");
+	
 
 	mTextures.load(Textures::ID::GuideBG, "../resources/Asset/Textures/Guide/guide.png");
 	mTextures.load(Textures::ID::CloseGuide, "../resources/Asset/Textures/Guide/close_guide.png");
