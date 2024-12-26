@@ -92,38 +92,93 @@ FetchContent_MakeAvailable(json)
 # để khi chạy có thể tìm thấy hết file
 file(GLOB SRCS CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_SOURCE_DIR}/src/SourceMenu/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/GameState/*.cpp
+        ${CMAKE_SOURCE_DIR}/src/GameLogic/*.cpp
+
 )
 
-add_executable(game ${SRCS} "header/constant.h" "header/tile.h" "header/render.h" "src/tile.cpp" "header/loadTiles.h" "src/Map.cpp" "header/Character.h" "src/Character.cpp" "header/Physics.h" "src/Physics.cpp" "header/Coin.h" "src/Coin.cpp" "header/Animation.h" "header/Monster.h" "src/Monster.cpp" "header/MonsterAnimation.h" "src/MonsterAnimation.cpp"  "header/DrawEngine.h" "src/DrawEngine.cpp" "header/ObjectAnimation.h" "header/BlockAnimation.h" "src/CoinAnimation.cpp" "header/Block.h"  "src/Block.cpp" "header/BlockState.h" "src/BlockState.cpp" "header/Projectile.h" "header/ProjectileAnimation.h" "src/Projectile.cpp" "src/ProjectileAnimation.cpp" "header/Item.h" "src/Item.cpp" "src/AudioManagement.cpp" 
-    # Source files
-"src/SourceMenu/Animation.cpp"
-"src/SourceMenu/Application.cpp"
-"src/SourceMenu/Button.cpp"
-"src/SourceMenu/Component.cpp"
-"src/SourceMenu/Container.cpp"
-"src/SourceMenu/GuideState.cpp"
-"src/SourceMenu/LevelState.cpp"
-"src/SourceMenu/main.cpp"
-"src/SourceMenu/MenuState.cpp"
-"src/SourceMenu/State.cpp"
-"src/SourceMenu/StateStack.cpp"
-"src/SourceMenu/Utility.cpp"
+add_executable(game ${SRCS} 
+
+"header/GameLogic/constant.h"
+"header/GameLogic/tile.h"
+"header/GameLogic/render.h"
+"src/GameLogic/tile.cpp"
+"src/GameLogic/Map.cpp"
+"header/GameLogic/Character.h"
+"src/GameLogic/Character.cpp"
+"header/GameLogic/Physics.h"
+"src/GameLogic/Physics.cpp"
+"header/GameLogic/Coin.h"
+"src/GameLogic/Coin.cpp"
+"header/GameLogic/Animation.h"
+"header/GameLogic/Monster.h"
+"src/GameLogic/Monster.cpp"
+"header/GameLogic/MonsterAnimation.h"
+"src/GameLogic/MonsterAnimation.cpp"
+"header/GameLogic/DrawEngine.h"
+"src/GameLogic/DrawEngine.cpp"
+"header/GameLogic/ObjectAnimation.h"
+"header/GameLogic/BlockAnimation.h"
+"src/GameLogic/CoinAnimation.cpp"
+"header/GameLogic/Block.h"
+"src/GameLogic/Block.cpp"
+"header/GameLogic/BlockState.h"
+"src/GameLogic/BlockState.cpp"
+"header/GameLogic/Projectile.h"
+"header/GameLogic/ProjectileAnimation.h"
+"src/GameLogic/Projectile.cpp"
+"src/GameLogic/ProjectileAnimation.cpp"
+"header/GameLogic/Item.h"
+"src/GameLogic/Item.cpp"
+"src/GameLogic/AudioManagement.cpp"
+
+# Source files
+"src/GameState/Animation.cpp"
+"src/GameState/Application.cpp"
+"src/GameState/Button.cpp"
+"src/GameState/Component.cpp"
+"src/GameState/Container.cpp"
+"src/GameState/GuideState.cpp"
+"src/GameState/LevelState.cpp"
+"src/GameState/main.cpp"
+"src/GameState/MenuState.cpp"
+"src/GameState/State.cpp"
+"src/GameState/StateStack.cpp"
+"src/GameState/Utility.cpp"
 
 # Header files
-"header/Include/Animation.hpp"
-"header/Include/Application.hpp"
-"header/Include/Button.hpp"
-"header/Include/Component.hpp"
-"header/Include/Container.hpp"
-"header/Include/GuideState.hpp"
-"header/Include/LevelState.hpp"
-"header/Include/MenuState.hpp"
-"header/Include/State.hpp"
-"header/Include/StateStack.hpp"
-"header/Include/Utility.hpp"
+"header/GameState/Animation.hpp"
+"header/GameState/Application.hpp"
+"header/GameState/Button.hpp"
+"header/GameState/Component.hpp"
+"header/GameState/Container.hpp"
+"header/GameState/GuideState.hpp"
+"header/GameState/LevelState.hpp"
+"header/GameState/MenuState.hpp"
+"header/GameState/State.hpp"
+"header/GameState/StateStack.hpp"
+"header/GameState/Utility.hpp"
 
- "src/SourceMenu/GameState.cpp" "header/Boss.h" "src/Boss.cpp" "src/SourceMenu/PauseState.cpp" "src/SourceMenu/LevelManager.cpp" "src/SourceMenu/WaitingState.cpp" "src/SourceMenu/TransitionState.cpp" "src/SourceMenu/BGNode.cpp" "src/SourceMenu/BGObject.cpp" "src/SourceMenu/Command.cpp" "src/SourceMenu/CommandQueue.cpp" "src/SourceMenu/GameOverState.cpp" "src/SourceMenu/LevelCompleteState.cpp" "src/SourceMenu/MusicPlayer.cpp" "src/SourceMenu/SceneNode.cpp" "src/SourceMenu/SettingState.cpp" "src/SourceMenu/SoundPlayer.cpp" "src/SourceMenu/TextNode.cpp" "src/SourceMenu/WinningState.cpp")
+"src/GameState/GameState.cpp"
+"header/GameLogic/Boss.h"
+"src/GameLogic/Boss.cpp"
+"src/GameState/PauseState.cpp"
+"src/GameState/LevelManager.cpp"
+"src/GameState/WaitingState.cpp"
+"src/GameState/TransitionState.cpp"
+"src/GameState/BGNode.cpp"
+"src/GameState/BGObject.cpp"
+"src/GameState/Command.cpp"
+"src/GameState/CommandQueue.cpp"
+"src/GameState/GameOverState.cpp"
+"src/GameState/LevelCompleteState.cpp"
+"src/GameState/MusicPlayer.cpp"
+"src/GameState/SceneNode.cpp"
+"src/GameState/SettingState.cpp"
+"src/GameState/SoundPlayer.cpp"
+"src/GameState/TextNode.cpp"
+"src/GameState/WinningState.cpp"
+)
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)
@@ -139,10 +194,9 @@ target_include_directories(game PRIVATE
     #${CMAKE_SOURCE_DIR}/include
     header
     resources
-    Asset
-    header/Include
+    header/GameState
+    header/GameLogic
 )
-
 if(WIN32)
     add_custom_command(
         TARGET game
