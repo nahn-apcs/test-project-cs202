@@ -99,7 +99,7 @@ void Character::interact(float deltatime, Map* map) {
         if (!attacked) setVelocityX(moveSpeed);
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 
         jump();
     }
@@ -481,11 +481,11 @@ Character::~Character() {
 
 void Character::pushBack(Map* map){
     if (faceRight) {
-		sprite.move(-10, 0);
+		if (!checkWallCollision(-10,0, map)) sprite.move(-10, 0);
         setVelocityX(-200.0f);
 	}
 	else {
-		sprite.move(10, 0);
+		if (!checkWallCollision(10,0, map)) sprite.move(10, 0);
         setVelocityX(200.0f);
 	}
     setVelocityY(-100.0f);
@@ -522,7 +522,7 @@ void Character::levelUp(Map* map){
 }
 
 void Character::knockUp(){
-	sprite.move(0, -10);
+ sprite.move(0, -10);
 	setVelocityY(-200.0f);
 }
 
