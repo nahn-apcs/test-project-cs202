@@ -52,7 +52,7 @@ Character::Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Tex
     hurtAnimations.push_back(new Animation(sHurt, 0.1f));
     hurtAnimations.push_back(new Animation(hurt, 0.1f));
     sprite.setPosition(x, y);
-    jumpStrength = -500.f;
+    jumpStrength = -400.f;
 }
 
 
@@ -71,7 +71,7 @@ void Character::shoot(Map* map) {
 void Character::interact(float deltatime, Map* map) {
     // Handle movement
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+    /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
         if (dashCooldown <= 0) {
 			if (faceRight) {
 				sprite.move(100, 0);
@@ -83,8 +83,8 @@ void Character::interact(float deltatime, Map* map) {
 			}
 			dashCooldown = 1.0f;
 		}
-	}
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
+	}*/
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
         increaseSpeed();
     }
     else

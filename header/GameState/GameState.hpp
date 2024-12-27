@@ -64,7 +64,6 @@ private:
     std::vector<sf::Texture> bossExhaustedTextures;
 
 
-
     Map* gameMap;   
     Character* player;
     DrawEngine* drawEngine;

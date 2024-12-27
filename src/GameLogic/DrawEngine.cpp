@@ -39,7 +39,7 @@ void DrawEngine::displayGameInfo(sf::RenderWindow& window, float elapsedTime, Ma
 	lvText.setString("HP: " + std::to_string(charac->getLevel()));
 	lvText.setCharacterSize(24);
 	lvText.setFillColor(sf::Color::Yellow);
-	lvText.setPosition(810, 10);
+	lvText.setPosition(910, 10);
 
 	if (map->level == 1) {
 		coinText.setFillColor(sf::Color::Black);
@@ -75,11 +75,15 @@ void DrawEngine::displayBossHealth(sf::RenderWindow& window, float elapsedTime, 
 	// Display the boss health
 	sf::Text bossHealthText;
 	bossHealthText.setFont(font);
-	bossHealthText.setString("Boss HP: " + std::to_string(b->getHealth()));
+	std::string bossHealth = "Boss HP: ";
+	for (int i = 0; i < b->getHealth(); i++) {
+		bossHealth += "|";
+	}
+	bossHealthText.setString(bossHealth);
 	bossHealthText.setCharacterSize(24);
 	bossHealthText.setFillColor(sf::Color::Red);
-	bossHealthText.setOrigin(bossHealthText.getLocalBounds().width / 2, bossHealthText.getLocalBounds().height / 2);
-	bossHealthText.setPosition(1280/2, 60);
+	//bossHealthText.setOrigin(bossHealthText.getLocalBounds().width / 2, bossHealthText.getLocalBounds().height / 2);
+	bossHealthText.setPosition(1280/2-60, 60);
 
 	sf::Text bossNameText;
 	bossNameText.setFont(font);

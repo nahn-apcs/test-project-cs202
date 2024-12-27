@@ -129,6 +129,7 @@ public:
 		saveMap = map->getMapData();
 		score = map->score;
         time = t;
+        coins = map->getCoinsNumber();
 	}
 
     void saveFromCharacter(Character* character){
@@ -163,6 +164,8 @@ public:
     int getSaveCharacter() const {return saveCharacter;}
     void setPlayerType(int playerType) {this->playerType = playerType;}
     int getPlayerType() const {return playerType;}
+    void setCoins(int coins) {this->coins = coins;}
+    int getCoins() const {return coins;}
 
 private:
     LevelManager();
@@ -214,7 +217,7 @@ private:
     float bossVelX;
     float bossVelY;
     bool hasboss = false;
-
+    int coins = 0;
     
 };
 

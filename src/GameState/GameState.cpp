@@ -30,7 +30,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 		if (!file) { std::cout << "File not found" << std::endl; 
 		exit(1); 
 		}
-		int level, score, time;
+		int level, score, time, coins;
 		int mapSize;
 		std::vector<std::string> map;
 		int monsterSize;
@@ -58,7 +58,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 		float bossVelX, bossVelY;
 		int bossActive;
 		if (file) {
-			file >> level >> score >> time;
+			file >> level >> score >> time >> coins;
 		
 			file >> mapSize;
 			for (int i = 0; i < mapSize; i++) {
@@ -303,6 +303,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 				audioManager->playMainMusic();*/
 				gameMap = new Map(map, 32,  mapTextures, score, monsterType, monsterPos, playerProjectilePos, monsterProjectilePos, playerProjectileDir, monsterProjectileDir, playerProjectileVel, monsterProjectileVel, itemPos, itemType);
 				gameMap->level = 1;
+				gameMap->setcoinsNumber(coins);
 				backgroundTexture = context.textures->get(Textures::Bg1);
 				backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
 				std::cout << gameMap->getMapData().size() << "\n";
@@ -344,6 +345,8 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 					std::vector<std::pair<float, float>>& saveItemPos,
 					std::vector<int>& saveItemType);*/
 				gameMap->level = 2;
+				gameMap->setcoinsNumber(coins);
+
 				backgroundTexture = context.textures->get(Textures::Bg2);
 				backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
 				std::cout << gameMap->getMapData().size() << "\n";
@@ -359,8 +362,21 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 				mapTextures.push_back(projectile);
 				mapTextures.push_back(enemyProjectile);
 
-				gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+				gameMap = new Map(map, 32, mapTextures,
+					score,
+					monsterType,
+					monsterPos,
+					playerProjectilePos,
+					monsterProjectilePos,
+					playerProjectileDir,
+					monsterProjectileDir,
+					playerProjectileVel,
+					monsterProjectileVel,
+					itemPos,
+					itemType);				
 				gameMap->level = 3;
+				gameMap->setcoinsNumber(coins);
+
 				backgroundTexture = context.textures->get(Textures::Bg3);
 				backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
 				std::cout << gameMap->getMapData().size() << "\n";
@@ -730,7 +746,7 @@ bool GameState::update(sf::Time dt) {
 
 				if (dynamic_cast<FlagBlock*>(block)) {
 					if (playerBounds.left + playerBounds.width + 5 > block->getBounds().left && playerBounds.top + playerBounds.height > block->getBounds().top && playerBounds.left < block->getBounds().left) {
-						win = true;
+						if (!boss || boss->isDead()) win = true;
 					}
 				}
 				//interact with water block --> die

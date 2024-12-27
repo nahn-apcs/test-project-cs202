@@ -160,7 +160,7 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			float vY = dy / 8.0f;
 			setVelocityX(-vX);
 			setVelocityY(-vY);
-
+			std::cout << "-vX: " << vX << " -vY: " << vY << std::endl;
 			moveTime = 1.0f;
 		}
 
@@ -172,7 +172,7 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			switch (random)
 			{
 			case 1:
-				sprite.setPosition(325*32, 30);
+				sprite.setPosition(325*32, 60);
 				rainShoot(map);
 				break;
 			case 2:
@@ -467,12 +467,18 @@ void Boss::damaged(Map* map)
 		if (health <= 0) {
 			return;
 		}
-		if (exhaust) {
-			return;
-		}
 		health -= 1;
-
-		hit++;
+		if (!exhaust) {
+			
+			if (!faceRight) if (!checkWallCollision(-10.f, 0.f, map)) {
+				move(-10.f, 0, map);
+			}
+			else if (!checkWallCollision(10.f, 0.f, map)) {
+				move(10.f, 0, map);
+			}
+			hit++;
+		}
+		
 		if (hit >= 10) {
 			exhaust = true;
 			hit = 0;

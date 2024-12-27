@@ -164,6 +164,7 @@ void PauseState::writeToFile() {
         file << lm.getSaveLevel() << std::endl;
         file << lm.getSaveScore() << std::endl;
         file << lm.getSaveTime() << std::endl;
+        file << lm.getCoins() << std::endl;
 
         file << lm.getSaveMap().size() << std::endl;
         for (int i = 0; i < lm.getSaveMap().size(); i++) {
