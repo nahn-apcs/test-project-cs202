@@ -13,13 +13,11 @@ class Block {
 protected:
   sf::Sprite sprite;
   BlockAnimation* animation;
-  MovementStrategy* movement;
   BlockState* state;
   float initY;
   float velocityY;
   bool isSolid;
   bool isAnimated;
-  bool isMoving;
   bool isTouched = false;
   float coinTime = 0.5f;
   std::string item;
@@ -33,14 +31,11 @@ public:
   virtual void update(float deltatime, std::vector<std::string>& mapData, int tileSize);
   virtual void draw(sf::RenderWindow& window);
   sf::FloatRect getBounds() const;
-  void setMovement(MovementStrategy* movement);
   void setState(BlockState* state);
   void ontouch(std::vector<std::string>& mapData, int tileSize);
   bool isSolidBlock() const;
-  bool isMovingBlock() const;
   bool isAnimatedBlock() const;
   void setAnimation(BlockAnimation* animation);
-  void setMoving(bool isMoving);
   void setSolid(bool isSolid);
   void setAnimated(bool isAnimated);
   void setTextureRect(const sf::IntRect& rect);

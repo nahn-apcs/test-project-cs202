@@ -40,39 +40,6 @@ void PatrolMovement::move(sf::Sprite& sprite, float deltatime,
 
 
 
-JumpupMovement::JumpupMovement(float jumpHeight, float jumpInterval)
-{
-  this->jumpHeight = jumpHeight;
-  this->jumpInterval = jumpInterval;
-  elapsedTime = 0.f;
-  isJumping = false;
-  initialY = 0.f;
-  velocityY = 0.f;
-}
-
-void JumpupMovement::move(sf::Sprite& sprite,
-                          float deltatime,
-                          std::vector<std::string>& mapData,
-                          int tileSize)
-{
-  elapsedTime += deltatime;
-  if (!isJumping && elapsedTime >= jumpInterval)
-  {
-      isJumping = true;
-	  initialY = sprite.getPosition().y;
-	  velocityY = sqrtf(2.0f * gravity * jumpHeight);
-      elapsedTime = 0.f;
-  }
-  if (isJumping) {
-    float deltaY = velocityY * elapsedTime - 0.5f * gravity * elapsedTime * elapsedTime;
-    sprite.setPosition(sprite.getPosition().x, initialY - deltaY);
-    if (deltaY <= 0) {
-      isJumping = false;
-      sprite.setPosition(sprite.getPosition().x, initialY);
-    }
-  }
-}
-
 XYmovement::XYmovement(sf::Vector2f velocity, float movementrange, float initialX)
 {
   this->velocity = velocity;
@@ -130,18 +97,6 @@ void XYmovement::move(sf::Sprite& sprite,float deltatime,std::vector<std::string
   // Update sprite position
   sprite.setPosition(nextPosition);
 
-  // Update map data if the sprite moves to a new grid
-  //if (nextGridX != prevGridX || nextGridY != prevGridY) {
-  //  // Clear previous tile
-  //  if (mapData[prevGridY][prevGridX] == 'B') {
-  //    mapData[prevGridY][prevGridX] = '0';
-  //  }
-
-  //  // Mark current tile
-  //  if (mapData[nextGridY][nextGridX] == '0') {
-  //    mapData[nextGridY][nextGridX] = 'B';
-  //  }
-  //}
 }
 
 UpDownmovement::UpDownmovement(sf::Vector2f velocity,

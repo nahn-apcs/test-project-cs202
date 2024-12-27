@@ -40,10 +40,10 @@ void InactiveState::ontouch(Block& block,
 // std::cout<<"Inactive state"<<std::endl;
   block.setTextureRect(sf::Rect(32*5, 0, 32, 32));
   block.setSolid(true);
-  block.setMoving(true);
+
   block.setAnimated(false);
   //block.setAnimation(nullptr);
-  block.setMovement(nullptr);
+
 }
 
 void DestroyedState::ontouch(Block& block,
