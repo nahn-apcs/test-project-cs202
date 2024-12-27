@@ -158,7 +158,7 @@ bool PauseState::handleEvent(const sf::Event& event)
 
 void PauseState::writeToFile() {
 	std::ofstream file;
-	file.open("../resources/save.txt");
+	file.open("resources/save.txt");
 	if (file.is_open()) {
 		LevelManager& lm = LevelManager::getInstance();
         file << lm.getSaveLevel() << std::endl;

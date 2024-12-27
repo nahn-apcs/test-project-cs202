@@ -26,7 +26,7 @@ class GameState : public State {
 public:
 
     GameState(StateStack& stack, Context context);
-    GameState::~GameState();
+    ~GameState();
     void saveGame();
     void loadGame();
     virtual void draw();

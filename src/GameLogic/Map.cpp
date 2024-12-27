@@ -378,7 +378,7 @@ void Map::draw(sf::RenderWindow& window) {
     enemyProjectiles.draw(window);
 
 	//sf::Font font;
-	//font.loadFromFile("../resources/font/Pixel_NES.otf");
+	//font.loadFromFile("resources/font/Pixel_NES.otf");
 	//sf::Text text;
 	//text.setFont(font);
 	//text.setString("Coins: " + std::to_string(coinCount));

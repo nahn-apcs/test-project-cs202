@@ -46,7 +46,7 @@ public:
 
 protected:
     sf::Sprite sprite;
-    float velocityX, velocityY;
+    float velocityX = 50, velocityY = 50;
     bool onGround;
     bool isJumping;
     bool attacking;

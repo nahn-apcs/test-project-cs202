@@ -2,7 +2,7 @@
 #include "Map.h"
 #include "Character.h"
 //sf::Font font;
-//if (!font.loadFromFile("../resources/font/Pixel_NES.otf")) { // Replace with the correct font path
+//if (!font.loadFromFile("resources/font/Pixel_NES.otf")) { // Replace with the correct font path
 //    return -1; // Error loading font
 //}
 class DrawEngine {
@@ -10,7 +10,7 @@ private:
 	sf::Font font;
 public:
 	DrawEngine() {
-		font.loadFromFile("../resources/font/Pixel_NES.otf");
+		font.loadFromFile("resources/font/Pixel_NES.otf");
 	}
 	void displayGameInfo(sf::RenderWindow& window, float elapsed, Map* map, Character* charac);
 	void displayBossHealth(sf::RenderWindow& window, float elapsed, Map* map, Character* charac, Boss* b);

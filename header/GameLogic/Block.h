@@ -29,7 +29,7 @@ protected:
 
 public:
   Block(const sf::Texture& texture);
-  ~Block();
+  virtual ~Block();
   virtual void update(float deltatime, std::vector<std::string>& mapData, int tileSize);
   virtual void draw(sf::RenderWindow& window);
   sf::FloatRect getBounds() const;
@@ -56,7 +56,7 @@ public:
   void setInitY(float y);
   Item* getItemObject();
   float getCoinTime();
-  sf::Sprite getSprite();
+  sf::Sprite &getSprite();
 
 
   virtual void setItem(const std::string& item);

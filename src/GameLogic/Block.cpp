@@ -1,4 +1,5 @@
 #include "Block.h"
+#include "BlockAnimation.h"
 
 
 Block::Block(const sf::Texture& texture) : isSolid(false), isAnimated(false), isMoving(false) {
@@ -305,7 +306,7 @@ std::string Block::getItem()
   return item;
 }
 
-sf::Sprite Block::getSprite()
+sf::Sprite &Block::getSprite()
 {
   return sprite;
 }

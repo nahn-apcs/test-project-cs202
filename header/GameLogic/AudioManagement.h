@@ -21,8 +21,8 @@ private:
 	bool mOnSound = 1;
 public:
 	AudioManagement();
-	AudioManagement(const AudioManagement&) = default;
-	AudioManagement& operator=(const AudioManagement& other) = default;
+	AudioManagement(const AudioManagement&) = delete;
+	AudioManagement& operator=(const AudioManagement& other) = delete;
 	~AudioManagement() = default;
 
 	void loadAudioResources();

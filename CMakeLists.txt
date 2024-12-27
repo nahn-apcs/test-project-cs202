@@ -49,7 +49,7 @@
 # install(TARGETS game RUNTIME DESTINATION bin)
 
 cmake_minimum_required(VERSION 3.11)
-project(GroupProject7 LANGUAGES CXX)
+project(CS202Project LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -63,7 +63,7 @@ include(FetchContent)
 FetchContent_Declare(
     SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
-    GIT_TAG        2.6.1  # Thay đổi phiên bản nếu cần
+    GIT_TAG        2.6.2  # Thay đổi phiên bản nếu cần
 )
 
 # Tải về và thêm thư viện
@@ -91,94 +91,11 @@ FetchContent_MakeAvailable(json)
 # Liệt kê hết những folder mà mình có file cpp
 # để khi chạy có thể tìm thấy hết file
 file(GLOB SRCS CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/src/GameLogic/*.cpp
     ${CMAKE_SOURCE_DIR}/src/GameState/*.cpp
-        ${CMAKE_SOURCE_DIR}/src/GameLogic/*.cpp
-
 )
 
-add_executable(game ${SRCS} 
-
-"header/GameLogic/constant.h"
-"header/GameLogic/tile.h"
-"header/GameLogic/render.h"
-"src/GameLogic/tile.cpp"
-"src/GameLogic/Map.cpp"
-"header/GameLogic/Character.h"
-"src/GameLogic/Character.cpp"
-
-
-"header/GameLogic/Coin.h"
-"src/GameLogic/Coin.cpp"
-"header/GameLogic/Animation.h"
-"header/GameLogic/Monster.h"
-"src/GameLogic/Monster.cpp"
-"header/GameLogic/MonsterAnimation.h"
-"src/GameLogic/MonsterAnimation.cpp"
-"header/GameLogic/DrawEngine.h"
-"src/GameLogic/DrawEngine.cpp"
-"header/GameLogic/ObjectAnimation.h"
-"header/GameLogic/BlockAnimation.h"
-"src/GameLogic/CoinAnimation.cpp"
-"header/GameLogic/Block.h"
-"src/GameLogic/Block.cpp"
-"header/GameLogic/BlockState.h"
-"src/GameLogic/BlockState.cpp"
-"header/GameLogic/Projectile.h"
-"header/GameLogic/ProjectileAnimation.h"
-"src/GameLogic/Projectile.cpp"
-"src/GameLogic/ProjectileAnimation.cpp"
-"header/GameLogic/Item.h"
-"src/GameLogic/Item.cpp"
-"src/GameLogic/AudioManagement.cpp"
-
-# Source files
-"src/GameState/Animation.cpp"
-"src/GameState/Application.cpp"
-"src/GameState/Button.cpp"
-"src/GameState/Component.cpp"
-"src/GameState/Container.cpp"
-"src/GameState/GuideState.cpp"
-"src/GameState/LevelState.cpp"
-"src/GameState/main.cpp"
-"src/GameState/MenuState.cpp"
-"src/GameState/State.cpp"
-"src/GameState/StateStack.cpp"
-"src/GameState/Utility.cpp"
-
-# Header files
-"header/GameState/Animation.hpp"
-"header/GameState/Application.hpp"
-"header/GameState/Button.hpp"
-"header/GameState/Component.hpp"
-"header/GameState/Container.hpp"
-"header/GameState/GuideState.hpp"
-"header/GameState/LevelState.hpp"
-"header/GameState/MenuState.hpp"
-"header/GameState/State.hpp"
-"header/GameState/StateStack.hpp"
-"header/GameState/Utility.hpp"
-
-"src/GameState/GameState.cpp"
-"header/GameLogic/Boss.h"
-"src/GameLogic/Boss.cpp"
-"src/GameState/PauseState.cpp"
-"src/GameState/LevelManager.cpp"
-"src/GameState/WaitingState.cpp"
-"src/GameState/TransitionState.cpp"
-"src/GameState/BGNode.cpp"
-"src/GameState/BGObject.cpp"
-"src/GameState/Command.cpp"
-"src/GameState/CommandQueue.cpp"
-"src/GameState/GameOverState.cpp"
-"src/GameState/LevelCompleteState.cpp"
-"src/GameState/MusicPlayer.cpp"
-"src/GameState/SceneNode.cpp"
-"src/GameState/SettingState.cpp"
-"src/GameState/SoundPlayer.cpp"
-"src/GameState/TextNode.cpp"
-"src/GameState/WinningState.cpp"
-)
+add_executable(game ${SRCS})
 
 # link thư viện
 target_link_libraries(game PRIVATE sfml-graphics sfml-window sfml-system sfml-audio SQLiteCpp sqlite3 nlohmann_json::nlohmann_json)
@@ -191,12 +108,46 @@ target_compile_features(game PRIVATE cxx_std_17)
 
 #thêm các folder vào đây
 target_include_directories(game PRIVATE
-    #${CMAKE_SOURCE_DIR}/include
-    header
-    resources
-    header/GameState
-    header/GameLogic
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/GameLogic
+    ${CMAKE_SOURCE_DIR}/src/GameState
+    ${CMAKE_SOURCE_DIR}/header
+    ${CMAKE_SOURCE_DIR}/header/GameLogic
+    ${CMAKE_SOURCE_DIR}/header/GameState
+    ${CMAKE_SOURCE_DIR}/resources
+    ${CMAKE_SOURCE_DIR}/resources/Asset
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Font
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/CompleteLevel
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Game
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/GameOver
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Guide
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Level
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Menu
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Pause
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Setting
+    ${CMAKE_SOURCE_DIR}/resources/Asset/Textures/Winning
+    ${CMAKE_SOURCE_DIR}/resources/Audio
+    ${CMAKE_SOURCE_DIR}/resources/boss minotaur
+    ${CMAKE_SOURCE_DIR}/resources/boss minotaur/main
+    ${CMAKE_SOURCE_DIR}/resources/font
+    ${CMAKE_SOURCE_DIR}/resources/Level1
+    ${CMAKE_SOURCE_DIR}/resources/Level2
+    ${CMAKE_SOURCE_DIR}/resources/Level3
+    ${CMAKE_SOURCE_DIR}/resources/projectiles
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/master
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/object
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/pig
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/pig/Pig_enemy_sprite_sheet
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/wukong
+    ${CMAKE_SOURCE_DIR}/resources/sprite_sheet/wukong/old
+    ${CMAKE_SOURCE_DIR}/resources/wukong16bit
+    ${CMAKE_SOURCE_DIR}/resources/wukong16bit/iloveimg-resized
+
+
 )
+
 if(WIN32)
     add_custom_command(
         TARGET game
@@ -204,13 +155,6 @@ if(WIN32)
         PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:game>
         VERBATIM)
 endif()
-# Copy images directory
-add_custom_target(copy_resources_images ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/resources
-    ${CMAKE_BINARY_DIR}/resources
 
-)
-add_dependencies(game copy_resources_images)
 
 install(TARGETS game)

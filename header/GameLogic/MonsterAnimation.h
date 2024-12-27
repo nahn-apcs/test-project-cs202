@@ -1,5 +1,5 @@
 #ifndef MONSTERANIMATION_H
-#define MONSTERANIMATIOn_H
+#define MONSTERANIMATION_H
 
 #include <SFML/Graphics.hpp>
 #include "ObjectAnimation.h"

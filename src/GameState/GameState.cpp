@@ -26,7 +26,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 		std::cout << "Load game\n";
 		LevelManager& lm = LevelManager::getInstance();
 		std::ifstream file;
-		file.open("../resources/save.txt");
+		file.open("resources/save.txt");
 		if (!file) { std::cout << "File not found" << std::endl; 
 		exit(1); 
 		}
@@ -599,7 +599,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 			mapTextures.push_back(enemyProjectile);
 			/*audioManager = new AudioManagement();
 			audioManager->playMainMusic();*/
-			gameMap = new Map("../resources/Level1/level.txt", 32, mapTextures);
+			gameMap = new Map("resources/Level1/level.txt", 32, mapTextures);
 			gameMap->level = 1;
 			backgroundTexture = context.textures->get(Textures::Bg1);
 			backgroundSprite.setTexture(context.textures->get(Textures::Bg1));
@@ -614,7 +614,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
       mapTextures.push_back(projectile);
       mapTextures.push_back(enemyProjectile);
 
-      gameMap = new Map("../resources/Level2/level.txt", 32, mapTextures);
+      gameMap = new Map("resources/Level2/level.txt", 32, mapTextures);
 	  gameMap->level = 2;
       backgroundTexture = context.textures->get(Textures::Bg2);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg2));
@@ -630,7 +630,7 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
       mapTextures.push_back(projectile);
       mapTextures.push_back(enemyProjectile);
 
-      gameMap = new Map("../resources/Level3/level.txt", 32, mapTextures);
+      gameMap = new Map("resources/Level3/level.txt", 32, mapTextures);
 	  gameMap->level = 3;
       backgroundTexture = context.textures->get(Textures::Bg3);
       backgroundSprite.setTexture(context.textures->get(Textures::Bg3));
@@ -1026,7 +1026,7 @@ void GameState::loadGame() {
 	
 	LevelManager& lm = LevelManager::getInstance();
 	std::ifstream file;
-	file.open("../resources/save.txt");
+	file.open("resources/save.txt");
 	if (file) {
 		int level, score, time;
 		file >> level >> score >> time;

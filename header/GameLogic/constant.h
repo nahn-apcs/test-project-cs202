@@ -3,7 +3,6 @@
 #define CONSTANTS_HPP_
 
 typedef enum Screen { MENU, LEVEL1, LEVEL2, LEVEL3 } Screen;
-typedef enum Interact { REST, CREATE, INSERT, DELETE, SEARCH, FILEINTER };
 typedef enum TileType {
 	GROUND,
 	NONE

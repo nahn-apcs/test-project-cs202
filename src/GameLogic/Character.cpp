@@ -36,7 +36,7 @@ Character::Character(
 
 
 Character::Character(std::vector<sf::Texture>& idleTextures, std::vector<sf::Texture>& runTextures, std::vector<sf::Texture>& attackTextures, std::vector<sf::Texture>& jumpT, std::vector<sf::Texture>& hurt, std::vector<sf::Texture>& sidleTextures, std::vector<sf::Texture>& srunTextures, std::vector<sf::Texture>& sattackTextures, std::vector<sf::Texture>& sjumpT, std::vector<sf::Texture>& sHurt, std::vector<sf::Texture>& dead
-    , float x, float y, int type, int hp, float veloX, float veloY, int status) : velocityX(velocityX), velocityY(velocityY), onGround(false), isJumping(false), attacking(false), faceRight(true), type(type) {
+    , float x, float y, int type, int hp, float veloX, float veloY, int status) : velocityX(veloX), velocityY(veloY), onGround(false), isJumping(false), attacking(false), faceRight(true), type(type) {
     attacked = true;
     level = hp;
     this->status = status;
@@ -70,6 +70,7 @@ void Character::shoot(Map* map) {
 
 void Character::interact(float deltatime, Map* map) {
     // Handle movement
+
 
     /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
         if (dashCooldown <= 0) {
