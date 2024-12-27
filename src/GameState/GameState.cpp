@@ -833,7 +833,7 @@ bool GameState::update(sf::Time dt) {
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
 
 						mapData[tileY][tileX] = '0';
-						player->knockUp();
+						player->knockUp(gameMap);
 						monster->kill(true, monster);  // Kill the monster
 
 					}
@@ -971,9 +971,10 @@ bool GameState::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-				saveGame();
 
-				requestStackPush(States::Pause);
+					saveGame();
+					requestStackPush(States::Pause);
+				
 			}
 		}
 	}

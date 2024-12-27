@@ -521,8 +521,8 @@ void Character::levelUp(Map* map){
     }
 }
 
-void Character::knockUp(){
- sprite.move(0, -10);
+void Character::knockUp(Map* map){
+    if (!checkWallCollision(0, -10, map)) sprite.move(0, -10);
 	setVelocityY(-200.0f);
 }
 

@@ -29,7 +29,7 @@ public:
     void damaged(Map* map);
     bool isAttacking() const { return attacking; }
     bool isDead() const { return Dead; }
-    void knockUp();
+    void knockUp(Map* map);
     int getLevel() const { return level; }
     sf::FloatRect getBounds() const;
     bool isEvoled() const { return status == 1; }
