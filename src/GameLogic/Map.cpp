@@ -254,7 +254,7 @@ Map::Map(std::vector<std::string>& map, int tileSize, std::vector<sf::Texture>& 
             coinsNumber++;
         }
         else if (saveItemType[i] == 2) {
-            Item* temp = ItemFactory::createItem("PowerUp", texture, { static_cast<int>(saveItemPos[i].first), static_cast<int>(saveItemPos[i].second) });
+            Item* temp = ItemFactory::createItem("Peach", texture, { static_cast<int>(saveItemPos[i].first), static_cast<int>(saveItemPos[i].second) });
             coins.push_back(temp);
             coinsNumber++;
         }
