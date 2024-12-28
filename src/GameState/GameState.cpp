@@ -997,6 +997,7 @@ bool GameState::handleEvent(const sf::Event& event) {
 	}
 	else if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Escape) {
+			LevelManager::getInstance().resetSave();
 			saveGame();
 			
 			requestStackPush(States::Pause);
