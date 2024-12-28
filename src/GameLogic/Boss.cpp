@@ -160,7 +160,7 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			float vY = dy / 8.0f;
 			setVelocityX(-vX);
 			setVelocityY(-vY);
-			std::cout << "-vX: " << vX << " -vY: " << vY << std::endl;
+			//std::cout << "-vX: " << vX << " -vY: " << vY << std::endl;
 			moveTime = 1.0f;
 		}
 

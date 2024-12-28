@@ -764,10 +764,10 @@ bool GameState::update(sf::Time dt) {
 					sf::Vector2f bossPos = boss->getPosition();
 					if (abs(playerPos.x - bossPos.x) < 200) boss->activate();
 				}
-					else {
-						boss->interact(deltaTime, gameMap, player->getBounds().getPosition());
-						boss->update(deltaTime, gameMap);
-					}
+				else {
+					boss->interact(deltaTime, gameMap, player->getBounds().getPosition());
+					boss->update(deltaTime, gameMap);
+				}
 			}
 
 			
