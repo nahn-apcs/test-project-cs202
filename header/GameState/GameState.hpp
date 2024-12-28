@@ -78,6 +78,7 @@ private:
     sf::View camera;
     bool win = false;
     bool lose = false;
+    bool bossPoint = false;
     float deadTime = 1.5f;
 };
 

@@ -2,11 +2,10 @@
 #include "BlockAnimation.h"
 
 
-Block::Block(const sf::Texture& texture) : isSolid(false), isAnimated(false), isMoving(false) {
+Block::Block(const sf::Texture& texture) : isSolid(false), isAnimated(false){
   sprite.setTexture(texture);
   sprite.setTextureRect(sf::IntRect(0, 0, 32, 32)); 
   item = "";
-  movement = nullptr;
   animation = nullptr;
   state = nullptr;
   itemObject = nullptr;
@@ -19,9 +18,6 @@ Block::~Block()
 {
   if (animation) {
     delete animation;
-  }
-  if (movement) {
-    delete movement;
   }
   if (state) {
     delete state;
@@ -68,10 +64,6 @@ void Block::update(float deltatime, std::vector<std::string>& mapData, int tileS
   }
   
 
-  if (isMoving && movement) {
-    movement->move(sprite, deltatime, mapData, tileSize);
-  }
-
   if (isAnimated && animation) {
     animation->update(deltatime);
     animation->applyToSprite(sprite, true);
@@ -96,11 +88,6 @@ sf::FloatRect Block::getBounds() const {
   return sprite.getGlobalBounds();
 }
 
-void Block::setMovement(MovementStrategy* movement)
-{
-  this->movement = movement;
-}
-
 void Block::setState(BlockState* state)
 {
   this->state = state;
@@ -119,10 +106,6 @@ bool Block::isSolidBlock() const
   return isSolid;
 }
 
-bool Block::isMovingBlock() const
-{
-  return isMoving;
-}
 
 bool Block::isAnimatedBlock() const
 {
@@ -134,11 +117,6 @@ void Block::setAnimation(BlockAnimation* animation)
   this->animation = animation;
 }
 
-
-void Block::setMoving(bool isMoving)
-{
-  this->isMoving = isMoving;
-}
 
 void Block::setSolid(bool isSolid)
 {

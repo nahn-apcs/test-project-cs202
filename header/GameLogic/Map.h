@@ -67,6 +67,7 @@ public:
     ProjectileManager& getEnemyProjectiles() { return enemyProjectiles; }
     AudioManagement* getAudioManager() { return audioManager; }
     void setcoinsNumber(int coinsNumber) { this->coinsNumber = coinsNumber; }
+    void addConstanScore(float score) { constantScore += score; }
   private:
     const std::string notCollidable = "0C";
     std::vector<std::string> mapData;

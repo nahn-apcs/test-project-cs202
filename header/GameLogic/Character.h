@@ -18,7 +18,7 @@ public:
     void pushBack(Map*);
     void dead(Map*);
     void jump();
-    void shoot(Map* map);
+    virtual void shoot(Map* map);
     virtual void draw(sf::RenderWindow& window);
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }
@@ -29,7 +29,7 @@ public:
     void damaged(Map* map);
     bool isAttacking() const { return attacking; }
     bool isDead() const { return Dead; }
-    void knockUp();
+    void knockUp(Map* map);
     int getLevel() const { return level; }
     sf::FloatRect getBounds() const;
     bool isEvoled() const { return status == 1; }

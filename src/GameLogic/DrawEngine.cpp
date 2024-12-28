@@ -83,7 +83,7 @@ void DrawEngine::displayBossHealth(sf::RenderWindow& window, float elapsedTime, 
 	bossHealthText.setCharacterSize(24);
 	bossHealthText.setFillColor(sf::Color::Red);
 	//bossHealthText.setOrigin(bossHealthText.getLocalBounds().width / 2, bossHealthText.getLocalBounds().height / 2);
-	bossHealthText.setPosition(1280/2-60, 60);
+	bossHealthText.setPosition(1280/2-260, 60);
 
 	sf::Text bossNameText;
 	bossNameText.setFont(font);

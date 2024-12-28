@@ -171,6 +171,14 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 			}*/
 
 			file >> playerType;
+      if (playerType == 1) {
+                          LevelManager::getInstance().setCurCharacter(
+                            LevelManager::wukong);
+                        }
+      else {
+                          LevelManager::getInstance().setCurCharacter(
+                            LevelManager::pig);
+      }
 			file >> playerX >> playerY;
 			file >> playerHP;
 			file >> playerStatus;
@@ -764,10 +772,10 @@ bool GameState::update(sf::Time dt) {
 					sf::Vector2f bossPos = boss->getPosition();
 					if (abs(playerPos.x - bossPos.x) < 200) boss->activate();
 				}
-					else {
-						boss->interact(deltaTime, gameMap, player->getBounds().getPosition());
-						boss->update(deltaTime, gameMap);
-					}
+				else {
+					boss->interact(deltaTime, gameMap, player->getBounds().getPosition());
+					boss->update(deltaTime, gameMap);
+				}
 			}
 
 			
@@ -780,6 +788,10 @@ bool GameState::update(sf::Time dt) {
 					coin->collect(); // Collect the coin
 					if (dynamic_cast<Coin*>(coin)) {
 						gameMap->increaseCoinsNumber();
+            int tileX = static_cast<int>(coin->getBounds().left / tileSize);
+            int tileY = static_cast<int>(coin->getBounds().top /tileSize);
+            mapData[tileY][tileX] = '0';
+                                        
 					}
 					else if (dynamic_cast<PowerUp*>(coin)) {
 						player->levelUp(gameMap);
@@ -833,7 +845,7 @@ bool GameState::update(sf::Time dt) {
 						auto tileY = static_cast<int>(monsterBounds.top / tileSize);
 
 						mapData[tileY][tileX] = '0';
-						player->knockUp();
+						player->knockUp(gameMap);
 						monster->kill(true, monster);  // Kill the monster
 
 					}
@@ -934,7 +946,12 @@ bool GameState::update(sf::Time dt) {
 				else deadTime -= deltaTime;
 			}
 
-			
+			if (boss) {
+        if (!bossPoint && boss->isDead()) {
+                            bossPoint = true;
+          gameMap->addConstanScore(10000);
+                          }
+      }
 			
 
 			return false;
@@ -971,7 +988,8 @@ bool GameState::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
-				saveGame();
+                    LevelManager::getInstance().resetSave();
+        saveGame();
 
 				requestStackPush(States::Pause);
 			}
@@ -1010,6 +1028,7 @@ void GameState::saveGame() {
 		}
 	}
 	std::vector<Monster*> monsters = gameMap->getMonsters();
+        std::cout << "Monster size: " << monsters.size() << std::endl;
 	for (auto& monster : monsters) {
 		if (!monster->getIsKilled()) {
 			lm.addMonster(monster);
@@ -1041,7 +1060,7 @@ void GameState::loadGame() {
 		int monsterSize;
 		file >> monsterSize;
 		std::vector<std::pair<float, float>> monsterPos;
-		std::vector<int> monsterType;
+		std::vector<char> monsterType;
 		for (int i = 0; i < monsterSize; i++) {
 			float x, y;
 			file >> x >> y;
@@ -1108,6 +1127,13 @@ void GameState::loadGame() {
 		}
 		int playerType;
 		file >> playerType;
+    if (playerType == 1) {
+                  LevelManager::getInstance().setCurCharacter(LevelManager::wukong);
+                }
+    else {
+                  LevelManager::getInstance().setCurCharacter(
+                    LevelManager::pig);
+    }
 		float playerX, playerY;
 		file >> playerX >> playerY;
 		int playerHP;

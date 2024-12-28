@@ -160,7 +160,7 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			float vY = dy / 8.0f;
 			setVelocityX(-vX);
 			setVelocityY(-vY);
-			std::cout << "-vX: " << vX << " -vY: " << vY << std::endl;
+			//std::cout << "-vX: " << vX << " -vY: " << vY << std::endl;
 			moveTime = 1.0f;
 		}
 
@@ -173,7 +173,10 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			{
 			case 1:
 				sprite.setPosition(325*32, 60);
+        setVelocityX(0);
+        setVelocityY(0);
 				rainShoot(map);
+        moveTime = 7.0f;
 				break;
 			case 2:
 				if (mIsMovingRight) {
@@ -188,7 +191,7 @@ void Boss::interact(float d, Map* map, sf::Vector2f player )
 			default:
 				break;
 			}
-			teleportTime = 10.0f;
+			teleportTime = 7.0f;
 		}
 
 		
@@ -469,8 +472,7 @@ void Boss::damaged(Map* map)
 		}
 		health -= 1;
 		if (!exhaust) {
-			
-			if (!faceRight) if (!checkWallCollision(-10.f, 0.f, map)) {
+			if (!mIsMovingRight) if (!checkWallCollision(-10.f, 0.f, map)) {
 				move(-10.f, 0, map);
 			}
 			else if (!checkWallCollision(10.f, 0.f, map)) {
@@ -481,9 +483,9 @@ void Boss::damaged(Map* map)
 		
 		if (hit >= 10) {
 			exhaust = true;
+			exhaustTime = 5.0f;
 			hit = 0;
 		}
-		exhaustTime = 5.0f;
 	}
 }
 
@@ -538,9 +540,16 @@ void Boss::angularShoot(Map* map, sf::Vector2f player)
 		for (int i = 0; i < 8; i++) {
 			map->enemyProjectiles.addProjectile(map->getProjectileTexture(), 300.0f * cos(angle), 300.0f * sin(angle), position.x + getBounds().width / 2, position.y + getBounds().height / 2, mIsMovingRight);
 			map->enemyProjectiles.addProjectile(map->getProjectileTexture(), 300.0f * cos(angle)*1.5f, 300.0f * sin(angle)*1.5f, position.x + getBounds().width / 2+ 100.f, position.y + getBounds().height / 100.0f, mIsMovingRight);
-
 			angle += 0.785398f/3.0f;
 		}
+                angle = atan2(dy, dx);
+		for (int i = 0; i < 8; i++) {
+			map->enemyProjectiles.addProjectile(map->getProjectileTexture(), 100.0f * cos(angle), 100.0f * sin(angle), position.x + getBounds().width / 2, position.y + getBounds().height / 2, mIsMovingRight);
+			map->enemyProjectiles.addProjectile(map->getProjectileTexture(), 100.0f * cos(angle) * 1.5f, 100.0f * sin(angle) * 1.5f, position.x + getBounds().width / 2 + 100.f, position.y + getBounds().height / 100.0f, mIsMovingRight);
+			map->enemyProjectiles.addProjectile(map->getProjectileTexture(), 150.0f * cos(angle) * 1.5f, 200.0f * sin(angle) * 0.5f, position.x + getBounds().width / 2 + 100.f, position.y + getBounds().height / 100.0f, mIsMovingRight);
+			angle += 0.785398f / 3.0f;
+		}
+
 	}
 }
 
@@ -601,12 +610,17 @@ void Boss::shootFromFeet(Map* map) {
 		int bottomRangeY = getBounds().top + getBounds().height - 25.0f;
 		int rightRangeX = getBounds().left + getBounds().width + 200;
 		int leftRangeX = getBounds().left - 200;
+                int middleY = getBounds().top + getBounds().height / 2;
 		for (int i = leftRangeX; i < rightRangeX; i += 80) {
 		    map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 100.f, 0.0f, i, getBounds().top, !mIsMovingRight);
 		}
 
 		for (int i = leftRangeX; i < rightRangeX; i += 80) {
 			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 100.f, 0.0f, i, bottomRangeY, !mIsMovingRight);
+		}
+
+    for (int i = leftRangeX; i < rightRangeX; i += 80) {
+			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 100.f, 0.0f, i, middleY, !mIsMovingRight);
 		}
 
 	}
@@ -626,10 +640,13 @@ void Boss::rainShoot(Map* map)
 		int leftRangeX = getBounds().left - 400;
 		int rightRangeX = getBounds().left + getBounds().width + 400;
 		for (int i = leftRangeX; i < rightRangeX; i += 80) {
-			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 0.f, 300.0f, i, 100, true);
+			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 0.f, 100.0f, i, 100, true);
 		}
 		for (int i = leftRangeX; i < rightRangeX; i += 80) {
 			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 0.f, 300.0f, i, 50, true);
+		}
+		for (int i = leftRangeX; i < rightRangeX; i += 80) {
+			map->enemyProjectiles.addProjectile(map->getEnemyProjectileTexture(), 0.f, 150.0f, i, 50, true);
 		}
 			
 	}

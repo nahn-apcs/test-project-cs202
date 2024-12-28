@@ -7,7 +7,7 @@ AudioManagement::AudioManagement()
 
 void AudioManagement::loadAudioResources()
 {
-	if (!mainMusic.openFromFile("resources/Audio/Background.wav"))
+	if (!mainMusic.openFromFile("resources/Audio/victory.wav"))
 	{
 		std::cout << "Error loading main music" << std::endl;
 	}
