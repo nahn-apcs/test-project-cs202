@@ -4,5 +4,5 @@ cmake -S. -Bbuild
 cmake --build build
 build/bin/game
 
-Test game: https://youtu.be/VwKNV16iXt8
+Test game: https://youtu.be/nuHFWnOZW_U
 ```
