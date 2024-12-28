@@ -18,7 +18,7 @@ public:
     void pushBack(Map*);
     void dead(Map*);
     void jump();
-    void shoot(Map* map);
+    virtual void shoot(Map* map);
     virtual void draw(sf::RenderWindow& window);
     void setVelocityX(float vx) { velocityX = vx; }
     void setVelocityY(float vy) { velocityY = vy; }

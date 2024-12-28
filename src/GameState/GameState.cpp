@@ -788,6 +788,10 @@ bool GameState::update(sf::Time dt) {
 					coin->collect(); // Collect the coin
 					if (dynamic_cast<Coin*>(coin)) {
 						gameMap->increaseCoinsNumber();
+            int tileX = static_cast<int>(coin->getBounds().left / tileSize);
+            int tileY = static_cast<int>(coin->getBounds().top /tileSize);
+            mapData[tileY][tileX] = '0';
+                                        
 					}
 					else if (dynamic_cast<PowerUp*>(coin)) {
 						player->levelUp(gameMap);
@@ -942,7 +946,12 @@ bool GameState::update(sf::Time dt) {
 				else deadTime -= deltaTime;
 			}
 
-			
+			if (boss) {
+        if (!bossPoint && boss->isDead()) {
+                            bossPoint = true;
+          gameMap->addConstanScore(10000);
+                          }
+      }
 			
 
 			return false;

@@ -543,7 +543,7 @@ SecondCharacter::SecondCharacter(
 	int type
 	) : Character(idleTextures, runTextures, attackTextures, jumpT, hurt, sidleTextures, srunTextures, sattackTextures, sjumpT, sHurt, dead, x, y, type) {
     jumpStrength = -400.f;
-    level = 5;
+    level = 6;
 }
 
 
