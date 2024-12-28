@@ -171,6 +171,14 @@ GameState::GameState(StateStack& stack, Context context) : boss(nullptr), State(
 			}*/
 
 			file >> playerType;
+      if (playerType == 1) {
+                          LevelManager::getInstance().setCurCharacter(
+                            LevelManager::wukong);
+                        }
+      else {
+                          LevelManager::getInstance().setCurCharacter(
+                            LevelManager::pig);
+      }
 			file >> playerX >> playerY;
 			file >> playerHP;
 			file >> playerStatus;
@@ -971,10 +979,10 @@ bool GameState::handleEvent(const sf::Event& event) {
 	if (event.type == sf::Event::MouseButtonPressed) {
 		if (event.mouseButton.button == sf::Mouse::Left) {
 			if (PauseButton.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+                    LevelManager::getInstance().resetSave();
+        saveGame();
 
-					saveGame();
-					requestStackPush(States::Pause);
-				
+				requestStackPush(States::Pause);
 			}
 		}
 	}
@@ -1011,6 +1019,7 @@ void GameState::saveGame() {
 		}
 	}
 	std::vector<Monster*> monsters = gameMap->getMonsters();
+        std::cout << "Monster size: " << monsters.size() << std::endl;
 	for (auto& monster : monsters) {
 		if (!monster->getIsKilled()) {
 			lm.addMonster(monster);
@@ -1042,7 +1051,7 @@ void GameState::loadGame() {
 		int monsterSize;
 		file >> monsterSize;
 		std::vector<std::pair<float, float>> monsterPos;
-		std::vector<int> monsterType;
+		std::vector<char> monsterType;
 		for (int i = 0; i < monsterSize; i++) {
 			float x, y;
 			file >> x >> y;
@@ -1109,6 +1118,13 @@ void GameState::loadGame() {
 		}
 		int playerType;
 		file >> playerType;
+    if (playerType == 1) {
+                  LevelManager::getInstance().setCurCharacter(LevelManager::wukong);
+                }
+    else {
+                  LevelManager::getInstance().setCurCharacter(
+                    LevelManager::pig);
+    }
 		float playerX, playerY;
 		file >> playerX >> playerY;
 		int playerHP;

@@ -167,6 +167,34 @@ public:
     void setCoins(int coins) {this->coins = coins;}
     int getCoins() const {return coins;}
 
+    void resetSave() {
+        		saveMap.clear();
+		saveMonsterPos.clear();
+		saveMonsterType.clear();
+		savePlayerProjectilePos.clear();
+		saveMonsterProjectilePos.clear();
+		savePlayerProjectileDir.clear();
+		saveMonsterProjectileDir.clear();
+		savePlayerProjectileVel.clear();
+		saveMonsterProjectileVel.clear();
+		saveItemPos.clear();
+		saveItemType.clear();
+		savePlayerPosX = 0;
+		savePlayerPosY = 0;
+		playerHP = 0;
+		playerStatus = 0;
+		playerVelX = 0;
+		playerVelY = 0;
+		saveBossPosX = 0;
+		saveBossPosY = 0;
+		bossHP = 0;
+		bossVelX = 0;
+		bossVelY = 0;
+		hasboss = false;
+		activeBoss = 0;
+		coins = 0;
+    }
+
 private:
     LevelManager();
     ~LevelManager() = default;
